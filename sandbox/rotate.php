@@ -218,17 +218,21 @@ function stringcreatefromimage( &$new, $type = 'jpg')
  *   @param [in]	$h	Current height
  *   @param [in]	$degrees	Rotation
  *   @param [in]	$crop=0	Crop if true
- *   @return     GdImage
+ *   @return		GdImage | FALSE
  *   
- *   @details    $(More details)
+ *   @details    Takes a GdImage resample, rotates and returns new GdImage
  *   
  *   @example    
- *       $src	= "2023-07-30T13-33-16_IMGP1592.JPG";
+ *       $src	= "IMG.JPG";
+ *       // Load GdImage
  *       $img 	= imagecreatefromjpeg($src);
+ *       // Get dimentions
  *       list($w, $h) = getimagesize($src);
+ *       // Resize to max
  *       $max	= 500;
  *       // Resize and rotate
  *       $new	= rotsize( $img, $max, $max, $w, $h, 90 );
+ *
  *       // Out to file
  *       imagejpeg($new, "out.jpg");
  *       
@@ -246,17 +250,22 @@ function stringcreatefromimage( &$new, $type = 'jpg')
  */
 function rotsize( $img, $width, $height , $w, $h, $degrees, $crop = 0 )
 {
-    if($w < $width and $h < $height) return "Picture is too small!";
-    $ratio = min($width/$w, $height/$h);
-    $width = intval($w * $ratio);
-    $height = intval($h * $ratio);
+    if($w < $width and $h < $height) 
+	{
+		trigger_error("Picture is too small!" , E_USER_WARNING);
+		return( FALSE );
+	}
+
+    $ratio		= min($width/$w, $height/$h);
+    $width		= intval($w * $ratio);
+    $height		= intval($h * $ratio);
 	// Target
-	$new	= imagecreatetruecolor($width, $height);
+	$new		= imagecreatetruecolor($width, $height);
 	// Resample                                    dst              source
 	imagecopyresampled($new, $img, 0, 0, $crop, 0, $width, $height , $w, $h);
 	// Rotate
 	if ( $degrees)
-		$new = imagerotate($new, $degrees, 0);
+		$new	= imagerotate($new, $degrees, 0);
 	// Return GdImage 
 	return($new);
 }	// rotsize()
