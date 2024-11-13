@@ -19,6 +19,8 @@ a {
 
 .display {
 	float: right;
+	max-width: 1200px;
+	max-height: 1000px;
 }
 
 .flag {

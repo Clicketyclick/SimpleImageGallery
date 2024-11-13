@@ -4,6 +4,12 @@
 		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
 		"image_ext": ["jpg", "JPEG" ]
 	},
+	"images": {
+		"thumb_max_width": 200,
+		"thumb_max_height": 200,
+		"display_max_width": 600,
+		"display_max_height": 600
+	},
 	"database": {
 		"file_name": "data.db",
 		"image_ext": ["jpg", "JPEG" ]

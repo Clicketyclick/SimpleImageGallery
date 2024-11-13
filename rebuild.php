@@ -15,18 +15,20 @@ preg_match('/\/\*\*(.*?)\*\//s', implode( '', file( __FILE__ )), $match); fputs(
 
 $releaseroot	= __DIR__ . '/';
 
+include_once('lib/handleJson.php');
 include_once('lib/imageResize.php');
 include_once('lib/handleSqlite.php');
 include_once('lib/debug.php');
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
 
-$cfg		= json_get_contents( 'config/config.json' );
-$local		= json_get_contents( 'config/local.json' );
-$dbCfg		= json_get_contents( 'config/database.json' );
-$metatags	= json_get_contents( 'config/meta.json' );
-$files	= [];
-$db		= FALSE;
+$cfg		= file_get_json( 'config/config.json' );
+$local		= file_get_json( 'config/local.json' );
+$dbCfg		= file_get_json( 'config/database.json' );
+$metatags	= file_get_json( 'config/meta.json' );
+
+$files		= [];
+$db			= FALSE;
 
 initDatabase( $db, $cfg['database']['file_name'], $dbCfg );
 
@@ -60,6 +62,9 @@ foreach ( $files as $path )
 	++$count;
 	debug( $file );
 
+	// Get image dimentions
+	list($width, $height, $type, $attr) = getimagesize($file);
+
 	// Get EXIF
 	$exif 		= exif_read_data( $file, 0, true);
 	$exifjson 	= SQLite3::escapeString( json_encode( $exif,  JSON_INVALID_UTF8_IGNORE ) );
@@ -74,39 +79,78 @@ foreach ( $files as $path )
 	$thumb 		= exif_thumbnail( $file );
 	if ( empty( $thumb) )
 	{
-		$note	.= "Thumb build";
-		$thumb =  getResizedImage( $file, 100,100 );
+		$note			.= "Thumb build";
+		//list($width, $height, $type, $attr) = getimagesize($file);
+		$thumb_width	= 100;
+		$thumb_height	= 100;
+		$dst			= "FALSE";
+		$thumb			= image_resize( 
+				$file
+			,	$dst
+			,	$cfg['images']['thumb_max_width']
+			,	$cfg['images']['thumb_max_height']
+			,	$exif['IFD0']['Orientation'] ?? 0
+			,	$crop=0
+			);
+	}
+	else
+	{
+		if ( $exif['IFD0']['Orientation'] ?? 0 )
+		{
+			$gdThumb	= imagecreatefromstring( $thumb );
+			//if ( $degrees )
+			$gdThumb	= gdReorientateByOrientation( $gdThumb, $exif['IFD0']['Orientation'], $file );
+			$thumb	= stringcreatefromimage( $gdThumb, 'jpg');
+		}
 	}
 	
 	// Rotate EXIF
-	if ( 8 == ( $exif['IFD0']['Orientation'] ?? 0 ) )
-	{
-		//verbose( '-- rotating');
-		file_put_contents( "$count.thumb.jpg", $thumb );
-		rotateImage( "$count.thumb.jpg", 90, $count. '.rotated.jpg' );
-		$thumb	= file_get_contents( $count. '.rotated.jpg' );
-	}
-
 	$thumb 		= base64_encode( $thumb );
-	//$view 		= base64_encode(exif_thumbnail( $file ));
 
-	// Read image path, convert to base64 encoding
-	$view 		= base64_encode( getResizedImage( $file) );
+	$dst		= "FALSE";
+	$view 		= image_resize( 
+					$file
+				,	$dst
+				,	$cfg['images']['display_max_width']
+				,	$cfg['images']['display_max_height']
+				,	$exif['IFD0']['Orientation'] ?? 0
+				,	$crop=0
+				);
+	$view 		= base64_encode( $view );
+
 	// Update thumb and view
-	debug( sprintf( $dbCfg['sql']['replace_into_images'], $dirname,$basename, $thumb , $view )  );
-	$r  = $db->exec( sprintf( $dbCfg['sql']['replace_into_images'], $dirname,$basename, $thumb , $view ) );
+	debug( sprintf( $dbCfg['sql']['replace_into_images']
+	,	$dirname
+	,	$basename
+	,	$thumb
+	,	$view 
+	)  );
+
+	// Write to table: images
+	$r  = $db->exec( sprintf( 
+		$dbCfg['sql']['replace_into_images']
+	,	$dirname
+	,	$basename
+	,	$thumb
+	,	$view 
+	) );
+
 	// Update meta
-	debug( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson )  );
+	debug( sprintf( $dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson )  );
 	$r  = $db->exec( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson ) );
 
-	fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
-	,	$exif['FILE']['FileName']
-	,	date( 'c', $exif['FILE']['FileDateTime'])
-	,	$exif['COMPUTED']['Width']
-	,	$exif['COMPUTED']['Height']
-	,	$exif['FILE']['MimeType']
-	,   $count . ':'. ( $exif['IFD0']['Orientation'] ?? '?')
-	,	$note
+	// Display status
+	//fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
+	verbose( sprintf( "[%-35.35s] [%s] %sx%s %s %s %s"
+		,	$exif['FILE']['FileName']
+		,	date( 'c', $exif['FILE']['FileDateTime'] )
+		,	$exif['COMPUTED']['Width']
+		,	$exif['COMPUTED']['Height']
+		,	$exif['FILE']['MimeType']
+		,   $count . ':'. ( $exif['IFD0']['Orientation'] ?? '?')
+		,	$note
+	)
+	,	"Image: "
 	);
 }
 $r  = $db->exec( "COMMIT;" );
@@ -160,91 +204,20 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 {
 	if ( ! file_exists( $dbfile ) )
 	{
+		verbose( $dbfile, 'Create database:\t');
 		$db	= createSqlDb($dbfile);
 		$r  = $db->exec( $dbCfg['sql']['create_images'] );
 		$r  = $db->exec( $dbCfg['sql']['create_meta'] );
 	}
 	else
 	{
+		verbose( $dbfile, 'Opening database:\t');
 		$db	= openSqlDb($dbfile);
 	}
     //array_push( $result, $r );
 
 }
 
-/**
- *  @fn        openSqlDb()
- *  @brief     Open or create database
- *  
- *  @details   Wrapper for SQLite3::open()
- *  
- *  @param [in] $dbfile Path and name of database file to open
- *  @return     File handle to database OR FALSE
- *  
- *  @example   $db = openSqlDb( "./my.db" );
- *  
- *  @todo     
- *  @bug     
- *  @warning    An empty database IS valid, but issues a warning
- *  
- *  @see
- *  @since      2019-12-11T07:43:08
- */
-function _openSqlDb( $dbfile ) {
-    if ( ! file_exists($dbfile) )
-    {
-        trigger_error( ___('database_not_found'). " [$dbfile]", E_USER_WARNING );
-        return( FALSE );
-    }
-    if ( ! filesize($dbfile) )
-    {
-        trigger_error( ___('database_is_empty')." [$dbfile] " . var_export( debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,2), TRUE ), E_USER_WARNING );
-    }
-    
-    $db = new SQLite3( $dbfile );
-    if ( ! $db ) {
-        trigger_error( ___('database_not_open')." [$dbfile]", E_USER_ERROR );
-        return( FALSE );
-    }
-    return( $db );
-}   // openSqlDb()
-
-//---------------------------------------------------------------------
-
-/**
- *  @fn        createSqlDb()
- *  @brief     Create new database if not exists
- *  
- *  @details   Wrapper for SQLite3::open()
- *  
- *  @param [in] $dbfile Path and name of database file to create
- *  @return     File handle to database OR FALSE
- *  
- *  @example   $db = createSqlDb( "./my.db" );
- *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
- *  @since      2024-04-11 13:19:44
- */
-function _createSqlDb( $dbfile ) {
-    if ( file_exists($dbfile) )
-    {
-        trigger_error( ___('database_already_exists')." [$dbfile]", E_USER_WARNING );
-        return( FALSE );
-    }
-    
-    $db = new SQLite3( $dbfile );
-    if ( ! $db ) {
-        trigger_error( ___('database_not_open')." [$dbfile]", E_USER_WARNING );
-        return( FALSE );
-    }
-    return( $db );
-}   // createSqlDb()
-
-//---------------------------------------------------------------------
 //----------------------------------------------------------------------
 
 function ___( $key, $lang = 'en' )
@@ -274,18 +247,4 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 
 //----------------------------------------------------------------------
 
-function json_get_contents( $file )
-{
-	if ( file_exists( $file ) )
-	{
-		$json	= json_decode( file_get_contents( $file ), TRUE );
-	}
-	return( $json ?? FALSE );
-}	// json_get_contents
-
-//----------------------------------------------------------------------
-
-function json_put_contents( $file, $json )
-{
-	return( file_put_contents( $file, json_encode( $json, JSON_PRETTY_PRINT ) ) );
-}	// json_put_contents
+?>
