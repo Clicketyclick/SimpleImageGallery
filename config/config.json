@@ -1,0 +1,13 @@
+{
+	"data": {
+		"data_root": "./data/",
+		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
+		"image_ext": ["jpg", "JPEG" ]
+	},
+	"database": {
+		"file_name": "data.db",
+		"image_ext": ["jpg", "JPEG" ]
+	}
+}
+
+

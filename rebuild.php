@@ -21,10 +21,10 @@ include_once('lib/debug.php');
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
 
-$cfg		= json_get_contents( 'config.json' );
-$local		= json_get_contents( 'local.json' );
-$dbCfg		= json_get_contents( 'database.json' );
-$metatags	= json_get_contents( 'meta.json' );
+$cfg		= json_get_contents( 'config/config.json' );
+$local		= json_get_contents( 'config/local.json' );
+$dbCfg		= json_get_contents( 'config/database.json' );
+$metatags	= json_get_contents( 'config/meta.json' );
 $files	= [];
 $db		= FALSE;
 

@@ -26,9 +26,9 @@ include_once( 'lib/debug.php');
 
 //$debug=1;
 
-$cfg		= file_get_json( 'config.json' );
-$local		= file_get_json( 'local.json' );
-$dbCfg		= file_get_json( 'database.json' );
+$cfg		= file_get_json( 'config/config.json' );
+$local		= file_get_json( 'config/local.json' );
+$dbCfg		= file_get_json( 'config/database.json' );
 
 $db	= openSqlDb($cfg['database']['file_name']);
 
