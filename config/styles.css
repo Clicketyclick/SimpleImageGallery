@@ -1,0 +1,32 @@
+/**
+ *   @file       styles.css
+ *   @brief      $(Brief description)
+ *   @details    $(More details)
+ *   
+ *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
+ *   @since      2024-11-11T06:14:19 / ErBa
+ *   @version    2024-11-11T06:14:19
+ */
+
+body {
+	background-color: black;
+	color: white;
+}
+a {
+	color: cyan;
+}
+
+.display {
+	float: right;
+}
+
+.flag {
+	width:64px;
+	height:auto;
+}
+
+.flag_mini {
+	width:32px;
+	height:auto;
+}
