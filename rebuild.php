@@ -13,51 +13,59 @@
 // Get DoxyIT header
 preg_match('/\/\*\*(.*?)\*\//s', implode( '', file( __FILE__ )), $match); fputs( STDERR, $match[1] . PHP_EOL );
 
+// Dummy root
 $releaseroot	= __DIR__ . '/';
 
+// Include libraries
+include_once('lib/debug.php');
 include_once('lib/handleJson.php');
 include_once('lib/imageResize.php');
 include_once('lib/handleSqlite.php');
-include_once('lib/debug.php');
+include_once('lib/iptc.php');
+
+// Verbose and debug
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
 
+// Read configuration
 $cfg		= file_get_json( 'config/config.json' );
 $local		= file_get_json( 'config/local.json' );
 $dbCfg		= file_get_json( 'config/database.json' );
 $metatags	= file_get_json( 'config/meta.json' );
 
+// Init global variables
 $files		= [];
 $db			= FALSE;
 
+//----------------------------------------------------------------------
+
+// Open - or create database
 initDatabase( $db, $cfg['database']['file_name'], $dbCfg );
 
+// Find all image files recursive
 getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
 debug( $files );
 
-verbose( '// Write all file names to table' );
-$r  = $db->exec( "BEGIN TRANSACTION;" );
-foreach ( $files as $path )
+// Put all files to database: images
+putFilesToDatabase( $files );
+
+
+function json_encode_db( $arr )
 {
-	['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-
-	debug( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
-	$r  = $db->exec( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
-	$r  = $db->exec( sprintf($dbCfg['sql']['insert_files'], 'meta', $dirname,$basename ) );
+	return( SQLite3::escapeString( json_encode( $arr,  JSON_INVALID_UTF8_IGNORE ) ) );
 }
-$r  = $db->exec( "COMMIT;" );
-
-//----------------------------------------------------------------------
 
 verbose( '// Write meta data for each file' );
 // Update ALL
 $count	= 0;
 $r  = $db->exec( "BEGIN TRANSACTION;" );
 
-foreach ( $files as $path )
+//foreach ( $files as $path )
+foreach ( $files as $file )
 {
-	['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-	$file	= "$dirname/$basename";
+	//['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
+	['basename' => $basename, 'dirname' => $dirname] = pathinfo( $file );
+	//$file	= "$dirname/$basename";
 	$note	= "";
 	++$count;
 	debug( $file );
@@ -67,13 +75,13 @@ foreach ( $files as $path )
 
 	// Get EXIF
 	$exif 		= exif_read_data( $file, 0, true);
-	$exifjson 	= SQLite3::escapeString( json_encode( $exif,  JSON_INVALID_UTF8_IGNORE ) );
-	debug($exifjson);
+	$exifjson 	= json_encode_db( $exif );
+	debug($exifjson, 'EXIF_json');
 
 	// Get IPTC
 	$iptc		= parseIPTC( $file );
-    $iptcjson 	= SQLite3::escapeString( json_encode( $iptc,  JSON_INVALID_UTF8_IGNORE ) );
-	debug($iptcjson);
+    $iptcjson 	= json_encode_db( $iptc );
+	debug($iptcjson, 'IPTC_json');
 
 	// Get thumbnail
 	$thumb 		= exif_thumbnail( $file );
@@ -155,51 +163,50 @@ foreach ( $files as $path )
 }
 $r  = $db->exec( "COMMIT;" );
 
+
 //----------------------------------------------------------------------
 
-function parseIPTC( $file )
+function putFilesToDatabase( $files )
 {
-	// Remap IPTC tags to human readables
-	$iptcHeaderArray	= $GLOBALS['metatags']['iptc'];
-
-	$size = getimagesize($file, $info);
-	$iptc = iptcparse($info['APP13']);
-
-	foreach ( $iptc as $key => $value)
+	global $db;
+	global $dbCfg;
+// Write all files to database
+	verbose( '// Write all file names to table' );
+	$r  = $db->exec( "BEGIN TRANSACTION;" );
+	foreach ( $files as $path )
 	{
-		// Coded character set ESC % G = UTF-8
-		if ( "1#090" == $key )
-		{
-			//if ( '1b2547' == bin2hex($iptc[$key][0]) )
-			if ( "\x1B%G" == $iptc[$key][0] )
-				$iptc[$key][0]	.= "UTF-8";
-		}
-		$iptc[ $iptcHeaderArray[$key]['tag'] ] = $iptc[$key];
-		unset($iptc[$key]);
+		['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
+
+		debug( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
+		$r  = $db->exec( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
+		$r  = $db->exec( sprintf($dbCfg['sql']['insert_files'], 'meta', $dirname,$basename ) );
 	}
-	//file_put_contents( "$file.json", var_export($iptc, TRUE)  );
-	return( $iptc );
-}	// parseIPTC
-
-/*
-CREATE TABLE IF NOT EXISTS images (
-    filename    TEXT not null,
-    thumb       TEXT,    -- BLOB
-    display     TEXT,    -- BLOB,
-    PRIMARY KEY (file)
-);
-CREATE INDEX idx_images( file );
-
-CREATE TABLE IF NOT EXISTS meta (
-    file    TEXT not null,
-    exif    TEXT,
-    iptc    TEXT,
-    PRIMARY KEY (file)
-);
-CREATE INDEX idx_meta( file );
+	$r  = $db->exec( "COMMIT;" );
+}	// putFilesToDatabase()
 
 
-*/
+//----------------------------------------------------------------------
+
+/**
+ *   @fn         initDatabase
+ *   @brief      Open or create database w. tables
+ *   
+ *   @param [in]	&$db	Handle to database
+ *   @param [in]	$dbfile	Database file name
+ *   @param [in]	&$dbCfg	Database schemas from JSON
+ *   @return     TRUE if open | FALSE
+ *   
+ *   @details    
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-13T13:47:53
+ */
 function initDatabase( &$db, $dbfile, &$dbCfg )
 {
 	if ( ! file_exists( $dbfile ) )
@@ -214,18 +221,58 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 		verbose( $dbfile, 'Opening database:\t');
 		$db	= openSqlDb($dbfile);
 	}
-    //array_push( $result, $r );
-
-}
+	return( ! empty( $db ) );
+}	// initDatabase()
 
 //----------------------------------------------------------------------
 
+/**
+ *   @fn         ___()
+ *   @brief      Localisation function
+ *   
+ *   @param [in]	$key	Lookup key for local
+ *   @param [in]	$lang='en'	Language code [Default:en]
+ *   @return     Translation | [$key][$lang]
+ *   
+ *   @details    
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-13T13:43:14
+ */
 function ___( $key, $lang = 'en' )
 {
-	return( $GLOBALS['local'][$key][$lang] );
-}
+	return( $GLOBALS['local'][$key][$lang] ?? "[$key][$lang]" );
+}	// ___()
+
 //----------------------------------------------------------------------
 
+/**
+ *   @fn         getImagesRecursive
+ *   @brief      Get a list of images recursive from root
+ *   
+ *   @param [in]	$root		Start of search
+ *   @param [in]	$image_ext	File extentions
+ *   @param [in]	&$files		Array of files
+ *   @param [in]	$allowed=[]	$(description)
+ *   @return     TRUE if files found | FALSE
+ *   
+ *   @details    $(More details)
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-13T13:44:58
+ */
 function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 {
 	$it = new RecursiveDirectoryIterator( $root, RecursiveDirectoryIterator::SKIP_DOTS );
@@ -243,6 +290,7 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 		else
 			$files[]	= str_replace( "\\", '/', "$file");
 	}
+	return( ! empty($files) );
 }	// getImagesRecursive()
 
 //----------------------------------------------------------------------

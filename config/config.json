@@ -2,18 +2,30 @@
 	"data": {
 		"data_root": "./data/",
 		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
-		"image_ext": ["jpg", "JPEG" ]
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
 	},
 	"images": {
-		"thumb_max_width": 200,
-		"thumb_max_height": 200,
-		"display_max_width": 600,
-		"display_max_height": 600
+		"thumb_max_width": 300,
+		"thumb_max_height": 300,
+		"display_max_width": 4200,
+		"display_max_height": 4200
+	},
+	"exif": {
+		"exif_map_tag": "See on Google map",
+		"exif_map_link_stub": "https://maps.google.com/maps?q={$lat},{$lon}",
+		"exif_map_link_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}",
+		"exif_map_embed_tag": "Image map",
+		"exif_map_embed_stub": "https://maps.google.com/maps?q={$lat},{$lon}&output=embed",
+		"exif_map_embed_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}&output=embed&hl=en"
 	},
 	"database": {
 		"file_name": "data.db",
-		"image_ext": ["jpg", "JPEG" ]
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
 	}
 }
-
-

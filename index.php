@@ -16,13 +16,36 @@ echo '
 <head>
   <title>SIG - Simple Image Gallery</title>
   <link rel="stylesheet" href="config/styles.css">
+
+<script>
+document.onkeydown = function (e) { 
+  e = e || window.event; 
+  var charCode = e.charCode || e.keyCode, 
+      character = String.fromCharCode(charCode); 
+
+  console.log(character+"_"+charCode);
+};
+
+/*
+charCode
+37	left
+38	up
+39	right
+
+
+*/
+
+
+</script>
 </head>
 <body>
+
 ';
 $releaseroot	= __DIR__ . '/';
 include_once( 'lib/handleJson.php');
 include_once( 'lib/handleSqlite.php');
 include_once( 'lib/debug.php');
+include_once( 'lib/map.php');
 
 //$debug=1;
 
@@ -32,16 +55,22 @@ $dbCfg		= file_get_json( 'config/database.json' );
 
 $db	= openSqlDb($cfg['database']['file_name']);
 
+// Default path = all
 if ( empty( $_REQUEST['path']) )
 	$_REQUEST['path'] = '%';
 
-
-echo "<span title='Subdirs to'>&#x1F4C2; {$_REQUEST['path']}</span>:\n";
+//echo "<span title='Subdirs to'>&#x1F4C2; {$_REQUEST['path']}</span>:\n";
 $dirs	= querySql( $db, "SELECT DISTINCT path FROM images WHERE path LIKE '{$_REQUEST['path']}%'");
 $tree	= buildDirTree( $dirs );
 verbose( "<br>tree:<br>" );
 debug( $tree );
 
+
+// Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+echo "Breadcrumps: ";
+echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', '/' );
+echo '/'. basename($_REQUEST['path']);
+echo "<br>";
 
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
 
@@ -51,22 +80,10 @@ foreach( $subdirs as $subdir )
 	echo "<a href='?path=$subdir'>&#x1F4C1;$dir</a> ";
 }
 
-
-echo "<p>Breadcrumps: ";
-$crumbs	= breadcrumbs( $_REQUEST['path'] );
-$trail	= [];
-// Ignore first and last element in list
-foreach( array_splice($crumbs, 1, -1 ) as $crumb => $crumbtag )
-{
-	$trail[] = "<a href='?path=$crumb'>[$crumbtag]</a>";
-}
-echo implode( "&rightarrow;", $trail );
-
-
 echo "</pre><br clear=both><hr>";
 
 if( empty($_REQUEST['show']) )
-{
+{	// Thumb list
 	$sql 	= "SELECT path, file, thumb FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
 	debug( $sql );
 	$files	= querySql( $db, $sql );
@@ -80,7 +97,7 @@ if( empty($_REQUEST['show']) )
 
 }
 else
-{
+{	// Show image
 	$prev	= $next	= FALSE;
 	$sql 	= "SELECT path, file FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
 	debug( $sql );
@@ -116,6 +133,64 @@ else
 
 //----------------------------------------------------------------------
 
+/**
+ *   @fn         breadcrumbTrail
+ *   @brief      Build breadcrumb trail
+ *   
+ *   @param [in]	$path		Path to break up
+ *   @param [in]	$delimiter	Delimiter between crumbs [Default: "&rightarrow;"]
+ *   @return     Trail as HTML string
+ *   
+ *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-13T14:15:32
+ */
+function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarrow;')
+{
+	$crumbs	= breadcrumbs( $path );
+	$trail	= [];
+	// Ignore first and last element in list
+	foreach( array_splice($crumbs, 1, -1 ) as $crumb => $crumbtag )
+	{
+		//$trail[] = "<a href='?path=$crumb'>[$crumbtag]</a>";
+		$trail[] = sprintf( "<a href='{$urlstub}'>[%s]</a>"
+		,	$crumb
+		,	$crumbtag
+		);
+	}
+	return( implode( $delimiter, $trail ) );
+}	//breadcrumbTrail()
+
+
+
+//----------------------------------------------------------------------
+
+
+/**
+ *   @fn         breadcrumbs
+ *   @brief      Build a breadcrumb trail from a file path
+ *   
+ *   @param [in]	$path	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    $(More details)
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-13T14:10:11
+ */
 function breadcrumbs( $path )
 {
 	$trail	= [];
@@ -123,7 +198,6 @@ function breadcrumbs( $path )
 	foreach( explode( '/', $path ) as $dir )
 	{
 		$token		.= "/$dir";
-		//$trail[]	= trim( $token, '/' );
 		$trail[trim( $token, '/')]	= $dir;
 	}
 	return( $trail  );
@@ -131,9 +205,10 @@ function breadcrumbs( $path )
 
 //----------------------------------------------------------------------
 
-function buildDirTree( $dirs )
+function buildDirTree( &$dirs )
 {
 	$tree		= [];
+	$dirs2		= [];
 	// 0->path=>dir 0->dir
 	foreach( $dirs as $no => $dirinfo )
 		$dirs2[] = $dirinfo['path'];
@@ -222,8 +297,8 @@ function show_image( $filedata )
 	$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
 	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
 
-	$output	.= sprintf( "<small>%s</small><img class='display' src='data:jpg;base64, %s' title='%s'>"
-	,	$filedata['path'] . '/ ' . $filedata['file']
+	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
+	//,	$filedata['path'] . '/ ' . $filedata['file']
 	,	$filedata['display']
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
@@ -240,13 +315,23 @@ function show_image( $filedata )
 	$output	.= "</pre></details>";
 
 	// Flag
-	$flag	= $iptc['Country-PrimaryLocationCode '][0] ?? '00';
+	$flag	= $iptc['Country-PrimaryLocationCode'][0] ?? '00';
 	$output	.= "<img "
 	.	"src='config/.flags/{$flag}.svg' "
 	.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
 	.	"class='flag' "
 	.">";
 
+	if ( ! empty($exif['GPS']["GPSLongitude"]) )
+	{
+		$lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
+		$lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
+		$zoom	= $_REQUEST['zoom'] ?? 15;
+
+		echo getMapLink( $lat, $lon, $zoom );
+		echo " @ $lon,$lat<br>";
+		echo getMapEmbed( $lat, $lon, $zoom );
+	}
 	$output	.= "<br clear=both><hr>";
 	
 	return( $output );
