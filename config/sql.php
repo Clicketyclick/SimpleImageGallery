@@ -2,11 +2,10 @@
 /**
  *  @file      sql.php
  *  @brief     Brief description
- *  
+ *  For ByteMARC only
  *  @details   SQL strings for direct database interaction
- *  
- *  @examples: 
- *      // SQL templates
+ *             For ByteMARC
+ *  @example   SQL templates
  *      require_once( $GLOBALS['releaseroot'] . "config/sql.php" );
  *  
  *  @copyright http://www.gnu.org/licenses/lgpl.txt LGPL version 3
