@@ -1,13 +1,13 @@
-	<?php
+<?php
 /**
  *   @file       index.php
  *   @brief      Gallery Viewer
- *   @details    
+ *   @details    Listing images with recursive browsing
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:19 / ErBa
- *   @version    2024-11-13T00:12:12
+ *   @version    2024-11-14T08:45:54
  */
 
 echo '
@@ -142,7 +142,7 @@ else
  *   @return     Trail as HTML string
  *   
  *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
- *   
+ *<!--
  *   @example    
  *   
  *   @todo       
@@ -150,6 +150,7 @@ else
  *   @warning    
  *   
  *   @see        https://
+ *-->
  *   @since      2024-11-13T14:15:32
  */
 function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarrow;')
@@ -179,6 +180,7 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarro
  *   
  *   @param [in]	$path	$(description)
  *   @return     $(Return description)
+ *<!--
  *   
  *   @details    $(More details)
  *   
@@ -189,6 +191,7 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarro
  *   @warning    
  *   
  *   @see        https://
+ *-->
  *   @since      2024-11-13T14:10:11
  */
 function breadcrumbs( $path )

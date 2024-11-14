@@ -848,12 +848,32 @@ function vacuumInto( &$db, $newdbfile ) {
 	https://github.com/ephestione/php-sqlite-dump/blob/master/sqlite_dump.php
 	PHP SQLite Dump
 
-Tired of searching for "dump sqlite php" on the interwebs and 
-finding only people suggesting to use the sqlite3 tool from 
-CLI, or using PHP just as a wrapper for said sqlite3 tool? Look 
-no further!
-
 */
+
+/**
+ *   @fn         dbDump
+ *   @brief      PHP SQLite Dump
+ *   
+ *   @param [in]	$filename	$(description)
+ *   @param [in]	$dumpfile	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    Tired of searching for "dump sqlite php" on the interwebs and 
+ *   finding only people suggesting to use the sqlite3 tool from 
+ *   CLI, or using PHP just as a wrapper for said sqlite3 tool? Look 
+ *   no further!
+ *   
+ *   @_example    
+ *   
+ *   @_todo       
+ *   @_bug        
+ *   @_warning    
+ *   
+ *   @see        https://github.com/ephestione/php-sqlite-dump
+ *   @author     ephestione
+ *   @since      2019-08-14T00:00:00
+ *   @version    2024-04-11 13:23:27
+ */
 function dbDump( $filename, $dumpfile) {
 	//$db = new SQLite3(dirname(__FILE__)."/your/db.sqlite");
 	$db = new SQLite3( $filename );

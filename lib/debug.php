@@ -4,13 +4,13 @@
  *  @brief      Verbose and debug functions
  *   
  *  @details    Debug and verbose for multi levels of info
- *  
  *  debug           Debug message with location
  *  verbose         Verbose message
  *  logging         Generates log intry in $GLOBALS['logfile'] if $GLOBALS['logging'] flag set
  *  self            Return string w. file.function.stringtoken
  *  progress_per    Generates a user-level message foreach x itterations
  *   
+ *  @todo      Update headers
  *  @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *  @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *  @since      2022-12-03T09:02:25 / Erik Bachmann
@@ -35,14 +35,14 @@
  *      debug "this you'll see", "Debug: on");
  *      $debug  = FALSE;
  *      debug( "this you won't", "Debug: on");
- *  
- *      
- *
+ *  @todo      Update globally
+ *  <!--
  *  @todo      
  *  @bug       
  *  @warning   
  *  
  *  @see       https://
+ *	-->
  *  @since     2022-12-03T08:57:29 / Erik Bachmann Pedersen
  */
 function debug ( $str, $extend = FALSE ) 

@@ -3,6 +3,10 @@
  *   @file       map.php
  *   @brief      $(Brief description)
  *   @details    $(More details)
+ *   @fn         getMapLink
+ *   @brief      Build a link to map
+ *   @fn         getMapEmbed
+ *   @brief      Build an iframe with map
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
@@ -67,7 +71,6 @@ function getMapLink( $lat, $lon, $zoom )
  *   @see        https://
  *   @since      2024-11-13T16:16:37
  */
-
 function getMapEmbed( $lat, $lon, $zoom )
 {
 	global $cfg;
@@ -87,11 +90,11 @@ function getMapEmbed( $lat, $lon, $zoom )
 
 /**
  *   @fn         getGps
- *   @brief      $(Brief description)
+ *   @brief      Convert EXIF GPS data to float
  *   
- *   @param [in]	$exifCoord	$(description)
- *   @param [in]	$hemi	$(description)
- *   @return     $(Return description)
+ *   @param [in]	$exifCoord	EXIF coordinate
+ *   @param [in]	$hemi		GPS Reference ['N','S','E','W']
+ *   @return     Coordinate as float
  *   
  *   @details    $(More details)
  *   
@@ -100,12 +103,16 @@ function getMapEmbed( $lat, $lon, $zoom )
  *       $lon = getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
  *       $lat = getGps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
  *       var_dump($lat, $lon);
- *   
+ *
+ *   Output:
+ *       float(-33.8751666667)
+ *       float(151.207166667)
+ *
  *   @todo       
  *   @bug        
  *   @warning    
  *   
- *   @see        https://stackoverflow.com/a/2572991
+ *   @see        https://stackoverflow.com/a/2572991 gak
  *   @since      2024-11-13T15:27:47
  */
 function getGps($exifCoord, $hemi)
@@ -123,7 +130,7 @@ function getGps($exifCoord, $hemi)
 
 /**
  *   @fn         gps2Num
- *   @brief      $(Brief description)
+ *   @brief      Reformat GPS to float
  *   
  *   @param [in]	$coordPart	$(description)
  *   @return     $(Return description)
