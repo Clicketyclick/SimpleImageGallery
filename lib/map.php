@@ -1,12 +1,9 @@
 <?php
 /**
  *   @file       map.php
- *   @brief      $(Brief description)
- *   @details    $(More details)
- *   @fn         getMapLink
- *   @brief      Build a link to map
- *   @fn         getMapEmbed
- *   @brief      Build an iframe with map
+ *   @brief      Links to map and GPS encoding
+ *   @details    getMapLink		Build a link to map
+ *   getMapEmbed	Build an iframe with map
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
@@ -16,24 +13,24 @@
 
 
 /**
- *   @fn         getMapLink
- *   @brief      Build a link to map
- *   
- *   @param [in]	$lat	Lattitude as float
- *   @param [in]	$lon	Longitude as float
- *   @param [in]	$zoom	Zoom level
- *   @return     html link
- *   
- *   @details    
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
- *   @since      2024-11-13T16:15:20
+ *  @brief     Build a link to map.
+ *  @details   Build link to external map page
+ *
+ * - Google
+ *
+ *  @param[in] $lat Lattitude as float
+ *  @param[in] $lon Longitude as float
+ *  @param[in] $zoom Zoom level
+ *  @return     html link
+ *  @since      2024-11-13T16:15:20
+ */
+/*
+<!--
+ *  @todo       
+ *  @bug        
+ *  @warning    
+ *  @see        https://
+-->
  */
 function getMapLink( $lat, $lon, $zoom )
 {
@@ -52,23 +49,13 @@ function getMapLink( $lat, $lon, $zoom )
 
 //----------------------------------------------------------------------
 /**
- *   @fn         getMapEmbed
+ *   fn         getMapEmbed
  *   @brief      Build an iframe with map
  *   
  *   @param [in]	$lat	Lattitude as float
  *   @param [in]	$lon	Longitude as float
  *   @param [in]	$zoom	Zoom level
  *   @return     html iframe
- *   
- *   @details    $(More details)
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T16:16:37
  */
 function getMapEmbed( $lat, $lon, $zoom )
@@ -89,28 +76,25 @@ function getMapEmbed( $lat, $lon, $zoom )
 //----------------------------------------------------------------------
 
 /**
- *   @fn         getGps
  *   @brief      Convert EXIF GPS data to float
  *   
- *   @param [in]	$exifCoord	EXIF coordinate
- *   @param [in]	$hemi		GPS Reference ['N','S','E','W']
- *   @return     Coordinate as float
- *   
- *   @details    $(More details)
- *   
- *   @example    
+ *@details       Example:
+ *@code
  *       $exif = exif_read_data($filename);
  *       $lon = getGps($exif["GPSLongitude"], $exif['GPSLongitudeRef']);
  *       $lat = getGps($exif["GPSLatitude"], $exif['GPSLatitudeRef']);
  *       var_dump($lat, $lon);
+ *@endcode
+ *@details       Output:
+ @verbatim
+	float(-33.8751666667)
+	float(151.207166667)
+ @endverbatim
+ *   @details    Float values are use when calling maps
  *
- *   Output:
- *       float(-33.8751666667)
- *       float(151.207166667)
- *
- *   @todo       
- *   @bug        
- *   @warning    
+ *   @param [in] $exifCoord EXIF coordinate
+ *   @param [in] $hemi GPS Reference ['N','S','E','W']
+ *   @return     Coordinate as float
  *   
  *   @see        https://stackoverflow.com/a/2572991 gak
  *   @since      2024-11-13T15:27:47
@@ -129,21 +113,13 @@ function getGps($exifCoord, $hemi)
 //----------------------------------------------------------------------	
 
 /**
- *   @fn         gps2Num
  *   @brief      Reformat GPS to float
  *   
- *   @param [in]	$coordPart	$(description)
- *   @return     $(Return description)
+ *   @param[in]	$coordPart	Coordinates with '/' parts
+ *   @return	Coordinate as float
  *   
- *   @details    $(More details)
+ *   @details    
  *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T15:28:40
  */
 function gps2Num($coordPart) 

@@ -1,8 +1,8 @@
 <?php
 /**
  *   @file       rebuild.php
- *   @brief      $(Brief description)
- *   @details    $(More details)
+ *   @brief      Rebuild database with files and metadata
+ *   @details    Recursive processing file tree
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
@@ -108,7 +108,7 @@ foreach ( $files as $file )
 			$gdThumb	= imagecreatefromstring( $thumb );
 			//if ( $degrees )
 			$gdThumb	= gdReorientateByOrientation( $gdThumb, $exif['IFD0']['Orientation'], $file );
-			$thumb	= stringcreatefromimage( $gdThumb, 'jpg');
+			$thumb		= stringcreatefromimage( $gdThumb, 'jpg');
 		}
 	}
 	
@@ -124,28 +124,34 @@ foreach ( $files as $file )
 				,	$exif['IFD0']['Orientation'] ?? 0
 				,	$crop=0
 				);
+	if ( empty($view) )
+	{
+		$view = file_get_contents($file);
+	}
+
 	$view 		= base64_encode( $view );
 
 	// Update thumb and view
-	debug( sprintf( $dbCfg['sql']['replace_into_images']
-	,	$dirname
-	,	$basename
-	,	$thumb
-	,	$view 
-	)  );
-
-	// Write to table: images
-	$r  = $db->exec( sprintf( 
+	$sql	= sprintf( 
 		$dbCfg['sql']['replace_into_images']
 	,	$dirname
 	,	$basename
 	,	$thumb
 	,	$view 
-	) );
+	);
+	debug( $sql );
+	//echo( $sql );
+
+	// Write to table: images
+	$r  = $db->exec( $sql );
 
 	// Update meta
-	debug( sprintf( $dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson )  );
-	$r  = $db->exec( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson ) );
+	$sql	= sprintf($dbCfg['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
+	debug( $sql  );
+	//echo "\n$sql\n";
+	
+	//$r  = $db->exec( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson ) );
+	$r  = $db->exec( $sql );
 
 	// Display status
 	//fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
@@ -166,11 +172,20 @@ $r  = $db->exec( "COMMIT;" );
 
 //----------------------------------------------------------------------
 
+/**
+ *   @brief      Write all file names to table.
+ *   
+ *   @param [in]	$files	List of file
+ *   @return     VOID
+ *   
+ *   @details    Write all files to database in one transaction
+ *   
+ *   @since      2024-11-14T11:09:35
+ */
 function putFilesToDatabase( $files )
 {
 	global $db;
 	global $dbCfg;
-// Write all files to database
 	verbose( '// Write all file names to table' );
 	$r  = $db->exec( "BEGIN TRANSACTION;" );
 	foreach ( $files as $path )
@@ -179,7 +194,7 @@ function putFilesToDatabase( $files )
 
 		debug( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
 		$r  = $db->exec( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
-		$r  = $db->exec( sprintf($dbCfg['sql']['insert_files'], 'meta', $dirname,$basename ) );
+		//$r  = $db->exec( sprintf($dbCfg['sql']['insert_files'], 'meta', $dirname,$basename ) );
 	}
 	$r  = $db->exec( "COMMIT;" );
 }	// putFilesToDatabase()
@@ -188,7 +203,7 @@ function putFilesToDatabase( $files )
 //----------------------------------------------------------------------
 
 /**
- *   @fn         initDatabase
+ *            initDatabase
  *   @brief      Open or create database w. tables
  *   
  *   @param [in]	&$db	Handle to database
@@ -196,15 +211,11 @@ function putFilesToDatabase( $files )
  *   @param [in]	&$dbCfg	Database schemas from JSON
  *   @return     TRUE if open | FALSE
  *   
- *   @details    
+ *   @details
+ *	* Create database if not exists
+ *      * Create tables
+ *  * Open data if exists
  *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T13:47:53
  */
 function initDatabase( &$db, $dbfile, &$dbCfg )
@@ -214,7 +225,7 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 		verbose( $dbfile, 'Create database:\t');
 		$db	= createSqlDb($dbfile);
 		$r  = $db->exec( $dbCfg['sql']['create_images'] );
-		$r  = $db->exec( $dbCfg['sql']['create_meta'] );
+		//$r  = $db->exec( $dbCfg['sql']['create_meta'] );
 	}
 	else
 	{
@@ -227,22 +238,12 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 //----------------------------------------------------------------------
 
 /**
- *   @fn         ___()
  *   @brief      Localisation function
  *   
  *   @param [in]	$key	Lookup key for local
  *   @param [in]	$lang='en'	Language code [Default:en]
  *   @return     Translation | [$key][$lang]
  *   
- *   @details    
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T13:43:14
  */
 function ___( $key, $lang = 'en' )
@@ -253,7 +254,6 @@ function ___( $key, $lang = 'en' )
 //----------------------------------------------------------------------
 
 /**
- *   @fn         getImagesRecursive
  *   @brief      Get a list of images recursive from root
  *   
  *   @param [in]	$root		Start of search
@@ -262,15 +262,8 @@ function ___( $key, $lang = 'en' )
  *   @param [in]	$allowed=[]	$(description)
  *   @return     TRUE if files found | FALSE
  *   
- *   @details    $(More details)
+ *   @details    Recursive loop from root
  *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T13:44:58
  */
 function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )

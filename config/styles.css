@@ -46,3 +46,7 @@ a {
 	bottom: 0;
 	*/
 }
+.headline {
+	font-weight: bold;
+	color: yellow;
+}

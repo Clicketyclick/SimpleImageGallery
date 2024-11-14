@@ -1,14 +1,24 @@
 {
 	"sql": {
-		"create_images": "CREATE TABLE IF NOT EXISTS images (\n\n    path    TEXT not null,\n    file    TEXT not null,\n    thumb   TEXT,\n    display TEXT,\n    PRIMARY KEY (path,file)\n)",
+		"_create_images": "CREATE TABLE IF NOT EXISTS images (\n\n    path    TEXT not null,\n    file    TEXT not null,\n    thumb   TEXT,\n    display TEXT,\n    PRIMARY KEY (path,file)\n)",
+		"create_images": "CREATE TABLE IF NOT EXISTS images (\n\n    path    TEXT not null,\n    file    TEXT not null,\n    exif    TEXT,\n    iptc    TEXT,\n    thumb   TEXT,\n    display TEXT,\n    PRIMARY KEY (path,file)\n)",
 		"create_images_idx": "CREATE INDEX idx_images ON images(\n    path, file\n);\nCREATE INDEX idx_images_path ON images(\n    path\n);\n",
-
-		"create_meta": "CREATE TABLE IF NOT EXISTS meta (\n    path    TEXT not null,\n    file    TEXT not null,\n    exif    TEXT,\n    iptc    TEXT,\n    PRIMARY KEY (path,file))",
-		"create_meta_idx": "CREATE INDEX idx_meta_file ON meta( path, file );\nCREATE INDEX idx_meta_path ON meta( path );\nCREATE INDEX idx_meta_exif ON meta( exif );\nCREATE INDEX idx_meta_iptc ON meta( iptc );",
+		"_create_meta": "CREATE TABLE IF NOT EXISTS meta (\n    path    TEXT not null,\n    file    TEXT not null,\n    exif    TEXT,\n    iptc    TEXT,\n    PRIMARY KEY (path,file))",
+		"_create_meta_idx": "CREATE INDEX idx_meta_file ON meta( path, file );\nCREATE INDEX idx_meta_path ON meta( path );\nCREATE INDEX idx_meta_exif ON meta( exif );\nCREATE INDEX idx_meta_iptc ON meta( iptc );",
 		"create_dir_list": "CREATE TABLE IF NOT EXISTS sfpg_dir (\n    path        TEXT,\n    dirDirs     INTEGER,    -- No of subdirs\n    dirImages   INTEGER,    -- No of images in current dir\n    dirFiles    INTEGER,    -- No of files in current dir\n    dirTime     INTEGER,    -- Timestamp\n    dirThumb    BLOB,       -- Thumbnail for directory\n}",
 		"insert_files": "INSERT OR IGNORE INTO %s( path, file ) VALUES( '%s','%s' );",
 		"replace_into_images": "REPLACE INTO images( path, file, thumb, display ) VALUES( '%s', '%s', '%s' , '%s');",
-		"replace_into_meta": "REPLACE INTO meta( path, file, exif, iptc ) VALUES( '%s', '%s', '%s' , '%s');",
+
+
+		"_replace_into_meta": "REPLACE INTO meta( path, file, exif, iptc ) VALUES( '%s', '%s', '%s' , '%s');",
+		"_replace_into_meta": "REPLACE INTO images( path, file, exif, iptc ) VALUES( '%s', '%s', '%s' , '%s');",
+		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE path like '%s'\nAND\nfile like '%s';",
+		
+		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
+		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
+		"select_thumb": "SELECT path, file, thumb FROM IMAGES WHERE path like '%s'",
+		"select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
+		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
 		"dummy": ""
 	}
 }

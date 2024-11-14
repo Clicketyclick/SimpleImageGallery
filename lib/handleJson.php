@@ -40,19 +40,13 @@ define("JSON_ENCODE_FLAGS", JSON_INVALID_UTF8_SUBSTITUTE
 //---------------------------------------------------------------------
 
 /**
- *  @fn         isJson
+ *	isJson
  *  @brief      Test if string is a valid JSON
  *  
  *  @param [in] $string JSON string
  *  @return     TRUE if JSON, else FALSE
  *  
  *  @details    Simple match with boolean result
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
  *  
  *  @see       https://stackoverflow.com/a/6041773/7485823
  *  @since     2023-06-16T07:28:27 / Bruger
@@ -65,19 +59,12 @@ function isJson($string) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        file_get_json
  *  @brief     Reads entire JSON file into a struct
  *  
  *  @param [in] $file Description for $file
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *  @details   Similar to file_get_contents() but decodes the JSON
  *  
  *  @see       https://
  *  @since     2023-03-08T11:19:43 / Bruger
@@ -109,22 +96,14 @@ function file_get_json( $file ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        file_put_json
  *  @brief     Write a structure to a JSON file
  *  
  *  @param [in] $file   File to write to
  *  @param [in] $data   Struct to write
  *  @return    Return description
  *  
- *  @details   More details
+ *  @details   Similar to file_put_contents() but encodes the JSON
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-08T11:19:43 / Bruger
  */
 function file_put_json( $file, $data ) {
@@ -146,8 +125,9 @@ function file_put_json( $file, $data ) {
 
 //---------------------------------------------------------------------
 
+if (PHP_VERSION_ID < 80300) { // Internal command PHP v. 8.3+
 /**
- *  @fn         json_validate
+ *              json_validate
  *  @brief      Full program to check the exact JSON ERROR
  *  
  *  @param [in] $string JSON string
@@ -155,13 +135,13 @@ function file_put_json( $file, $data ) {
  *  
  *  @details    
  *      Testing with Valid JSON INPUT
- *      
+ *@code      
  *      	$json = '[{"user_id":13,"username":"stack"},{"user_id":14,"username":"over"}]';
  *      	$output = json_validate($json);
  *      	print_r($output);
- *      
+ *@endcode
  *      Valid OUTPUT
- *      
+@verbatim
  *      	Array
  *      	(
  *      		[0] => stdClass Object
@@ -176,12 +156,15 @@ function file_put_json( $file, $data ) {
  *      				[username] => over
  *      			)
  *      	)
- *      
+@endverbatim
+ *  @details    
  *      Testing with invalid JSON
- *      
+ *@code      
  *      	$json = '{background-color:yellow;color:#000;padding:10px;width:650px;}';
  *      	$output = json_validate($json);
  *      	print_r($output);
+ *@endcode
+ *  @details    
  *      	Invalid OUTPUT
  *      
  *      	Syntax error, malformed JSON.
@@ -189,24 +172,17 @@ function file_put_json( $file, $data ) {
  *      Extra note for (PHP >= 5.2 && PHP < 5.3.0)
  *      
  *      Since json_last_error is not supported in PHP 5.2, you can check if the encoding or decoding returns boolean FALSE. Here is an example
- *      
+ *@code     
  *      	// decode the JSON data
  *      	$result = json_decode($json);
  *      	if ($result === FALSE) {
  *      		// JSON is invalid
  *      	}
- *
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
+ *@endcode
  *  @author		Madan Sapkota https://stackoverflow.com/users/782535/madan-sapkota
  *  @see       	https://stackoverflow.com/a/15198925/7485823
  *  @since     	2023-06-15T07:27:02 / Bruger
  */
-if (PHP_VERSION_ID < 80300) { // Internal command PHP v. 8.3+
 function json_validate($string, $associative = TRUE, $max_depth	= 512)
 {
     // decode the JSON data
@@ -290,20 +266,18 @@ function json_validate($string, $associative = TRUE, $max_depth	= 512)
 
 
 /**
- *  @fn        array_diff_assoc_recursive
+ *              array_diff_assoc_recursive
  *  @brief      Computes the difference of arrays - recursive
  *  
  *  @param [in] $aArray1 	Primary array
  *  @param [in] $aArray2 	Secondary array
- *  @return    an array containing all the entries from array that are not present in any of the other arrays. Keys in the array array are preserved.
+ *  @return    array with diff values
  *  
- *  @details   More details
+ *  @details   Returns an array containing all the entries from array 
+ *  	that are not present in any of the other arrays. 
+ *		Keys in the array array are preserved.
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   Original: arrayRecursiveDiff()
+ *  @note   Original: arrayRecursiveDiff()
  *  
  *  @see       https://www.php.net/manual/en/function.array-diff.php#91756
  *  @since     2023-08-29T17:12:47 / erba
@@ -332,7 +306,7 @@ function array_diff_assoc_recursive($aArray1, $aArray2) {
 //---------------------------------------------------------------------
 
  /**
- *  @fn        ksort_recursive
+ *  fn        ksort_recursive
  *  @brief      Sort an array by key in ascending order recursive
  *  
  *  @param [in] $array 	Associative array to be sorted
@@ -340,11 +314,9 @@ function array_diff_assoc_recursive($aArray1, $aArray2) {
  *  
  *  @details   Implements ksort recursive
  *  
- *  @example   ksort_recursive($data);print_r($data);
- *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *@code
+ *		ksort_recursive($data);print_r($data);
+ *@endcode  
  *  
  *  @see       https://stackoverflow.com/a/15669150 PHP sort array alphabetically
  *  @since     2013-03-27T20:49:00 / [Baba](https://stackoverflow.com/users/1226894/baba)
@@ -360,21 +332,13 @@ function array_diff_assoc_recursive($aArray1, $aArray2) {
 
 
 /**
- *   @fn         xml2json
+ *   fn         xml2json
  *   @brief      Convert XML structure to JSON
  *   
  *   @param [in]	$xml	XML structure
  *   @param [in]	$struct	Return JSON string or PHP data structure
  *   @return     TRUE:	PHP data structure
  *               FALSE:	JSON string
- *   
- *   @details    
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
  *   
  *   @see        https://sergheipogor.medium.com/convert-xml-to-json-like-a-pro-in-php-603d0a3351f1
  *   @since      2024-11-04T13:03:56

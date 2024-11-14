@@ -60,7 +60,10 @@ if ( empty( $_REQUEST['path']) )
 	$_REQUEST['path'] = '%';
 
 //echo "<span title='Subdirs to'>&#x1F4C2; {$_REQUEST['path']}</span>:\n";
-$dirs	= querySql( $db, "SELECT DISTINCT path FROM images WHERE path LIKE '{$_REQUEST['path']}%'");
+$sql	= sprintf( $dbCfg['sql']['select_path'], $_REQUEST['path']  );
+$dirs	= querySql( $db, $sql );
+
+//"SELECT DISTINCT path FROM images WHERE path LIKE '%s%%'"
 $tree	= buildDirTree( $dirs );
 verbose( "<br>tree:<br>" );
 debug( $tree );
@@ -84,7 +87,8 @@ echo "</pre><br clear=both><hr>";
 
 if( empty($_REQUEST['show']) )
 {	// Thumb list
-	$sql 	= "SELECT path, file, thumb FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
+	//$sql 	= "SELECT path, file, thumb FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
+	$sql	= sprintf($dbCfg['sql']['select_thumb'], $_REQUEST['path'] );
 	debug( $sql );
 	$files	= querySql( $db, $sql );
 	debug( "Files:<pre>" );
@@ -99,7 +103,8 @@ if( empty($_REQUEST['show']) )
 else
 {	// Show image
 	$prev	= $next	= FALSE;
-	$sql 	= "SELECT path, file FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
+	//$sql 	= "SELECT path, file FROM IMAGES WHERE path like '{$_REQUEST['path']}'";
+	$sql	= sprintf($dbCfg['sql']['select_path_file'], $_REQUEST['path'] );
 	debug( $sql );
 	$files	= querySql( $db, $sql );
 	debug("Files:<pre>");
@@ -117,7 +122,8 @@ else
 				$next	= $files[$no+1]['file'];
 		}
 	}
-	$sql 	= "SELECT path, file, display FROM IMAGES WHERE path like '{$_REQUEST['path']}' AND file like '{$_REQUEST['show']}'";
+	//$sql 	= "SELECT path, file, display FROM IMAGES WHERE path like '{$_REQUEST['path']}' AND file like '{$_REQUEST['show']}'";
+	$sql	= sprintf($dbCfg['sql']['select_display'], $_REQUEST['path'], $_REQUEST['show'] );
 	debug( $sql );
 	//echo "<br>\n";
 	$file	= querySql( $db, $sql );
@@ -262,14 +268,16 @@ Implement as figure
 */
 function show_thumb( $filedata )
 {
+	global $dbCfg;
 	$output	= '';
 	global $db;
-	$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	//$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	//$meta	= querySql( $db, "SELECT exif, iptc FROM images WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	$sql	= sprintf( $dbCfg['sql']['select_meta'], $filedata['file'], $filedata['path'] );
+	$meta	= querySql( $db, $sql );
 	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
 
-	//$output	.= sprintf( "%s<a href='?path={$filedata['path']}&show={$filedata['file']}'><img class='cover' src='data:jpg;base64, %s' style='float: right;' title='%s'></a>"
 	$output	.= sprintf( "<figure style='float: left;border=1;' width=32px><figcaption><small>%s</small></figcaption><a href='?path={$filedata['path']}&show={$filedata['file']}'><img class='cover' src='data:jpg;base64, %s' title='%s'></a></figure>"
-	//,	$filedata['path'] . '/<br>' . $filedata['file']
 	,	$filedata['file']
 	,	$filedata['thumb']
 	,	$filedata['path'] . '/' . $filedata['file'] 
@@ -289,16 +297,39 @@ function show_thumb( $filedata )
 	return( $output );
 }
 //----------------------------------------------------------------------
+/*
+//https://stackoverflow.com/a/1320156
+function _array_flatten(array $array) {
+    $return = array();
+    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+    return $return;
+}
+/*
+function array_reduce(array_keys($arr), function($carry, $key)use($arr)
+{
+    $carry[] = $key;
+    $carry[] = $arr[$key];
+    return $carry;
+}, array()
+);
+*/
+/**/
 
 function show_image( $filedata )
 {
 	$output	= '';
 	global $db;
+	global $dbCfg;
 	debug( $filedata['file']);
 	debug( $filedata['path'] );
 	
-	$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	//$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	//$meta	= querySql( $db, "SELECT exif, iptc FROM images WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	$sql	= sprintf( $dbCfg['sql']['select_meta'], $filedata['file'], $filedata['path'] );
+	$meta	= querySql( $db, $sql );
+	debug( $sql );
 	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
+	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 
 	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
 	//,	$filedata['path'] . '/ ' . $filedata['file']
@@ -306,15 +337,22 @@ function show_image( $filedata )
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
 
+	// Header
+	$output .= "<span class='headline'>{$iptc['Headline'][0]}</span><br>";
+	$output .= $iptc['Caption-Abstract'][0];
+	
+	$output .= "<br><small>"
+	.	implode( ', ', $iptc['SupplementalCategories'])
+	.	"</small>";
+
 	// EXIF
 	$output	.= "<details><summary>&#x1F5BB;EXIF</summary><pre>";
 	$output	.= var_export( $exif, TRUE );
 	$output	.= "</pre></details>";
 
 	// IPTC
-	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 	$output	.= "<details><summary>&#x1F5BA;IPTC</summary><pre>";
-	$output	.= var_export( $iptc, TRUE );
+	$output	.= var_export( array_flatten2($iptc), TRUE );
 	$output	.= "</pre></details>";
 
 	// Flag
@@ -338,6 +376,59 @@ function show_image( $filedata )
 	$output	.= "<br clear=both><hr>";
 	
 	return( $output );
+}
+
+/**
+ *   @brief      reduce complexity of array
+ *   
+ *   @param [in]	)	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    Reduce sub arrays with only one entry to string
+ *   
+@code
+$a	=' {"Multi entries":["entry1","entry2"],"Single entry":["Just one"]}';
+$b	= json_decode( $a, TRUE, 512, JSON_OBJECT_AS_ARRAY | JSON_INVALID_UTF8_IGNORE );
+
+var_export( $b );
+echo PHP_EOL;
+var_export( array_flatten2($b) );
+@codeend
+
+@verbatim
+array (
+  'Multi entries' =>
+  array (
+    0 => 'entry1',
+    1 => 'entry2',
+  ),
+  'Single entry' =>
+  array (
+    0 => 'Just one',
+  ),
+)
+array (
+  'Multi entries' =>
+  array (
+    0 => 'entry1',
+    1 => 'entry2',
+  ),
+  'Single entry' => 'Just one',
+)
+@verbatimend
+ *   
+ *   @since      2024-11-14T13:39:47
+ */
+
+function array_flatten2( $arr, $out=array() )  {
+	foreach( $arr as $key => $item ) {
+		if ( is_array( $item ) && 1 < count( $item ) ) {
+			$out[$key] = $item;
+		} else {
+			$out[$key] = $item[0];
+		}
+	}
+	return $out;
 }
 
 //----------------------------------------------------------------------

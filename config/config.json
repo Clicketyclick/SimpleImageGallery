@@ -11,7 +11,9 @@
 		"thumb_max_width": 300,
 		"thumb_max_height": 300,
 		"display_max_width": 4200,
-		"display_max_height": 4200
+		"_display_max_width": 1200,
+		"display_max_height": 4200,
+		"_display_max_height": 1200
 	},
 	"exif": {
 		"exif_map_tag": "See on Google map",

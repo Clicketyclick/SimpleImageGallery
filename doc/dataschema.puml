@@ -1,0 +1,34 @@
+@startuml
+json images_json {
+   "path": "Directory relative",
+   "file":"File name",
+   "thumb": "Thumbnail",
+   "display": "Display image"
+}
+
+json sfpg_dir_json {
+   "path":"Directory relative",
+    "dirDirs": "No of subdirs",
+    "dirImages": "No of images in current dir",
+    "dirFiles": "No of files in current dir",
+    "dirTime": "Timestamp",
+    "dirThumb": "Thumbnail for directory"
+}
+
+
+class images {
+   "path": TEXT "Directory relative",
+   "file": TEXT "File name",
+   "thumb": BLOB "Thumbnail",
+   "display": BLOB "Display image"
+}
+
+class sfpg_dir {
+   "path": TEXT "Directory relative",
+    "dirDirs": INTEGER "No of subdirs",
+    "dirImages": INTEGER "No of images in current dir",
+    "dirFiles": INTEGER "No of files in current dir",
+    "dirTime": DATE "Timestamp",
+    "dirThumb": BLOB "Thumbnail for directory"
+}
+@enduml
