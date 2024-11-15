@@ -71,6 +71,22 @@
 		"2#231": { "tag": "DocumentHistory", "writable": "string[0,256]", "note": "" },
 		"2#232": { "tag": "ExifCameraInfo", "writable": "string[0,4096]", "note": "" },
 		"2#255": { "tag": "CatalogSets", "writable": "string[0,256]+", "note": "" },
+
+		"1#000": { "tag": "EnvelopeRecordVersion", "writable": "0", "note": "" },
+		"1#005": { "tag": "Destination", "writable": "0", "note": "" },
+		"1#020": { "tag": "FileFormat", "writable": "0", "note": "" },
+		"1#022": { "tag": "FileVersion", "writable": "int16u", "note": "" },
+
+
+		"1#022": { "tag": "FileVersion", "writable": "int16u", "note": "" },
+		"1#030": { "tag": "ServiceIdentifier", "writable": "string[0,10]", "note": "" }, 
+		"1#040": { "tag": "EnvelopeNumber", "writable": "digits[8]", "note": "" },
+		"1#050": { "tag": "ProductID", "writable": "string[0,32]+", "note": "" },
+		"1#060": { "tag": "EnvelopePriority", "writable": "digits[1]", "note": "0 = 0 (reserved) 1 = 1 (most urgent) 2 = 2 3 = 3 4 = 4 5 = 5 (normal urgency) 6 = 6 7 = 7 8 = 8 (least urgent) 9 = 9 (user-defined priority)" },
+
+		"1#070": { "tag": "DateSent", "writable": "digits[8]", "note": "" },
+		"1#080": { "tag": "TimeSent", "writable": "string[11]", "note": "" },
+
 		"1#090": { "tag": "CodedCharacterSet", "writable": "0", "note": "Esc % G = UTF-8" }
 	},
 	"xmp": {
