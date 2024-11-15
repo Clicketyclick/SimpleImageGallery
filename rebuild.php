@@ -10,8 +10,13 @@
  *   @version    2024-11-11T06:14:36
  */
 
+// Parse cli arguments and insert into $_REQUEST
+parse_cli2request();
+
 // Get DoxyIT header
 preg_match('/\/\*\*(.*?)\*\//s', implode( '', file( __FILE__ )), $match); fputs( STDERR, $match[1] . PHP_EOL );
+
+register_shutdown_function('shutdown');
 
 // Dummy root
 $releaseroot	= __DIR__ . '/';
@@ -22,6 +27,7 @@ include_once('lib/handleJson.php');
 include_once('lib/imageResize.php');
 include_once('lib/handleSqlite.php');
 include_once('lib/iptc.php');
+include_once('lib/jsondb.php');
 
 // Verbose and debug
 $GLOBALS['verbose']	= 1;
@@ -32,6 +38,30 @@ $cfg		= file_get_json( 'config/config.json' );
 $local		= file_get_json( 'config/local.json' );
 $dbCfg		= file_get_json( 'config/database.json' );
 $metatags	= file_get_json( 'config/meta.json' );
+
+// Parse CLI / $_REQUEST
+/*
+-cfg:images:image_resize_type=scale
+resized
+resampled
+
+*/
+foreach ( $_REQUEST as $cmd => $cmdvalue )
+{
+	if ( str_starts_with( $cmd, 'cfg' ) )
+	{
+		setPathKey( array_slice(explode(':', $cmd ), 1), $cfg, $cmdvalue);
+	}
+}
+
+
+function status( $tag, $value )
+{
+	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
+}
+
+status( "Image resize type", $cfg['images']['image_resize_type'] );
+debug( $cfg, 'Config after $_REQUEST' );
 
 // Init global variables
 $files		= [];
@@ -60,27 +90,32 @@ verbose( '// Write meta data for each file' );
 $count	= 0;
 $r  = $db->exec( "BEGIN TRANSACTION;" );
 
+$starttime	= microtime( TRUE );
 //foreach ( $files as $path )
 foreach ( $files as $file )
 {
+	$currenttime	= microtime( TRUE );
+	++$count;
+
 	//['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
 	['basename' => $basename, 'dirname' => $dirname] = pathinfo( $file );
 	//$file	= "$dirname/$basename";
 	$note	= "";
-	++$count;
 	debug( $file );
 
+	//debug(microtime( TRUE ) - $currenttime, "\nStart");
 	// Get image dimentions
 	list($width, $height, $type, $attr) = getimagesize($file);
-
+	//debug(microtime( TRUE ) - $currenttime, 'Get image dimentions');
 	// Get EXIF
 	$exif 		= exif_read_data( $file, 0, true);
 	$exifjson 	= json_encode_db( $exif );
 	debug($exifjson, 'EXIF_json');
-
+	//debug(microtime( TRUE ) - $currenttime, 'EXIF_json');
 	// Get IPTC
 	$iptc		= parseIPTC( $file );
     $iptcjson 	= json_encode_db( $iptc );
+	//debug(microtime( TRUE ) - $currenttime, 'IPTC_json');
 	debug($iptcjson, 'IPTC_json');
 
 	// Get thumbnail
@@ -98,7 +133,8 @@ foreach ( $files as $file )
 			,	$cfg['images']['thumb_max_width']
 			,	$cfg['images']['thumb_max_height']
 			,	$exif['IFD0']['Orientation'] ?? 0
-			,	$crop=0
+			,	$cfg['images']['image_resize_type']
+			,	$cfg['images']['crop']
 			);
 	}
 	else
@@ -111,7 +147,7 @@ foreach ( $files as $file )
 			$thumb		= stringcreatefromimage( $gdThumb, 'jpg');
 		}
 	}
-	
+	//debug(microtime( TRUE ) - $currenttime, 'get thumb');
 	// Rotate EXIF
 	$thumb 		= base64_encode( $thumb );
 
@@ -122,13 +158,14 @@ foreach ( $files as $file )
 				,	$cfg['images']['display_max_width']
 				,	$cfg['images']['display_max_height']
 				,	$exif['IFD0']['Orientation'] ?? 0
+				,	$cfg['images']['image_resize_type']
 				,	$crop=0
 				);
 	if ( empty($view) )
 	{
 		$view = file_get_contents($file);
 	}
-
+	//debug(microtime( TRUE ) - $currenttime, 'view resize');
 	$view 		= base64_encode( $view );
 
 	// Update thumb and view
@@ -139,7 +176,7 @@ foreach ( $files as $file )
 	,	$thumb
 	,	$view 
 	);
-	debug( $sql );
+	//debug( $sql );
 	//echo( $sql );
 
 	// Write to table: images
@@ -147,28 +184,34 @@ foreach ( $files as $file )
 
 	// Update meta
 	$sql	= sprintf($dbCfg['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
-	debug( $sql  );
+	//debug( $sql  );
 	//echo "\n$sql\n";
 	
 	//$r  = $db->exec( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson ) );
 	$r  = $db->exec( $sql );
 
+	//debug(microtime( TRUE ) - $currenttime, 'DB write');
+	
 	// Display status
 	//fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
-	verbose( sprintf( "[%-35.35s] [%s] %sx%s %s %s %s"
+	verbose( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
+		,	$count
+		,	count( $files )
 		,	$exif['FILE']['FileName']
 		,	date( 'c', $exif['FILE']['FileDateTime'] )
 		,	$exif['COMPUTED']['Width']
 		,	$exif['COMPUTED']['Height']
 		,	$exif['FILE']['MimeType']
 		,   $count . ':'. ( $exif['IFD0']['Orientation'] ?? '?')
-		,	$note
+		,   number_format( microtime( TRUE ) - $currenttime, 2) . 'sec. '.$note
 	)
 	,	"Image: "
 	);
 }
+
 $r  = $db->exec( "COMMIT;" );
 
+//echo PHP_EOL . "Images processed: ". $count;
 
 //----------------------------------------------------------------------
 
@@ -199,7 +242,6 @@ function putFilesToDatabase( $files )
 	$r  = $db->exec( "COMMIT;" );
 }	// putFilesToDatabase()
 
-
 //----------------------------------------------------------------------
 
 /**
@@ -222,14 +264,15 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 {
 	if ( ! file_exists( $dbfile ) )
 	{
-		verbose( $dbfile, 'Create database:\t');
+		verbose( $dbfile, "Create database:\t" );
 		$db	= createSqlDb($dbfile);
 		$r  = $db->exec( $dbCfg['sql']['create_images'] );
 		//$r  = $db->exec( $dbCfg['sql']['create_meta'] );
 	}
 	else
 	{
-		verbose( $dbfile, 'Opening database:\t');
+		//verbose( $dbfile, "Opening database:\t");
+		status("Opening database",  $dbfile);
 		$db	= openSqlDb($dbfile);
 	}
 	return( ! empty( $db ) );
@@ -287,5 +330,67 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 }	// getImagesRecursive()
 
 //----------------------------------------------------------------------
+
+
+/**
+ *   @brief      Run at shutdown
+ *   
+ *   @param [in]		$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    
+ *    This is our shutdown function, in 
+ *    here we can do any last operations
+ *    before the script is complete.
+ *   
+ *   @since      2024-11-15T13:28:32
+ */
+function shutdown( )
+{
+	/*
+	if ( ! empty($args) )
+	{
+		echo PHP_EOL . implode( "\n", $args ) . PHP_EOL ;
+	}
+	* /
+	echo PHP_EOL . "Images processed: ". $GLOBALS['count'];
+	echo PHP_EOL . "Runtime: " . microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"] .  PHP_EOL;
+    echo PHP_EOL . 'Script executed with success', PHP_EOL;
+	*/
+	fputs( STDERR, "\n");
+	status( "Images processed", $GLOBALS['count']);
+	status( "Runtime ", microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"] );
+
+}	// shutdown()
+
+//----------------------------------------------------------------------
+
+
+/**
+ *  @brief     Parse cli arguments and insert into $_REQUEST
+ *  
+ *  @details   Store in global variable
+ *  
+@code
+parse_cli2request(); var_export( $_REQUEST );
+@endcode
+ *  
+ *  @see       https://stackoverflow.com/a/37600661
+ *  @since     2024-06-25T09:09:12 / erba
+ */
+function parse_cli2request()
+{
+    global $argv;
+    
+    // CLI or HTTP
+    // https://stackoverflow.com/a/37600661
+    if (php_sapi_name() === 'cli') {
+        // Remove '-' and '/' from keys
+        for ( $x = 0 ; $x < count($argv) ; $x++ )
+            $argv[$x]   = ltrim($argv[$x], '-/');
+        // Concatenate and parse string into $_REQUEST
+        parse_str(implode('&', array_slice($argv, 1)), $_REQUEST);
+    }
+}   // parse_cli2request()
 
 ?>
