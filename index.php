@@ -7,7 +7,7 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:19 / ErBa
- *   @version    2024-11-14T08:45:54
+ *   @version    2024-11-15T01:05:42
  */
 
 echo '
@@ -18,35 +18,47 @@ echo '
   <link rel="stylesheet" href="config/styles.css">
 
 <script>
-document.onkeydown = function (e) { 
-  e = e || window.event; 
-  var charCode = e.charCode || e.keyCode, 
-      character = String.fromCharCode(charCode); 
+//>>> Keybord events
+	document.onkeydown = function (e) { 
+		e = e || window.event; 
+		var charCode = e.charCode || e.keyCode, 
+			character = String.fromCharCode(charCode); 
 
-  console.log(character+"_"+charCode);
-};
-
-/*
-charCode
-37	left
-38	up
-39	right
-
-
-*/
-
+	  //console.log(character+"_"+charCode);
+	  
+	  switch(charCode) {
+			case 37:// Left / Previous
+				if (typeof(prev_image) === typeof(Function) )
+					prev_image();
+				break;
+			case 38:// Up / Close
+				// Close
+				if (typeof(close_image) === typeof(Function) )
+					close_image();
+				break;
+			case 39:// Right / Next
+				if (typeof(next_image) === typeof(Function) )
+					next_image();
+				break;
+			default:
+				// code block
+		}
+	  
+	};
+//<<< Keybord events
 
 </script>
 </head>
 <body>
-
 ';
+
 $releaseroot	= __DIR__ . '/';
 include_once( 'lib/handleJson.php');
 include_once( 'lib/handleSqlite.php');
 include_once( 'lib/debug.php');
 include_once( 'lib/map.php');
 
+$verbose=1;
 //$debug=1;
 
 $cfg		= file_get_json( 'config/config.json' );
@@ -59,28 +71,55 @@ $db	= openSqlDb($cfg['database']['file_name']);
 if ( empty( $_REQUEST['path']) )
 	$_REQUEST['path'] = '%';
 
-//echo "<span title='Subdirs to'>&#x1F4C2; {$_REQUEST['path']}</span>:\n";
+//"SELECT DISTINCT path FROM images WHERE path LIKE '%s%%'"
 $sql	= sprintf( $dbCfg['sql']['select_path'], $_REQUEST['path']  );
 $dirs	= querySql( $db, $sql );
 
-//"SELECT DISTINCT path FROM images WHERE path LIKE '%s%%'"
 $tree	= buildDirTree( $dirs );
-verbose( "<br>tree:<br>" );
-debug( $tree );
+debug( $tree, 'tree' );
 
 
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
-echo "Breadcrumps: ";
+echo "Breadcrumbs: ";
 echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', '/' );
 echo '/'. basename($_REQUEST['path']);
 echo "<br>";
 
+// Get subdirectories to current directory
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
 
 foreach( $subdirs as $subdir )
 {
 	$dir	= pathinfo( $subdir, PATHINFO_BASENAME);
-	echo "<a href='?path=$subdir'>&#x1F4C1;$dir</a> ";
+	//echo "<a href='?path=$subdir'>&#x1F4C1;$dir</a> ";
+	
+	
+	// get newest image 	"newest_picture_in_path"
+	$sql	= sprintf( $dbCfg['sql']['newest_picture_in_path'], $_REQUEST['path'] .'/'. $dir );
+	//var_export($sql);//exit;
+	$newestthumb	= querySql( $db, $sql );
+	$newestthumb	= $newestthumb[0];
+//var_export($newestthumb['file']);exit;
+//var_export($newestthumb);exit;
+	
+	
+	printf( "
+	<figure class='subfolder'>
+		<figcaption>&#x1F4C1;<small>%s</small></figcaption>
+		<a href='?path={$subdir}'>
+			<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>
+		</a>
+	</figure>"
+	//,	$newestthumb['file']
+	,	$dir
+	,	$newestthumb['thumb']
+	,	$newestthumb['path'] . '/' . $newestthumb['file'] 
+	);
+	
+	
+	
+	//echo "<a href='?path=$subdir'>&#x1F4C1;$dir</a> ";
+	
 }
 
 echo "</pre><br clear=both><hr>";
@@ -98,7 +137,6 @@ if( empty($_REQUEST['show']) )
 	{
 		echo show_thumb( $filedata );
 	}
-
 }
 else
 {	// Show image
@@ -125,22 +163,53 @@ else
 	//$sql 	= "SELECT path, file, display FROM IMAGES WHERE path like '{$_REQUEST['path']}' AND file like '{$_REQUEST['show']}'";
 	$sql	= sprintf($dbCfg['sql']['select_display'], $_REQUEST['path'], $_REQUEST['show'] );
 	debug( $sql );
-	//echo "<br>\n";
+
 	$file	= querySql( $db, $sql );
 	debug("Files:<pre>");
 	debug($file[0]);
 	debug("</pre>" );
-	//echo $prev ? "prev: $prev" : "no prev: $prev";
-	echo $prev ? "[<a href='?path={$_REQUEST['path']}&show=$prev'>prev</a>] " : "[<s>prev</s>] $prev ";
-	echo $next ? "[<a href='?path={$_REQUEST['path']}&show=$next'>next</a>] " : "[<s>next</s>] $next ";
-	echo "[<a href='?path={$_REQUEST['path']}'>Close</a>] ";
+	// Previous
+	echo $prev ? "[<a href='?path={$_REQUEST['path']}&show=$prev'>prev</a>] 
+	<script>
+		function prev_image() { 
+			console.log( '?path={$_REQUEST['path']}&show=$prev' ); 
+			document.location.href = '?path={$_REQUEST['path']}&show=$prev';
+		}
+	</script>
+	" : "[<s>prev</s>] $prev  
+	<script>
+		function prev_image(){
+			console.log('skip prev')
+		}
+	</script>";
+	// Next
+	echo $next ? "[<a href='?path={$_REQUEST['path']}&show=$next'>next</a>]
+	<script>
+		function next_image() { 
+			console.log( '?path={$_REQUEST['path']}&show=$next' ); 
+			document.location.href = '?path={$_REQUEST['path']}&show=$next';
+		}</script>
+	" : "[<s>next</s>] $next 
+	<script>
+		function next_image() {
+			console.log('skip next')
+		}
+	</script>";
+	// Close
+	echo "[<a href='?path={$_REQUEST['path']}'>Close</a>] 
+	<script>
+		function close_image() { 
+			console.log( '?path={$_REQUEST['path']}&show=$next' ); 
+			document.location.href = '?path={$_REQUEST['path']}';
+		}</script>
+	";
 	echo show_image( $file[0] );
 }
 
 //----------------------------------------------------------------------
 
 /**
- *   @fn         breadcrumbTrail
+ *               breadcrumbTrail
  *   @brief      Build breadcrumb trail
  *   
  *   @param [in]	$path		Path to break up
@@ -148,15 +217,7 @@ else
  *   @return     Trail as HTML string
  *   
  *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
- *<!--
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
- *-->
+ *
  *   @since      2024-11-13T14:15:32
  */
 function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarrow;')
@@ -181,23 +242,12 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarro
 
 
 /**
- *   @fn         breadcrumbs
+ *               breadcrumbs
  *   @brief      Build a breadcrumb trail from a file path
  *   
  *   @param [in]	$path	$(description)
  *   @return     $(Return description)
- *<!--
- *   
- *   @details    $(More details)
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
- *-->
+ *
  *   @since      2024-11-13T14:10:11
  */
 function breadcrumbs( $path )
@@ -214,6 +264,20 @@ function breadcrumbs( $path )
 
 //----------------------------------------------------------------------
 
+
+/**
+ *            	buildDirTree
+ *   @brief     Build directory tree
+ *   
+ *   @param [in]	&$dirs	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    $(More details)
+ *   
+ *   
+ *   @see        https://
+ *   @since      2024-11-15T01:24:07
+ */
 function buildDirTree( &$dirs )
 {
 	$tree		= [];
@@ -238,6 +302,24 @@ function buildDirTree( &$dirs )
 
 //----------------------------------------------------------------------
 
+
+/**
+ *   @brief      Get subdirectories to current directory
+ *   
+ *   @param [in]	$haystack	Haystack of directories
+ *   @param [in]	$current	Current directory
+ *   @return     List of subdirectories to current directory
+ *   
+ *<!--
+ *   @details    
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *-->
+ *   @since      2024-11-15T01:29:30
+ */
 function subdirsToCurrent( $haystack, $current )
 {
 	$pattern	= '/^' . SQLite3::escapeString( str_replace( '/', '\/', $current ) ) . '\/[^\/]*$/i';
@@ -247,76 +329,59 @@ function subdirsToCurrent( $haystack, $current )
 
 //----------------------------------------------------------------------
 
-/*
-
-Implement as figure
-
-<figure class="getrecordfigure" title="{path}{file}">
-<img 
-	class="figureimage" 
-	src="{path}/{thumb}" 
-	onerror="this.onerror=null;this.title+=this.src;this.src=&quot;icons/no_cover_available.jpg&quot;" 
-	onclick="call_sub( 'setSession', 'recno=1&amp;rowno=32' );  "
-	> 
-<br clear="both">
-<figcaption class="getrecordfigurecaption">
-	{file}
-</figcaption>
-</figure>
-
-
-*/
+/**
+ *               show_thumb
+ *   @brief      Build thumb display
+ *   
+ *   @param [in]	$filedata	Source file
+ *   @return     HTML figure
+ *   
+ *   @details    
+ *   
+ *   @see        https://
+ *   @since      2024-11-15T01:31:11
+ */
 function show_thumb( $filedata )
 {
 	global $dbCfg;
-	$output	= '';
 	global $db;
-	//$meta	= querySql( $db, "SELECT exif, iptc FROM meta WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
-	//$meta	= querySql( $db, "SELECT exif, iptc FROM images WHERE file = '{$filedata['file']}' AND path = '{$filedata['path']}'");
+	$output	= '';
+
 	$sql	= sprintf( $dbCfg['sql']['select_meta'], $filedata['file'], $filedata['path'] );
 	$meta	= querySql( $db, $sql );
 	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
 
-	$output	.= sprintf( "<figure style='float: left;border=1;' width=32px><figcaption><small>%s</small></figcaption><a href='?path={$filedata['path']}&show={$filedata['file']}'><img class='cover' src='data:jpg;base64, %s' title='%s'></a></figure>"
+	$output	.= sprintf( "
+	<figure style='float: left;border=1;' width=32px>
+		<figcaption><small>%s</small></figcaption>
+		<a href='?path={$filedata['path']}&show={$filedata['file']}'>
+			<img class='cover' src='data:jpg;base64, %s' title='%s'>
+		</a>
+	</figure>"
 	,	$filedata['file']
 	,	$filedata['thumb']
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
-/*
-	// EXIF
-	$output	.= "<details><summary>EXIF</summary><pre>";
-	$output	.= var_export( $exif, TRUE );
-	$output	.= "</pre></details>";
-	// IPTC
-	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
-	$output	.= "<details><summary>IPTC</summary><pre>";
-	$output	.= var_export( $iptc, TRUE );
-	$output	.= "</pre></details>";
-*/
-	
+
 	return( $output );
 }
 //----------------------------------------------------------------------
-/*
-//https://stackoverflow.com/a/1320156
-function _array_flatten(array $array) {
-    $return = array();
-    array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
-    return $return;
-}
-/*
-function array_reduce(array_keys($arr), function($carry, $key)use($arr)
-{
-    $carry[] = $key;
-    $carry[] = $arr[$key];
-    return $carry;
-}, array()
-);
-*/
-/**/
 
+
+/**
+ *               show_image
+ *   @brief      Build image display
+ *   
+ *   @param [in]	$filedata	Source file
+ *   @return     HTML figure
+ *   
+ *   @details    
+ *   
+ *   @since      2024-11-15T01:32:29
+ */
 function show_image( $filedata )
 {
+	global $cfg;
 	$output	= '';
 	global $db;
 	global $dbCfg;
@@ -338,13 +403,19 @@ function show_image( $filedata )
 	);
 
 	// Header
-	$output .= "<span class='headline'>{$iptc['Headline'][0]}</span><br>";
-	$output .= $iptc['Caption-Abstract'][0];
-	
-	$output .= "<br><small>"
-	.	implode( ', ', $iptc['SupplementalCategories'])
-	.	"</small>";
+	if($iptc)
+	{
+		$headline	= $iptc['Headline'][0] ?? '...';
+		$output .= "<span class='headline'>{$headline}</span><br>";
+		$caption	= $iptc['Caption-Abstract'][0] ?? '';
 
+		$output .= $caption;
+		$supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
+
+		$output .= "<br><small>"
+		.	$supcat
+		.	"</small>";
+	}
 	// EXIF
 	$output	.= "<details><summary>&#x1F5BB;EXIF</summary><pre>";
 	$output	.= var_export( $exif, TRUE );
@@ -369,14 +440,16 @@ function show_image( $filedata )
 		$lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
 		$zoom	= $_REQUEST['zoom'] ?? 15;
 
-		echo getMapLink( $lat, $lon, $zoom );
+		echo getMapLink( $lat, $lon, $zoom, $cfg['maps']['map_source'] );
 		echo " @ $lon,$lat<br>";
-		echo getMapEmbed( $lat, $lon, $zoom );
+		echo getMapEmbed( $lat, $lon, $zoom, $cfg['maps']['map_source'] );
 	}
 	$output	.= "<br clear=both><hr>";
 	
 	return( $output );
 }
+
+//----------------------------------------------------------------------
 
 /**
  *   @brief      reduce complexity of array
@@ -419,7 +492,6 @@ array (
  *   
  *   @since      2024-11-14T13:39:47
  */
-
 function array_flatten2( $arr, $out=array() )  {
 	foreach( $arr as $key => $item ) {
 		if ( is_array( $item ) && 1 < count( $item ) ) {
@@ -429,7 +501,8 @@ function array_flatten2( $arr, $out=array() )  {
 		}
 	}
 	return $out;
-}
+}	// array_flatten2()
 
 //----------------------------------------------------------------------
+
 ?>
