@@ -19,6 +19,8 @@
 		"select_thumb": "SELECT path, file, thumb FROM IMAGES WHERE path like '%s'",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
+		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
+		"oldest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path ASC, file ASC LIMIT 1;",
 		"dummy": ""
 	}
 }

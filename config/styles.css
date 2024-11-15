@@ -21,10 +21,11 @@ a {
 	float: right;
 	max-width: 1200px;
 	max-height: 1000px;
+	max-width: 70%;
+	max-height: 90%;
 	position: absolute; 
 	top: 50px;
 	right: 0;
-	
 }
 
 .flag {
@@ -49,4 +50,20 @@ a {
 .headline {
 	font-weight: bold;
 	color: yellow;
+}
+.subfolder {
+	float: left;
+	border: 1px solid white;
+	max-width:	100px;
+	max-height:	120px;
+	_width:	100px;
+	padding: 2px;
+	margin: 2px;
+}
+.subfolder_icon {
+	float: left;
+	border: 1px solid white;
+	
+	max-width:	100%;
+	max-height:	80px;
 }
