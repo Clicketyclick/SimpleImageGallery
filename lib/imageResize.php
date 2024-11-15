@@ -13,29 +13,24 @@
  
 
 /**
- *   @fn         image_resize
+ *            image_resize
  *   @brief      Resize and rotate image
  *   
  *   @param [in]	$src	Source file
  *   @param [in]	$dst	Image stream
  *   @param [in]	$width	New max width
  *   @param [in]	$height	New max height
+ *   @param [in]	$resizetype		'scale', 'resized' or 'resampled'
  *   @param [in]	$crop=0	Cropping FALSE/TRUE
  *   @return     New image stream
  *   
  *   @details    
  *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
  *   @see        https://www.php.net/manual/en/function.imagecopyresampled.php#104028
  *   @since      2024-11-11T10:18:57
  */
-function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
-
+function image_resize($src, $dst, $width, $height, $orientation, $resizetype = 'scale', $crop=0)
+{
 	if(!list($w, $h) = getimagesize($src))
 	{
 		//return "Unsupported picture type!";
@@ -53,7 +48,6 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 		case 'jpg': $img = imagecreatefromjpeg($src); break;
 		case 'png': $img = imagecreatefrompng($src); break;
 		default : 
-			//return "Unsupported picture type!";
 			trigger_error( "Unsupported picture type: [$type]", E_USER_WARNING );
 			return( FALSE );
 	}
@@ -65,7 +59,9 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 		{
 			//return "Picture is too small!";
 			trigger_error( "Picture is too small: $w < $width or $h < $height", E_USER_WARNING );
-			return( FALSE );
+			verbose( "Picture is too small: $w < $width or $h < $height");
+			//return( $img );
+			//return( FALSE );
 		}
 		$ratio = max($width/$w, $height/$h);
 		$h	= intval($height / $ratio);
@@ -77,8 +73,12 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 		if($w < $width and $h < $height) 
 		{
 			//return "Picture is too small!";
-			trigger_error( "Picture is too small: $w < $width or $h < $height", E_USER_WARNING );
-			return( FALSE );
+			//trigger_error( "Picture is too small: $w < $width or $h < $height", E_USER_WARNING );
+			verbose( "Picture is too small: $w < $width or $h < $height");
+			debug( "Picture is too small: $w < $width or $h < $height");
+			//error_log( "Picture is too small: $w < $width or $h < $height" );
+			//return( $img );
+			//return( FALSE );
 		}
 
 		$ratio	= min($width/$w, $height/$h);
@@ -87,18 +87,30 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 		$x		= 0;
 	}
 
-	$new = imagecreatetruecolor($width, $height);
-
-	// preserve transparency
-	if($type == "gif" or $type == "png")
+	// imagescale() - Scale an image using the given new width and height
+	if ( 'scale' == $resizetype )	// 0,50
 	{
-		imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
-		imagealphablending($new, false);
-		imagesavealpha($new, true);
+		$new	= imagescale( $img, $width, $height, IMG_NEAREST_NEIGHBOUR );
 	}
+	else
+	{	//if ( in_array( $resizetype, ['resampled', 'resized'] ) )
+		$new = imagecreatetruecolor($width, $height);
 
-	imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+		// preserve transparency
+		if($type == "gif" or $type == "png")
+		{
+			imagecolortransparent($new, imagecolorallocatealpha($new, 0, 0, 0, 127));
+			imagealphablending($new, false);
+			imagesavealpha($new, true);
+		}
 
+		// imagecopyresampled() - Copy and resize part of an image with resampling
+		if ( 'resampled' == $resizetype )	// 256,65
+			imagecopyresampled($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+		// imagecopyresized() - Copy and resize part of an image
+		if ( 'resized' == $resizetype )	// 0,76
+			imagecopyresized($new, $img, 0, 0, $x, 0, $width, $height, $w, $h);
+	}
 
 	// Rotate
 /*
@@ -112,30 +124,8 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 8 = Rotate 270 CW
 */
 	$new	= gdReorientateByOrientation( $new, $orientation, $src );
-/*
-	switch($orientation)
-	{
-		case 3:
-			$degrees	= 180;
-			break;
-		case 6:
-			$degrees	= 270;
-			break;
-		case 8:
-			$degrees	= 90;
-			break;
-		default:
-			$degrees	= 0;
-	}
-	if ( $degrees )
-	{
-		 imagerotate($new, 90, 0);
-		//trigger_error( "Rotating $orientation / $degrees", E_USER_NOTICE );
-		debug( "Rotating $orientation / $degrees [$src]" );
-	}
-*/	
+
 	ob_start();
-	
 	switch($type)
 	{
 		case 'bmp': imagewbmp($new); break;
@@ -157,7 +147,7 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
 
 
 /**
- *   @fn         stringcreatefromimage
+ *            	stringcreatefromimage
  *   @brief      Create a string from image stream
  *   
  *   @param [in]	&$new	$(description)
@@ -165,12 +155,6 @@ function image_resize($src, $dst, $width, $height, $orientation, $crop=0){
  *   @return     image string
  *   
  *   @details    The reverse of: imagecreatefromstring — Create a new image from the image stream in the string
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
  *   
  *   @see        https://
  *   @since      2024-11-11T16:43:02
@@ -192,7 +176,29 @@ function stringcreatefromimage( &$new, $type = 'jpg')
 	return( ob_get_clean() );
 }	// stringcreatefromimage
 
+//----------------------------------------------------------------------
 
+/**
+ *   @brief      Reorientate GD image by EXIF orientation
+ *   
+ *   @param [in]	$gdImage		GD Image blob
+ *   @param [in]	$orientation	EXIF orientation
+ *   @param [in]	$note=''		Debug note
+ *   @return     Updated GD Image
+ *   
+ *   @details    
+ * * 1 = Horizontal (normal)
+ * * 2 = Mirror horizontal
+ * * 3 = Rotate 180
+ * * 4 = Mirror vertical
+ * * 5 = Mirror horizontal and rotate 270 CW
+ * * 6 = Rotate 90 CW
+ * * 7 = Mirror horizontal and rotate 90 CW
+ * * 8 = Rotate 270 CW
+ *   
+ *   @see        https://
+ *   @since      2024-11-15T01:06:53
+ */
 function gdReorientateByOrientation( $gdImage, $orientation, $note = '' )
 {
 	switch($orientation)
@@ -216,20 +222,22 @@ function gdReorientateByOrientation( $gdImage, $orientation, $note = '' )
 	}
 
 	return( $gdImage );
-}
+}	// gdReorientateByOrientation()
+
 //----------------------------------------------------------------------
 
-/*
-1 = Horizontal (normal)
-2 = Mirror horizontal
-3 = Rotate 180
-4 = Mirror vertical
-5 = Mirror horizontal and rotate 270 CW
-6 = Rotate 90 CW
-7 = Mirror horizontal and rotate 90 CW
-8 = Rotate 270 CW
-
-*/
+/**
+ *   @brief      Rotate image to file
+ *   
+ *   @param [in]	$filename	Source file
+ *   @param [in]	$degrees	Degrees to rotate
+ *   @param [in]	$out		Target file
+ *   @return     VOID
+ *   
+ *   @details    
+ *   
+ *   @since      2024-11-15T01:10:03
+ */
 function rotateImage( $filename, $degrees, $out )
 {
 //	$rotated_img = imagerotate($src_img, 45, $color)
@@ -241,10 +249,23 @@ function rotateImage( $filename, $degrees, $out )
 
 	// Output
 	imagejpeg($rotate, $out);
-}
+}	// rotateImage()
 
 //----------------------------------------------------------------------
 
+/**
+ *   @brief      Read and resize image
+ *   
+ *   @param [in]	$file			Source file
+ *   @param [in]	$width=1000		New width
+ *   @param [in]	$height=1000	New Height
+ *   @return     new image
+ *   
+ *   @details    
+ *   
+ *   @see        https://
+ *   @since      2024-11-15T01:11:45
+ */
 function getResizedImage( $file, $width = 1000, $height = 1000 )
 {
 	$pathinfo	= pathinfo( $file );
@@ -260,42 +281,6 @@ function getResizedImage( $file, $width = 1000, $height = 1000 )
 	return( $view );
 }	//getResizedImage
 
-/**
- *   @fn         stringcreatefromimage
- *   @brief      Create a string from image stream
- *   
- *   @param [in]	&$new	$(description)
- *   @param [in]	$type='jpg'	$(description)
- *   @return     image string
- *   
- *   @details    The reverse of: imagecreatefromstring — Create a new image from the image stream in the string
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
- *   @since      2024-11-11T16:43:02
- */
-/*
-function stringcreatefromimage( &$new, $type = 'jpg')
-{
-	$type = strtolower($type);
-	if($type == 'jpeg') $type = 'jpg';
-	ob_start();
-	switch($type){
-    case 'bmp': imagewbmp($new); break;
-    case 'gif': imagegif($new); break;
-    case 'jpg': imagejpeg($new); break;
-    case 'png': imagepng($new); break;
-	default : return "Unsupported image type!";
-	}
-	imagejpeg($new);
-	return( ob_get_clean() );
-}	// stringcreatefromimage
-*/
 //----------------------------------------------------------------------
 
 ?>
