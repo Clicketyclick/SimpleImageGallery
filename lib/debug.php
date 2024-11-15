@@ -59,7 +59,8 @@ function debug ( $str, $extend = FALSE )
             ,   var_export( $str, TRUE )
             );
         } else {
-            $msg    = sprintf(  "[%s](%s): %s\n"
+            $msg    = sprintf(  "%s[%s](%s): %s\n"
+			,   basename($backtrace['file'])
             ,   $backtrace['line']
             ,   $backtrace['function']
             ,   var_export( $str, TRUE )
