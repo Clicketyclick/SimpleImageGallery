@@ -32,15 +32,36 @@
  *  @see        https://
 -->
  */
-function getMapLink( $lat, $lon, $zoom )
+function getMapLink( $lat, $lon, $zoom, $map_source )
 {
 	global $cfg;
-	if ($cfg['exif']['exif_map_tag'] and $cfg['exif']['exif_map_link_stub'])
+	
+	$lat_margin_lower	= $cfg['maps']['map_window_margin'];
+	
+	if ( $cfg['maps']['map_types'][$map_source]['tag'] and $cfg['maps']['map_types'][$map_source]['link_stub'])
 	{
 		if (isset( $lat ) && isset( $lon ) )
 		{
-			$tmpStr = sprintf("<a target='_blank' href='{$cfg['exif']['exif_map_link_stub']}'>{$cfg['exif']['exif_map_tag']}</a>");
-			$tmpStr = str_replace( ['{$lat}','{$lon}','{$zoom}'], [$lat,$lon,$zoom], $tmpStr);
+			$mstub	= $cfg['maps']['map_types'][$map_source]['link_stub'];
+			$mtag	= $cfg['maps']['map_types'][$map_source]['tag'];
+			$tmpStr = sprintf("<a target='_blank' href='{$mstub}'>{$mtag}</a>");
+			$tmpStr = str_replace( 
+				[
+					'{$lat}','{$lon}','{$zoom}'
+				,	'{$lat_margin_higher}'
+				,	'{$lon_margin_higher}'
+				,	'{$lat_margin_lower}'
+				,	'{$lon_margin_lower}' 
+				]
+			, 	[
+					$lat,$lon,$zoom
+				,	$lat + $lat_margin_lower
+				,	$lon + $lat_margin_lower
+				,	$lat - $lat_margin_lower
+				,	$lon - $lat_margin_lower
+				]
+			,	$tmpStr
+			);
 		}
 		return($tmpStr);
 	}
@@ -58,15 +79,40 @@ function getMapLink( $lat, $lon, $zoom )
  *   @return     html iframe
  *   @since      2024-11-13T16:16:37
  */
-function getMapEmbed( $lat, $lon, $zoom )
+function getMapEmbed( $lat, $lon, $zoom, $map_source )
 {
 	global $cfg;
-	if ($cfg['exif']['exif_map_tag'] and $cfg['exif']['exif_map_link_stub'])
+	$lat_margin	= $cfg['maps']['map_window_margin'];
+	//if ($cfg['exif']['exif_map_tag'] and $cfg['exif']['exif_map_link_stub'])
+	if ( $cfg['maps']['map_types'][$map_source]['tag'] and $cfg['maps']['map_types'][$map_source]['link_stub'])
 	{
 		if (isset( $lat ) && isset( $lon ) )
 		{
-			$tmpStr = sprintf("<iframe class=\"map_iframe\" src=\"{$cfg['exif']['exif_map_embed_stub']}\"></iframe>" );
-			$tmpStr = str_replace( ['{$lat}','{$lon}','{$zoom}'], [$lat,$lon,$zoom], $tmpStr);
+			$mstub	= $cfg['maps']['map_types'][$map_source]['embed_stub'];
+			//var_export($mstub);
+			$mtag	= $cfg['maps']['map_types'][$map_source]['tag'];
+
+			$tmpStr = sprintf("<iframe class=\"map_iframe\" src=\"{$mstub}\"></iframe>" );
+			//$tmpStr = str_replace( ['{$lat}','{$lon}','{$zoom}'], [$lat,$lon,$zoom], $tmpStr);
+			$tmpStr = str_replace( 
+				[
+					'{$lat}','{$lon}','{$zoom}'
+				,	'{$lat_margin_higher}'
+				,	'{$lon_margin_higher}'
+				,	'{$lat_margin_lower}'
+				,	'{$lon_margin_lower}' 
+				]
+			, 	[
+					$lat
+				,	$lon
+				,	$zoom
+				,	($lat + $lat_margin)
+				,	($lon + $lat_margin)
+				,	($lat - $lat_margin)
+				,	($lon - $lat_margin)
+				]
+			,	$tmpStr
+			);
 		}
 		return($tmpStr);
 	}
