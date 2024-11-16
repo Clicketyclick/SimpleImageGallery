@@ -93,7 +93,7 @@ function getMapEmbed( $lat, $lon, $zoom, $map_source )
 			$mtag	= $cfg['maps']['map_types'][$map_source]['tag'];
 
 			$tmpStr = sprintf("<iframe class=\"map_iframe\" src=\"{$mstub}\"></iframe>" );
-			//$tmpStr = str_replace( ['{$lat}','{$lon}','{$zoom}'], [$lat,$lon,$zoom], $tmpStr);
+
 			$tmpStr = str_replace( 
 				[
 					'{$lat}','{$lon}','{$zoom}'
