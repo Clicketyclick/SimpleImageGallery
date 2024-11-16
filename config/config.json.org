@@ -2,7 +2,6 @@
 	"data": {
 		"data_root": "./data/",
 		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
-		"data_root": "W:/gallery",
 		"image_ext": [
 			"jpg",
 			"JPEG"
@@ -43,7 +42,7 @@
 	},
 	"exif": {},
 	"database": {
-		"file_name": "data.w.db",
+		"file_name": "data.db",
 		"image_ext": [
 			"jpg",
 			"JPEG"
