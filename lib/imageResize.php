@@ -52,6 +52,11 @@ function image_resize($src, $dst, $width, $height, $orientation, $resizetype = '
 			return( FALSE );
 	}
 
+	if ( empty( $img ) )
+	{
+		logging( "$src error in image" );
+		return( FALSE );
+	}
 	// resize
 	if($crop)
 	{

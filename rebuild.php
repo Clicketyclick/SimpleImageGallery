@@ -32,7 +32,8 @@ include_once('lib/jsondb.php');
 // Verbose and debug
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
-
+$GLOBALS['logging']	= 1;
+//$GLOBALS['logfile.txt']	= 1;
 // Read configuration
 $cfg		= file_get_json( 'config/config.json' );
 $local		= file_get_json( 'config/local.json' );
@@ -88,12 +89,13 @@ function json_encode_db( $arr )
 verbose( '// Write meta data for each file' );
 // Update ALL
 $count	= 0;
-$r  = $db->exec( "BEGIN TRANSACTION;" );
+
 
 $starttime	= microtime( TRUE );
 //foreach ( $files as $path )
 foreach ( $files as $file )
 {
+	$r  = $db->exec( "BEGIN TRANSACTION;" );
 	$currenttime	= microtime( TRUE );
 	++$count;
 
@@ -147,6 +149,13 @@ foreach ( $files as $file )
 			$thumb		= stringcreatefromimage( $gdThumb, 'jpg');
 		}
 	}
+	
+	if ( empty( $thumb ) )
+	{
+		$r  = $db->exec( "COMMIT;" );
+		logging( "Skipping thumb $file" );
+		continue;
+	}
 	//debug(microtime( TRUE ) - $currenttime, 'get thumb');
 	// Rotate EXIF
 	$thumb 		= base64_encode( $thumb );
@@ -163,7 +172,11 @@ foreach ( $files as $file )
 				);
 	if ( empty($view) )
 	{
-		$view = file_get_contents($file);
+		//$view = file_get_contents($file);
+		$r  = $db->exec( "COMMIT;" );
+		logging( "Skipping view $file" );
+		continue;
+
 	}
 	//debug(microtime( TRUE ) - $currenttime, 'view resize');
 	$view 		= base64_encode( $view );
@@ -207,9 +220,10 @@ foreach ( $files as $file )
 	)
 	,	"Image: "
 	);
+	
+	$r  = $db->exec( "COMMIT;" );
 }
 
-$r  = $db->exec( "COMMIT;" );
 
 //echo PHP_EOL . "Images processed: ". $count;
 
@@ -359,7 +373,9 @@ function shutdown( )
 	*/
 	fputs( STDERR, "\n");
 	status( "Images processed", $GLOBALS['count']);
-	status( "Runtime ", microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"] );
+	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
+	status( "Runtime ", $Runtime );
+	status( "Runtime ", microtime2human( $Runtime ) );
 
 }	// shutdown()
 
