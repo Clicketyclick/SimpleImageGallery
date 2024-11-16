@@ -4,6 +4,9 @@
  *   @brief      Rebuild database with files and metadata
  *   @details    Recursive processing file tree
  *   
+ *   
+ *   @todo		Needs a resume action on broken rebuild (WHERE exif IS NULL)
+ *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:36 / ErBa
@@ -111,11 +114,26 @@ foreach ( $files as $file )
 	//debug(microtime( TRUE ) - $currenttime, 'Get image dimentions');
 	// Get EXIF
 	$exif 		= exif_read_data( $file, 0, true);
+	if ( empty( $exif ) )
+	{
+		logging( "$src error in image EXIF" );
+		// Write to table: images
+		$r  = $db->exec( $sql );
+		continue;
+	}
+
 	$exifjson 	= json_encode_db( $exif );
 	debug($exifjson, 'EXIF_json');
 	//debug(microtime( TRUE ) - $currenttime, 'EXIF_json');
 	// Get IPTC
 	$iptc		= parseIPTC( $file );
+	if ( empty( $iptc ) )
+	{
+		logging( "$src error in image IPTC" );
+		// Write to table: images
+		$r  = $db->exec( $sql );
+		continue;
+	}
     $iptcjson 	= json_encode_db( $iptc );
 	//debug(microtime( TRUE ) - $currenttime, 'IPTC_json');
 	debug($iptcjson, 'IPTC_json');
