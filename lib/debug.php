@@ -243,4 +243,19 @@ function progress_per( $var, $limit, $function, $msg = FALSE, $type = E_USER_NOT
         
 }   // progress_per()
 
+/*
+function action( $tag, $value )
+{
+	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
+}
+function state( $tag, $value )
+{
+	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
+}
+*/
+function status( $tag, $value )
+{
+	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
+}
+
 ?>
