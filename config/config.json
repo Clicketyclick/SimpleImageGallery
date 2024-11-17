@@ -2,7 +2,7 @@
 	"data": {
 		"data_root": "./data/",
 		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
-		"data_root": "W:/gallery",
+		"_data_root": "W:/gallery",
 		"image_ext": [
 			"jpg",
 			"JPEG"
@@ -14,10 +14,20 @@
 		"image_resize_type": "scale",
 		"thumb_max_width": 300,
 		"thumb_max_height": 300,
-		"display_max_width": 4200,
-		"_display_max_width": 1200,
-		"display_max_height": 4200,
-		"_display_max_height": 1200,
+		"Simple_display_max_width": 1200,
+		"Simple_display_max_height": 1200,
+		
+		"UHD_display_max_width": 3840,
+		"UHD_display_max_height": 2160,
+
+		"4K_display_max_width": 4096,
+		"4K_display_max_height": 2160,
+		
+		"CAM_display_max_width": 3872,
+		"CAM_display_max_height": 2592,
+		
+		"display_max_width": 3872,
+		"display_max_height": 2592,
 		"crop": 0
 	},
 	"maps": {
@@ -43,7 +53,8 @@
 	},
 	"exif": {},
 	"database": {
-		"file_name": "data.w.db",
+		"_file_name": "data.w.db",
+		"file_name": "data.db",
 		"image_ext": [
 			"jpg",
 			"JPEG"
