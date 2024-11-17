@@ -31,7 +31,7 @@ include_once('lib/imageResize.php');
 include_once('lib/handleSqlite.php');
 include_once('lib/iptc.php');
 include_once('lib/jsondb.php');
-
+include_once('lib/progress_bar.php');
 // Verbose and debug
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
@@ -46,8 +46,10 @@ $metatags	= file_get_json( 'config/meta.json' );
 // Parse CLI / $_REQUEST
 /*
 -cfg:images:image_resize_type=scale
-resized
-resampled
+-cfg:images:image_resize_type=resized
+-cfg:images:image_resize_type=resampled
+
+-cfg:resume=1
 
 */
 foreach ( $_REQUEST as $cmd => $cmdvalue )
@@ -56,12 +58,6 @@ foreach ( $_REQUEST as $cmd => $cmdvalue )
 	{
 		setPathKey( array_slice(explode(':', $cmd ), 1), $cfg, $cmdvalue);
 	}
-}
-
-
-function status( $tag, $value )
-{
-	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
 }
 
 status( "Image resize type", $cfg['images']['image_resize_type'] );
@@ -76,18 +72,32 @@ $db			= FALSE;
 // Open - or create database
 initDatabase( $db, $cfg['database']['file_name'], $dbCfg );
 
-// Find all image files recursive
-getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
-debug( $files );
-
-// Put all files to database: images
-putFilesToDatabase( $files );
-
-
-function json_encode_db( $arr )
-{
-	return( SQLite3::escapeString( json_encode( $arr,  JSON_INVALID_UTF8_IGNORE ) ) );
+// Resume or process all?
+if ( ! empty( $cfg['resume '] ) )
+{	// Resume
+	$sql	= $dbCfg['sql']['select_files_resume'];
+	$files 	= $db->exec( $sql );
+	foreach ( $files as $file )
+	{
+		if ( strpos( $file, "\\") )
+		{
+			unset( $files[$file] );
+			$files[]	= str_replace( "\\", '/', "$file");
+		}
+	}
+	status( count( $files ), "Resume");
 }
+else
+{	// Process all
+	// Find all image files recursive
+	getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
+	debug( $files );
+
+	status( count( $files ), "Processing");
+	// Put all files to database: images
+	putFilesToDatabase( $files );
+}
+
 
 verbose( '// Write meta data for each file' );
 // Update ALL
@@ -96,6 +106,7 @@ $count	= 0;
 
 $starttime	= microtime( TRUE );
 //foreach ( $files as $path )
+$total	= count($files);
 foreach ( $files as $file )
 {
 	$r  = $db->exec( "BEGIN TRANSACTION;" );
@@ -205,7 +216,8 @@ foreach ( $files as $file )
 	,	$dirname
 	,	$basename
 	,	$thumb
-	,	$view 
+	,	$view
+	,	$dirname
 	);
 	//debug( $sql );
 	//echo( $sql );
@@ -225,9 +237,10 @@ foreach ( $files as $file )
 	
 	// Display status
 	//fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
-	verbose( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
+	//verbose( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
+	logging( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
 		,	$count
-		,	count( $files )
+		,	$total
 		,	$exif['FILE']['FileName']
 		,	date( 'c', $exif['FILE']['FileDateTime'] )
 		,	$exif['COMPUTED']['Width']
@@ -238,8 +251,9 @@ foreach ( $files as $file )
 	)
 	,	"Image: "
 	);
-	
 	$r  = $db->exec( "COMMIT;" );
+	
+	echo progressbar($count, $total) . $file;
 }
 
 
@@ -266,10 +280,9 @@ function putFilesToDatabase( $files )
 	foreach ( $files as $path )
 	{
 		['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-
-		debug( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
-		$r  = $db->exec( sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname,$basename ) );
-		//$r  = $db->exec( sprintf($dbCfg['sql']['insert_files'], 'meta', $dirname,$basename ) );
+		$sql	= sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname, $basename, $dirname );
+		debug( $sql );
+		$r  = $db->exec( $sql );
 	}
 	$r  = $db->exec( "COMMIT;" );
 }	// putFilesToDatabase()
@@ -365,6 +378,59 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 
 
 /**
+ *  @brief     Parse cli arguments and insert into $_REQUEST
+ *  
+ *  @details   Store in global variable
+ *  
+@code
+parse_cli2request(); var_export( $_REQUEST );
+@endcode
+ *  
+ *  @see       https://stackoverflow.com/a/37600661
+ *  @since     2024-06-25T09:09:12 / erba
+ */
+function parse_cli2request()
+{
+    global $argv;
+    
+    // CLI or HTTP
+    // https://stackoverflow.com/a/37600661
+    if (php_sapi_name() === 'cli') {
+        // Remove '-' and '/' from keys
+        for ( $x = 0 ; $x < count($argv) ; $x++ )
+            $argv[$x]   = ltrim($argv[$x], '-/');
+        // Concatenate and parse string into $_REQUEST
+        parse_str(implode('&', array_slice($argv, 1)), $_REQUEST);
+    }
+}   // parse_cli2request()
+
+//----------------------------------------------------------------------
+
+
+/**
+ *   @brief      Encode mixed data for database
+ *   
+ *   @param [in]	$arr	Mixed data
+ *   @return     json with escaped values
+ *   
+ *   @details    
+ *   - json_encode w. JSON_INVALID_UTF8_IGNORE
+ *   - SQLite3::escapeString
+ *   
+ *   @code
+ *   $exifjson 	= json_encode_db( $exif );
+ *   @endcode
+ *   
+ *   @since      2024-11-16T10:56:57
+ */
+function json_encode_db( $arr )
+{
+	return( SQLite3::escapeString( json_encode( $arr,  JSON_INVALID_UTF8_IGNORE ) ) );
+}	// json_encode_db()
+
+//----------------------------------------------------------------------
+
+/**
  *   @brief      Run at shutdown
  *   
  *   @param [in]		$(description)
@@ -394,37 +460,9 @@ function shutdown( )
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	status( "Runtime ", $Runtime );
 	status( "Runtime ", microtime2human( $Runtime ) );
+	status( "Log", $GLOBALS['logfile']  ?? 'none');
 
 }	// shutdown()
 
-//----------------------------------------------------------------------
-
-
-/**
- *  @brief     Parse cli arguments and insert into $_REQUEST
- *  
- *  @details   Store in global variable
- *  
-@code
-parse_cli2request(); var_export( $_REQUEST );
-@endcode
- *  
- *  @see       https://stackoverflow.com/a/37600661
- *  @since     2024-06-25T09:09:12 / erba
- */
-function parse_cli2request()
-{
-    global $argv;
-    
-    // CLI or HTTP
-    // https://stackoverflow.com/a/37600661
-    if (php_sapi_name() === 'cli') {
-        // Remove '-' and '/' from keys
-        for ( $x = 0 ; $x < count($argv) ; $x++ )
-            $argv[$x]   = ltrim($argv[$x], '-/');
-        // Concatenate and parse string into $_REQUEST
-        parse_str(implode('&', array_slice($argv, 1)), $_REQUEST);
-    }
-}   // parse_cli2request()
 
 ?>
