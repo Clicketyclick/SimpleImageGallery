@@ -81,7 +81,7 @@ debug( $tree, 'tree' );
 
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "Breadcrumbs: ";
-echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', '/' );
+echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' );
 echo '/'. basename($_REQUEST['path']);
 echo "<br>";
 
@@ -209,23 +209,25 @@ else
 //----------------------------------------------------------------------
 
 /**
- *               breadcrumbTrail
  *   @brief      Build breadcrumb trail
  *   
  *   @param [in]	$path		Path to break up
- *   @param [in]	$delimiter	Delimiter between crumbs [Default: "&rightarrow;"]
+ *   @param [in]	$urlstub='?path=%s'	URL stub to crumbs
+ *   @param [in]	$start=1	Start dir
+ *   @param [in]	$end=-1		End dir
+ *   @param [in]	$delimiter='&rightarrow;'	Delimiter between crumbs [Default: "&rightarrow;"]
  *   @return     Trail as HTML string
  *   
  *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
  *
  *   @since      2024-11-13T14:15:32
  */
-function breadcrumbTrail( $path, $urlstub = '?path=%s', $delimiter = '&rightarrow;')
+function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
 {
 	$crumbs	= breadcrumbs( $path );
 	$trail	= [];
 	// Ignore first and last element in list
-	foreach( array_splice($crumbs, 1, -1 ) as $crumb => $crumbtag )
+	foreach( array_splice($crumbs, $start, $end ) as $crumb => $crumbtag )
 	{
 		//$trail[] = "<a href='?path=$crumb'>[$crumbtag]</a>";
 		$trail[] = sprintf( "<a href='{$urlstub}'>[%s]</a>"
