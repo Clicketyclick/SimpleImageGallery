@@ -64,7 +64,7 @@ function image_resize($src, $dst, $width, $height, $orientation, $resizetype = '
 		{
 			//return "Picture is too small!";
 			trigger_error( "Picture is too small: $w < $width or $h < $height", E_USER_WARNING );
-			verbose( "Picture is too small: $w < $width or $h < $height");
+			logging( "Picture is too small: $w < $width or $h < $height");
 			//return( $img );
 			//return( FALSE );
 		}
@@ -79,7 +79,7 @@ function image_resize($src, $dst, $width, $height, $orientation, $resizetype = '
 		{
 			//return "Picture is too small!";
 			//trigger_error( "Picture is too small: $w < $width or $h < $height", E_USER_WARNING );
-			verbose( "Picture is too small: $w < $width or $h < $height");
+			logging( "Picture is too small: $w < $width or $h < $height");
 			debug( "Picture is too small: $w < $width or $h < $height");
 			//error_log( "Picture is too small: $w < $width or $h < $height" );
 			//return( $img );
