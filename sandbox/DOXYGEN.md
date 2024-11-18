@@ -22,7 +22,6 @@ Original:
 
 ```php
 /**
- *   @fn         timestamp_iso8601
  *   @brief      $(Brief description)
  *   
  *   @param [in]	$timestamp	$(description)
@@ -44,7 +43,6 @@ Original:
 
 ```php
 /**
- *   @fn         timestamp_iso8601
  *   @brief      $(Brief description)
  *   
  *   @param [in]	$timestamp	$(description)
