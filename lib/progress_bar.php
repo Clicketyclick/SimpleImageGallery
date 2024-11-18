@@ -226,7 +226,8 @@ for($x=1;$x<=100;$x++){
  */
 function progressbar($done, $total, $size=30) {
     static $width;
- 
+	static $wheel	= ['-','\\', '|','/'];
+	
     // if we go over our bound, just ignore it
     if($done > $total)  return("OVERRUN: $done");
     if( 0 >= $done )    return('UNDEF');
@@ -242,7 +243,8 @@ function progressbar($done, $total, $size=30) {
     $progressbar="\r[";
     $progressbar.=str_repeat("=", $bar);
     if($bar<$size){
-        $progressbar.=">";
+        //$progressbar.=">";
+        $progressbar.= $wheel[ $done % 4];
         $progressbar.=str_repeat(" ", $size-$bar);
     } else {
         $progressbar.="=";
