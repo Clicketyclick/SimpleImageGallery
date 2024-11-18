@@ -101,6 +101,36 @@ database |
 
 ## SQLite
 
+### Create table: images
+
+```sql
+CREATE TABLE IF NOT EXISTS images (
+    name    TEXT,           -- Display name
+    file    TEXT not null,  -- Base file
+
+    source  TEXT,           -- Source path
+    path    TEXT not null,  -- Search path
+
+    exif    TEXT,           -- EXIF as JSON
+    iptc    TEXT,           -- IPTC as JSON
+
+    thumb   TEXT,            -- Thumb Base64 encoded
+    display TEXT,            -- Display Base64 encoded
+
+    PRIMARY KEY (source,file)
+);
+
+```
+
+```sql
+```
+
+
+
+
+
+
+
 ```sql
 -- Reset path
 -- UPDATE images SET path = source;
@@ -247,49 +277,72 @@ UPDATE images SET path = replace (path, './20', '/20');
 
 UPDATE images SET source = replace (path, './20', './data/20');
 
-ALTER TABLE images ADD COLUMN source;
-UPDATE images SET source = path;
 
+
+
+ALTER TABLE images ADD COLUMN source  TEXT;
+ALTER TABLE images ADD COLUMN name    TEXT;
+
+UPDATE images SET source = path;
 UPDATE images SET path = source;
 
 
--- Update path
-UPDATE images SET path = replace (path, './data', '.');
--- Grouping
-SELECT DISTINCT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
-UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE "./2024/2024-08%_Blåvand";
-SELECT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
 
 
 
--- name -----------------------------
--- ALTER TABLE images ADD COLUMN name;
-
-UPDATE images SET name = file;
-----------------------------------------------------------------------
--- Replace any case of '.jpg' length with ''
-UPDATE images  
-SET 
-  name = SUBSTR(name, 0, INSTR(LOWER(name), '.jpg')) || '' || SUBSTR(name, INSTR(LOWER(name), '.jpg')+4)
-WHERE 
-  name LIKE "%.jpg%";
-----------------------------------------------------------------------
--- Remove date prefix
--- -- 190xx-xx-xxTxx-xx-xx
-UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '19__-__-__T__-__-__%';
--- -- 20xx-xx-xxTxx-xx-xx
-UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__T__-__-__%';
--- 20xx-xx-xx_xx-xx-xx
-UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__\___-__-__%' ESCAPE '\' ;
--- 20xx-xx-xx_
-UPDATE images SET name = substr( name, 11 ) WHERE name LIKE '20__-__-__\_%' ESCAPE '\' ;
-----------------------------------------------------------------------
-.output name_images.txt
-SELECT name FROM images;
-.output
 
 
-SELECT name FROM images2 WHERE length(name) > 15 AND ( name like "19%" OR name like "20%" );
+
+	-- Update path
+	UPDATE images SET path = replace (path, './data', '.');
+	-- Grouping
+	SELECT DISTINCT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
+	UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE "./2024/2024-08%_Blåvand";
+	SELECT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
+
+
+
+	-- name -----------------------------
+	-- ALTER TABLE images ADD COLUMN name;
+
+
+.progress 1000
+CREATE INDEX idx_name ON images(name);
+CREATE INDEX idx_source ON images(source);
+CREATE INDEX idx_file ON images(file);
+CREATE INDEX idx_path ON images(path);
+.progress 1000
+SELECT count(name) FROM images WHERE name IS NULL;
+UPDATE images SET name = file WHERE name IS NULL;
+UPDATE images SET source = path WHERE source IS NULL;
+
+
+
+	--UPDATE images SET name = file;
+	----------------------------------------------------------------------
+	-- Replace any case of '.jpg' length with ''
+	UPDATE images  
+	SET 
+	  name = SUBSTR(name, 0, INSTR(LOWER(name), '.jpg')) || '' || SUBSTR(name, INSTR(LOWER(name), '.jpg')+4)
+	WHERE 
+	  name LIKE "%.jpg%";
+	----------------------------------------------------------------------
+	-- Remove date prefix
+	-- -- 190xx-xx-xxTxx-xx-xx
+	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '19__-__-__T__-__-__%';
+	-- -- 20xx-xx-xxTxx-xx-xx
+	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__T__-__-__%';
+	-- 20xx-xx-xx_xx-xx-xx
+	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__\___-__-__%' ESCAPE '\' ;
+	-- 20xx-xx-xx_
+	UPDATE images SET name = substr( name, 11 ) WHERE name LIKE '20__-__-__\_%' ESCAPE '\' ;
+	----------------------------------------------------------------------
+	.output name_images.txt
+	SELECT name FROM images;
+	.output
+
+
+	SELECT name FROM images2 WHERE length(name) > 15 AND ( name like "19%" OR name like "20%" );
 ```
 
 ### Configuration
@@ -341,6 +394,23 @@ CREATE TABLE IF NOT EXISTS wordclouds (
     tag         TEXT NOT NULL,
     norm        TEXT NOT NULL
 );
+
+┌──────────────────────────────────────┬───────┬──────────────────────────────┬──────────────────────────────┐
+│              search_id               │ recno │            entry             │             key              │
+├──────────────────────────────────────┼───────┼──────────────────────────────┼──────────────────────────────┤
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ </pre><pre>                  │ </pre><pre>                  │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ROW:1                        │ row:1                        │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ID:50387798-b870970-fa004r:n │ id:50387798-b870970-fa004r:n │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ 004r:n                       │ 004r:n                       │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ 004a:h                       │ 004a:h                       │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ CL:Kontor                    │ cl:kontor                    │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ CL:Fagreol                   │ cl:fagreol                   │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ISIL:EBP                     │ isil:ebp                     │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ AU:Deleuran, Claus           │ au:deleuran, claus           │
+│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ KW:DM2                       │ kw:dm2                       │
+└──────────────────────────────────────┴───────┴──────────────────────────────┴──────────────────────────────┘
+
+
 
 /*
 CREATE TABLE IF NOT EXISTS wordcloudblobs (
