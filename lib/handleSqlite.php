@@ -88,7 +88,6 @@ $booleans_cut   = [
 //---------------------------------------------------------------------
 
 /**
- *  @fn        openSqlDb()
  *  @brief     Open or create database
  *  
  *  @details   Wrapper for SQLite3::open()
@@ -96,10 +95,10 @@ $booleans_cut   = [
  *  @param [in] $dbfile Path and name of database file to open
  *  @return     File handle to database OR FALSE
  *  
- *  @example   $db = openSqlDb( "./my.db" );
+ *  @code
+ *  $db = openSqlDb( "./my.db" );
+ *  @endcode
  *  
- *  @todo     
- *  @bug     
  *  @warning    An empty database IS valid, but issues a warning
  *  
  *  @see
@@ -127,7 +126,6 @@ function openSqlDb( $dbfile ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        createSqlDb()
  *  @brief     Create new database if not exists
  *  
  *  @details   Wrapper for SQLite3::open()
@@ -135,13 +133,10 @@ function openSqlDb( $dbfile ) {
  *  @param [in] $dbfile Path and name of database file to create
  *  @return     File handle to database OR FALSE
  *  
- *  @example   $db = createSqlDb( "./my.db" );
+ *  @code
+ *     $db = createSqlDb( "./my.db" );
+ *  @endcode
  *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
  *  @since      2024-04-11 13:19:44
  */
 function createSqlDb( $dbfile ) {
@@ -162,7 +157,6 @@ function createSqlDb( $dbfile ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        createTable()
  *  @brief     Create new table in database
  *  
  *  @details   Build new tables from tabledef. Tabledef is an assosiative array with
@@ -172,15 +166,11 @@ function createSqlDb( $dbfile ) {
  *  @param [in] $tabledef Table definitions
  *  @return    Return description
  *  
- *  
- *  @example    $tabledef    = [ "mytable" => ["id" => "INTEGER", "str" => "TEXT"] ];
+ *  @code
+ *      $tabledef    = [ "mytable" => ["id" => "INTEGER", "str" => "TEXT"] ];
  *              createSqlTable( $db, $tabledef );
+ *  @endcode
  *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
  *  @since      2019-12-10T08:25:50
  */
 function createSqlTable( &$db, $tabledef ) {
@@ -205,29 +195,27 @@ function createSqlTable( &$db, $tabledef ) {
 
 //---------------------------------------------------------------------
 /**
- *  @fn        buildSqlInsert()
  *  @brief     Insert new row in table
  *  
  *  @details   More details
  *  
  *  @return    Return description
  *  
- *  @example   $fields = [ "name" = 'HP ZBook 17', "model" => 'ZBook', "serial" => 'SN-2015' ];
+ *  @code
+ *     $fields = [ "name" = 'HP ZBook 17', "model" => 'ZBook', "serial" => 'SN-2015' ];
  *      echo buildSqlInsert("devices", $fields );
+ *  @endcode
  *  
- *   INSERT INTO devices (name, model, serial)
- *   VALUES('HP ZBook 17','ZBook','SN-2015');
+@verbatim
+    INSERT INTO devices (name, model, serial)
+    VALUES('HP ZBook 17','ZBook','SN-2015');
+@endverbatim
  *  
  *  @param [in] $tablename Name of table
  *  @param [in] $fields    Hash of field tags and values
  *  @param [in] $rowid     RecNo to update - or FALSE to Insert
  *  @return    SQL expression
  *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
  *  @since      2019-11-23T20:09:46
  */
 function buildSqlInsert( $tablename, $fields, $rowid = FALSE ) {
@@ -256,7 +244,6 @@ function buildSqlInsert( $tablename, $fields, $rowid = FALSE ) {
 
 //---------------------------------------------------------------------
 /**
- *  @fn        buildSqlUpdate()
  *  @brief     Build an UPDATE statement in SQL
  *  
  *  @details   More details
@@ -266,18 +253,17 @@ function buildSqlInsert( $tablename, $fields, $rowid = FALSE ) {
  *  @param [in] $shere     WHERE clause
  *  @return    SQL expression
  *  
- *  @example    $fields = [ "name" => 'HP ZBook 17', "model" => 'ZBook', "serial" => 'SN-2015' ];
+ *  @code
+ *      $fields = [ "name" => 'HP ZBook 17', "model" => 'ZBook', "serial" => 'SN-2015' ];
  *      $where = [ "rowid" => 1];
  *      echo buildSqlUpdate("devices", $fields, $where );
+ *  @endcode
  *
+@verbatim
  *      UPDATE devices SET "name" = 'HP ZBook 17', "model" => 'ZBook', "serial" => 'SN-2015'
  *      WHERE     rowid = 1;
- *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
+@endverbatim
+ *    
  *  @since      2019-12-11T07:51:32
  */
 function buildSqlUpdate( $tablename, $fields, $where = FALSE ) {
@@ -309,7 +295,6 @@ function buildSqlUpdate( $tablename, $fields, $where = FALSE ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getSqlTableLength()
  *  @brief     Return no of elements in table
  *  
  *  @details   Count no of elements
@@ -319,13 +304,10 @@ function buildSqlUpdate( $tablename, $fields, $where = FALSE ) {
  *  @param [in] $where WHERE clause
  *  @return    No of rows
  *  
- *  @example   getSqlTableLength( $db, "meta" )
+ *  @code
+ *     getSqlTableLength( $db, "meta" )
+ *  @endcode
  *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
  *  @since      2019-12-11T08:23:06
  */
 function getSqlTableLength( &$db, $table, $where = FALSE ) {
@@ -344,32 +326,29 @@ function getSqlTableLength( &$db, $table, $where = FALSE ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getSqlTables()
  *  @brief     List tables/indices in database
  *  
  *  @details   Getting list of tables from sqlite_master
  *  
- *  CREATE TABLE sqlite_master (
+@verbatim
+CREATE TABLE sqlite_master (
   type text,
   name text,
   tbl_name text,
   rootpage integer,
   sql text
 );
-
+@endverbatim
+ *
  *  @param [in] $db Database handle
  *  @param [in] $fields Field name (name)
  *  @param [in] $type   Element type (table/trigger/index)
  *  @return    Array of tables
  *  
- *  @example   $list = getSqlTables( $db );
+ *  @code
+ *     $list = getSqlTables( $db );
+ *  @endcode
  *  
- *  @todo       
- *  @bug        
- *  @warning    
- *  @deprecated 
- *   
- *  @see
  *  @since      2019-12-11T13:58:34
  */
  function getSqlTables( &$db, $fields = "name", $type = "table") {
@@ -387,7 +366,6 @@ function getSqlTableLength( &$db, $table, $where = FALSE ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getSqlMaxRowId()
  *  @brief     Get highest rowid in table
  *  
  *  @details   More details
@@ -396,14 +374,12 @@ function getSqlTableLength( &$db, $table, $where = FALSE ) {
  *  @param [in] $table Name of table
  *  @return    Highest rowid
  *  
- *  @example   getSqlMaxRowId
+ *  @code
+ *     echo getSqlMaxRowId();
+ *  @endcode
  *  
- *  @todo       
- *  @bug        
  *  @warning    Highest rowid is NOT the no of rows! Use getSqlTableLength()
- *  @deprecated 
  *   
- *  @see
  *  @since      2019-12-11T14:12:18
  */
 function getSqlMaxRowId( &$db, $table ) {
@@ -422,7 +398,6 @@ function getSqlMaxRowId( &$db, $table ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        querySql()
  *  @brief     Executes an SQL query
  *  
  *  @details   More details
@@ -431,14 +406,6 @@ function getSqlMaxRowId( &$db, $table ) {
  *  @param [in] $sql SQL statement
  *  @return    Return result
  *  
- *  @example   querySql
- *  
- *  @todo       
- *  @bug        
- *  @warning    
- *  @deprecated 
- *   
- *  @see
  *  @since      2019-12-11T14:13:49
  */
 function querySql( &$db, $sql ) {
@@ -459,7 +426,6 @@ function querySql( &$db, $sql ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        querySqlSingleValue()
  *  @brief     Executes a query and returns a single result (value)
  *  
  *  @details   Alias for SQLite3::querySingle (default)
@@ -468,16 +434,14 @@ function querySql( &$db, $sql ) {
  *  @param [in] $sql Description for $sql
  *  @return    Return description
  *  
- *  @example   $sql    = "SELECT str FROM {$tablename};";
- *  @example   $got    = querySqlSingleValue( $db, $sql );
- *  @example   $expected   = "'Hello world'";
+ *  @code
+ *     $sql    = "SELECT str FROM {$tablename};";
+ *     $got    = querySqlSingleValue( $db, $sql );
+ *     $expected   = "'Hello world'";
+ *  @endcode
  *  
- *  @todo       
- *  @bug        
  *  @warning    Returned value is quoted: "'Hello'"
- *  @deprecated 
  *   
- *  @see
  *  @since      2019-12-11T13:09:19
  */
 function querySqlSingleValue( &$db, $sql ) {
@@ -488,7 +452,6 @@ function querySqlSingleValue( &$db, $sql ) {
 
 
 /**
- *  @fn        querySqlSingleRow()
  *  @brief     Executes a query and returns a single result (Row)
  *  
  *  @details   Alias for SQLite3::querySingle (entire_row = true)
@@ -497,20 +460,16 @@ function querySqlSingleValue( &$db, $sql ) {
  *  @param [in] $sql Description for $sql
  *  @return    Return description
  *  
- *  @example   $sql    = "SELECT * FROM {$tablename};";
- *  @example   $got    = querySqlSingleRow( $db, $sql );
- *  @example   $expected   = "array (
- *  @example     'id' => 1,
- *  @example     'str' => 'Hello world',
- *  @example   )";
-
+ *  @code
+ *     $sql    = "SELECT * FROM {$tablename};";
+ *     $got    = querySqlSingleRow( $db, $sql );
+ *     $expected   = "array (
+ *       'id' => 1,
+ *       'str' => 'Hello world',
+ *     )";
+ *  @endcode
  *  
- *  @todo       
- *  @bug        
- *  @warning    
- *  @deprecated 
  *   
- *  @see
  *  @since      2019-12-11T13:09:19
  */
 function querySqlSingleRow( &$db, $sql ) {
@@ -521,7 +480,6 @@ function querySqlSingleRow( &$db, $sql ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        executeSql()
  *  @brief     Prepares an SQL statement for execution, execute and return result as array
  *  
  *  @details   More details
@@ -530,14 +488,9 @@ function querySqlSingleRow( &$db, $sql ) {
  *  @param [in] $sql SQL statement
  *  @return    Return description
  *  
- *  @example   executeSql()
  *  
- *  @todo       
- *  @bug        
  *  @warning    May only process ONE statement at a time
- *  @deprecated 
  *   
- *  @see
  *  @since      2019-12-11T14:18:28
  */
 function executeSql( &$db, $sql ) {
@@ -590,7 +543,6 @@ function executeSql( &$db, $sql ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        closeSqlDb()
  *  @brief     Close / Close +  delete database file
  *  
  *  @details   More details
@@ -599,14 +551,9 @@ function executeSql( &$db, $sql ) {
  *  @param [in] $dbfile Name of database file to remove
  *  @return    Return description
  *  
- *  @example   closeSqlDb
  *  
- *  @todo       
- *  @bug        
  *  @warning    Will rename database file without warning
- *  @deprecated 
  *   
- *  @see
  *  @since      2019-12-11T14:19:02
  */
 function closeSqlDb( &$db, $dbfile = FALSE ) {
@@ -625,7 +572,6 @@ function closeSqlDb( &$db, $dbfile = FALSE ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        stdClass2array()
  *  @brief     Converting an array/stdClass -> array
  *  
  *  @details   Converting an array/stdClass -> array
@@ -635,11 +581,6 @@ function closeSqlDb( &$db, $dbfile = FALSE ) {
  *  @param [in] $stdClass Description for $stdClass
  *  @return    Return description
  *  
- *  @example   stdClass2array
- *  
- *  @todo     
- *  @bug     
- *  @warning 
  *  @deprecated No longer in used
  *  
  *  @see        https://stackoverflow.com/a/18576902
@@ -654,7 +595,6 @@ function stdClass2array( &$stdClass ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        fetchObject()
  *  @brief     Fetch object from SQLite
  *  
  *  @details   More details
@@ -663,11 +603,6 @@ function stdClass2array( &$stdClass ) {
  *  @param [in] $objectType    Description for $objectType
  *  @return    Return description
  *  
- *  @example   fetchObject
- *  
- *  @todo     
- *  @bug     
- *  @warning 
  *  @deprecated No longer in used
  *  
  *  @see        https://www.php.net/manual/en/class.sqlite3result.php#101589
@@ -706,7 +641,6 @@ function fetchObject( &$sqlite3result, $objectType = NULL) {
 //---------------------------------------------------------------------
 
 /** 
- *  @fn        truncateTable()
  *  @brief     Truncating a table
  *  
  *  @details   Delete all entries - execpt LIMIT last entries
@@ -716,10 +650,6 @@ function fetchObject( &$sqlite3result, $objectType = NULL) {
  *  @param [in] $limit  Rest to leave in table
  *  @return    Return description
  *  
- *  @example   truncateTable
- *  
- *  @todo     
- *  @bug     
  *  @warning    This function requires that table has rowid's (default)
  *  
  *  @see        https://stackoverflow.com/a/6990013/7485823
@@ -739,7 +669,6 @@ DELETE FROM $table WHERE rowid NOT IN (
 //---------------------------------------------------------------------
 
 /** 
- *  @fn        resetRowid()
  *  @brief     Reset rowids after truncate
  *  
  *  @details   Unload and reload entries to reset rowid. 
@@ -749,13 +678,6 @@ DELETE FROM $table WHERE rowid NOT IN (
  *  @param [in] $table 	Description for $table
  *  @return    Return description
  *  
- *  @example   resetRowid
- *  
- *  @todo     
- *  @bug     
- *  @warning 
- *  
- *  @see
  *  @since      2020-01-28T10:47:05
  */
 function resetRowid( &$db, $table ) {
@@ -812,7 +734,6 @@ function dbSchema( &$db, $table, $where = ""  ) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn        vacuumInto
  *  @brief     Vacuum current database to a new database file
  *  
  *  @param [in] $db        Handle to current database
@@ -823,12 +744,10 @@ function dbSchema( &$db, $table, $where = ""  ) {
  *  to use the statement VACUUM INTO 'file.db'; to backup the database 
  *  to a new file.
  *  
- *  @example    $db = openSqlDb( "source.db" );
+ *  @code
+ *      $db = openSqlDb( "source.db" );
  *              var_export( vacuumInto($db, "target.db" ) );
- *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *  @endcode
  *  
  *  @see       https://www.php.net/manual/en/sqlite3.backup.php
  *  @since     2022-01-16T22:32:40 / erba
@@ -851,7 +770,6 @@ function vacuumInto( &$db, $newdbfile ) {
 */
 
 /**
- *   @fn         dbDump
  *   @brief      PHP SQLite Dump
  *   
  *   @param [in]	$filename	$(description)
@@ -923,19 +841,11 @@ function dbDump( $filename, $dumpfile) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn        getDbFile
  *  @brief     Get full path to database
  *  
  *  @param [in] $db        Handle to current database
  *  @return    Path as string
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
  *  
  *  @see       https://stackoverflow.com/a/44279467
  *  @since     2022-04-26T14:15:52 / erba
@@ -948,19 +858,10 @@ function getDbFile( &$db ) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn        getDbName
  *  @brief     Get database name
  *  
  *  @param [in] $db     	Handle to current database
  *  @return    Return description
- *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
  *  
  *  @see       https://stackoverflow.com/a/44279467
  *  @since     2022-04-26T14:16:08 / erba
@@ -973,7 +874,6 @@ function getDbName( &$db ) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn        array_flatten
  *  @brief     Flatten array
  *  
  *  @param [in] $arrayDescription for $array
@@ -981,13 +881,6 @@ function getDbName( &$db ) {
  *  
  *  @details   Change single string in array to just single string??
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-12T17:53:02 / Bruger
  */
 function flatten(array $array) {
@@ -1006,7 +899,6 @@ function array_flatten(array $array) {
 
 
 /**
- *  @fn        array_keys_OR
  *  @brief     Boolean OR operation on keys
  *  
  *  @param [in] $array1 Primary array
@@ -1015,20 +907,18 @@ function array_flatten(array $array) {
  *  
  *  @details   More details
  *  
- *  @example   
+ *  @code
  *      $array1 = [ 550 => 'xxx',  645 => 'xxx',  1097 => 'xxx',  1125 => 'xxx',  1126 => 'xxx' ];
  *      $array2 = [ 1126 => 'xxx', 645 => 'xxx' ];
  *      $result = array_keys_OR( $array1, $array2 );
  *      print implode( ",", array_keys($result) );
+ *  @endcode
  *  
  *  should give:
- *          550,645,1097,1125,1126
+@verbatim
+550,645,1097,1125,1126
+@endverbatim
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-19T18:00:50 / Erik Bachmann
  */
 function array_keys_OR ( &$array1, &$array2 ) {
@@ -1037,7 +927,6 @@ function array_keys_OR ( &$array1, &$array2 ) {
 
 
 /**
- *  @fn        array_keys_AND
  *  @brief     Boolean AND operation on keys
  *  
  *  @param [in] $array1 Primary array
@@ -1046,20 +935,18 @@ function array_keys_OR ( &$array1, &$array2 ) {
  *  
  *  @details   More details
  *  
- *  @example   
+ *  @code   
  *      $array1 = [ 550 => 'xxx',  645 => 'xxx',  1097 => 'xxx',  1125 => 'xxx',  1126 => 'xxx' ];
  *      $array2 = [ 1126 => 'xxx', 645 => 'xxx' ];
  *      $result = array_keys_AND( $array1, $array2 );
  *      print implode( ",", array_keys($result) );
+ *  @endcode
  *  
  *  should give:
- *          645,1126
+@verbatim
+645,1126
+@endverbatim
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-19T18:05:14 / Erik Bachmann
  */
 function array_keys_AND ( &$array1, &$array2 ) {
@@ -1068,7 +955,6 @@ function array_keys_AND ( &$array1, &$array2 ) {
 
 
 /**
- *  @fn        array_keys_NOT
  *  @brief     Boolean NOT operation on keys
  *  
  *  @param [in] $array1 Primary array
@@ -1077,20 +963,18 @@ function array_keys_AND ( &$array1, &$array2 ) {
  *  
  *  @details   More details
  *  
- *  @example   
+ *  @code
  *      $array1 = [ 550 => 'xxx',  645 => 'xxx',  1097 => 'xxx',  1125 => 'xxx',  1126 => 'xxx' ];
  *      $array2 = [ 1126 => 'xxx', 645 => 'xxx' ];
  *      $result = array_keys_NOT( $array1, $array2 );
  *      print implode( ",", array_keys($result) );
+ *  @endcode
  *  
  *  should give:
- *          550,1097,1125
+@verbatim
+550,1097,1125
+@endverbatim
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-19T18:05:14 / Erik Bachmann
  */
 function array_keys_NOT ( &$array1, &$array2 ) {
@@ -1101,7 +985,6 @@ function array_keys_NOT ( &$array1, &$array2 ) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn        expandBoolean
  *  @brief     Expand boolean keys in SQL expressions
  *  
  *  @param [in] $booleans   Expansion pairs FROM => TO
@@ -1113,7 +996,7 @@ function array_keys_NOT ( &$array1, &$array2 ) {
  *  Like: "This AND THAT"
  *  to: "This' INTERSECT SELECT recno FROM search WHERE entry LIKE 'THAT"
  *  
- *  @example   
+ *  @code   
  *      $booleans   = [
  *          "AND"   => "'\nINTERSECT \n    SELECT recno \n\tFROM search \n\tWHERE entry \n\tLIKE '"
  *      ,   "OR"    => "'\nUNION \n    SELECT recno \n\tFROM search \n\tWHERE entry \n\tLIKE '"
@@ -1123,7 +1006,9 @@ function array_keys_NOT ( &$array1, &$array2 ) {
  *  
  *      $newphrase  = expandBoolean( $booleans, "em:Biler OR em:Opel NOT em:Brugermanualer");
  *      var_dump( sprintf( $sql, $newphrase ) );
+ *  @endcode
  *  
+@verbatim
  *      string(214) "
  *          SELECT recno
  *              FROM search
@@ -1140,12 +1025,8 @@ function array_keys_NOT ( &$array1, &$array2 ) {
  *              WHERE entry
  *              LIKE 'em:Brugermanualer';
  *      "
+@endverbatim
  *
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-12T17:27:06 / Bruger
  */
 function expandBoolean( &$booleans, $phrase )
@@ -1158,7 +1039,6 @@ function expandBoolean( &$booleans, $phrase )
 
 
 /**
- *  @fn        matchSqlDefInDb
  *  @brief     Match SQL definition in database
  *  
  *  @param [in] $db Description for $db
@@ -1168,15 +1048,6 @@ function expandBoolean( &$booleans, $phrase )
  *  @param [in] $coldef Description for $coldef
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:20:56 / Bruger
  *///---------------------------------------------------------------------
 function matchSqlDefInDb( &$db, $type, $tbl_name, $name, $coldef)
@@ -1225,7 +1096,6 @@ function matchSqlDefInDb( &$db, $type, $tbl_name, $name, $coldef)
 //---------------------------------------------------------------------
 
 /**
- *  @fn        matchColumnDefInDb
  *  @brief     Match columen definition in database
  *  
  *  @param [in] $db Description for $db
@@ -1234,15 +1104,6 @@ function matchSqlDefInDb( &$db, $type, $tbl_name, $name, $coldef)
  *  @param [in] $coldef Description for $coldef
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:25:14 / Bruger
  */
 function matchColumnDefInDb( &$db, $name, $column, $coldef)
@@ -1272,7 +1133,6 @@ function matchColumnDefInDb( &$db, $name, $column, $coldef)
 //---------------------------------------------------------------------
 
 /**
- *  @fn        ifExistsColumnInDb
  *  @brief     Check if column exists in database
  *  
  *  @param [in] $db Description for $db
@@ -1280,15 +1140,6 @@ function matchColumnDefInDb( &$db, $name, $column, $coldef)
  *  @param [in] $column Description for $column
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:25:26 / Bruger
  */
 function ifExistsColumnInDb( &$db, $name, $column)
@@ -1301,7 +1152,6 @@ function ifExistsColumnInDb( &$db, $name, $column)
 //---------------------------------------------------------------------
 
 /**
- *  @fn        ifExistsTriggerInDb
  *  @brief     Check if trigger exists in database
  *  
  *  @param [in] $db Description for $db
@@ -1309,15 +1159,6 @@ function ifExistsColumnInDb( &$db, $name, $column)
  *  @param [in] $idx Description for $idx
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:25:35 / Bruger
  */
 function ifExistsTriggerInDb( &$db, $tbl_name, $idx)
@@ -1330,7 +1171,6 @@ function ifExistsTriggerInDb( &$db, $tbl_name, $idx)
 //---------------------------------------------------------------------
 
 /**
- *  @fn        ifExistsIdxInDb
  *  @brief     Check if index exists
  *  
  *  @param [in] $db Description for $db
@@ -1338,15 +1178,6 @@ function ifExistsTriggerInDb( &$db, $tbl_name, $idx)
  *  @param [in] $idx Description for $idx
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:25:56 / Bruger
  */
 function ifExistsIdxInDb( &$db, $tbl_name, $idx)
@@ -1361,7 +1192,6 @@ function ifExistsIdxInDb( &$db, $tbl_name, $idx)
 //---------------------------------------------------------------------
 
 /**
- *  @fn        ifExistsInDb
  *  @brief     Count occurences in sqlite_master
  *  
  *  @param [in] $db Description for $db
@@ -1369,15 +1199,6 @@ function ifExistsIdxInDb( &$db, $tbl_name, $idx)
  *  @param [in] $type Description for $type
  *  @return    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-03-26T19:26:23 / Bruger
  */
 function ifExistsInDb( &$db, $name, $type = "table")
