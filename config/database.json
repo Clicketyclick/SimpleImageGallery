@@ -1,32 +1,71 @@
 {
-	"sql": {
-		"_create_images": "CREATE TABLE IF NOT EXISTS images (\n\n    path    TEXT not null,\n    file    TEXT not null,\n    thumb   TEXT,\n    display TEXT,\n    PRIMARY KEY (path,file)\n)",
-		"__create_images": "CREATE TABLE IF NOT EXISTS images (\n\n    path    TEXT not null,\n    file    TEXT not null,\n    exif    TEXT,\n    iptc    TEXT,\n    thumb   TEXT,\n    display TEXT,\n    PRIMARY KEY (path,file)\n)",
-		"_create_images": "CREATE TABLE IF NOT EXISTS images (\n    path    TEXT not null,  -- Search path\n    file    TEXT not null,  -- Base file\n    source  TEXT,           -- Source path\n    exif    JSON,           -- EXIF as JSON\n    iptc    JSON,           -- IPTC as JSON\n    thumb   BASE64,            -- Thumb Base64 encoded\n    display BASE64,            -- Display Base64 encoded\n    PRIMARY KEY (path,file)\n);",
-		"create_images": "CREATE TABLE IF NOT EXISTS images (\n    name    TEXT,           -- Display name\n    path    TEXT not null,  -- Search path\n    file    TEXT not null,  -- Base file\n    source  TEXT,           -- Source path\n    exif    JSON,           -- EXIF as JSON\n    iptc    JSON,           -- IPTC as JSON\n    thumb   BASE64,         -- Thumb Base64 encoded\n    display BASE64,         -- Display Base64 encoded\n    PRIMARY KEY (path,file)\n);",
+	"tables": {
+		"create_images": "CREATE TABLE IF NOT EXISTS images (\n    name    TEXT,           -- Display name\n    path    TEXT not null,  -- Search path\n    file    TEXT not null,  -- Base file\n    source  TEXT,           -- Source path\n    exif    TEXT,           -- EXIF as JSON\n    iptc    TEXT,           -- IPTC as JSON\n    thumb   TEXT,         -- Thumb Base64 encoded\n    display TEXT,         -- Display Base64 encoded\n    PRIMARY KEY (source,file)\n);",
 		"create_images_idx": "CREATE INDEX idx_images ON images(\n    path, file\n);\nCREATE INDEX idx_images_path ON images(\n    path\n);\n",
-		"_create_meta": "CREATE TABLE IF NOT EXISTS meta (\n    path    TEXT not null,\n    file    TEXT not null,\n    exif    TEXT,\n    iptc    TEXT,\n    PRIMARY KEY (path,file))",
-		"_create_meta_idx": "CREATE INDEX idx_meta_file ON meta( path, file );\nCREATE INDEX idx_meta_path ON meta( path );\nCREATE INDEX idx_meta_exif ON meta( exif );\nCREATE INDEX idx_meta_iptc ON meta( iptc );",
-		"create_dir_list": "CREATE TABLE IF NOT EXISTS sfpg_dir (\n    path        TEXT,\n    dirDirs     INTEGER,    -- No of subdirs\n    dirImages   INTEGER,    -- No of images in current dir\n    dirFiles    INTEGER,    -- No of files in current dir\n    dirTime     INTEGER,    -- Timestamp\n    dirThumb    BLOB,       -- Thumbnail for directory\n}",
-		"_insert_files": "INSERT OR IGNORE INTO %s( path, file ) VALUES( '%s','%s' );",
+		"create_search": "CREATE TABLE IF NOT EXISTS search\n(\n    search_id   TEXT NOT NULL\n,   recno       NUMERIC NOT NULL\n,   entry       TEXT NOT NULL\n,   key         TEXT\n);",
+		"create_wordclouds": "CREATE TABLE IF NOT EXISTS wordclouds (\n    cloudname   TEXT NOT NULL,\n    key         TEXT NOT NULL,\n    entry       TEXT NOT NULL,\n    count       TEXT NOT NULL,\n    tag         TEXT NOT NULL,\n    norm        TEXT NOT NULL\n);\n",
+		"_dummy": ""
+	},
+	"sql": {
 		"insert_files": "INSERT OR IGNORE INTO %s( path, file, source ) VALUES( '%s','%s','%s' );",
+		"insert_search": "INSERT OR IGNORE INTO search( search_id, recno, entry, key ) VALUES( '%s','%s','%s','%s' );",
 		"replace_into_images": "REPLACE INTO images( path, file, thumb, display, source ) VALUES( '%s', '%s', '%s', '%s', '%s');",
-
-		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE path like '%s'\nAND\nfile like '%s';",
-		
-		"select_files_resume_count":  "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
+		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE source like '%s'\nAND\nfile like '%s';",
+		"select_files_resume_count": "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_files_resume": "SELECT path||'/'||file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
-		"_select_files_resume": "SELECT file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
-		"_select_files_resume": "SELECT file as files FROM images WHERE iptc IS NULL OR iptc = '' ;",
-		"_select_files_resume": "SELECT file FROM images;",
-
 		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
+		"select_source_meta": "SELECT source||'/'||file as file, exif, iptc FROM images;",
 		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
 		"select_thumb": "SELECT path, file, thumb FROM IMAGES WHERE path like '%s'",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
 		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
 		"oldest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path ASC, file ASC LIMIT 1;",
-		"dummy": ""
+		"_dummy": ""
+	},
+	"post": {
+		"path": [
+			"-- Update path",
+			"UPDATE images SET path = replace (path, './data', '.');"
+		],
+		"name": [
+			"UPDATE images SET name = file;",
+			"-- Replace any case of '.jpg' length with ''",
+			"UPDATE images SET name = SUBSTR(name, 0, INSTR(LOWER(name), '.jpg')) || '' || SUBSTR(name, INSTR(LOWER(name), '.jpg')+4) WHERE name LIKE \"%.jpg%\"",
+			"-- Remove date prefix",
+			"-- -- 190xx-xx-xxTxx-xx-xx",
+			"UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '19__-__-__T__-__-__%';",
+			"-- -- 20xx-xx-xxTxx-xx-xx",
+			"UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__T__-__-__%';",
+			"-- 20xx-xx-xx_xx-xx-xx",
+			"UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__\\___-__-__%' ESCAPE '\\' ;",
+			"-- 20xx-xx-xx_",
+			"UPDATE images SET name = substr( name, 11 ) WHERE name LIKE '20__-__-__\\_%' ESCAPE '\\' ;"
+		],
+		"grouping": [
+			"UPDATE images SET path = './2024/2024-04_Lissabon' WHERE path LIKE \"./2024/2024-04%_Lissabon\";",
+			"UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE \"./2024/2024-08%_Blåvand\";"
+		],
+		"vacuum": [
+			"VACUUM;"
+		]
+	},
+	"search": {
+		"iptc": {
+			"Headline": "TI:",
+			"Keywords": "KW:",
+			"Location": "PL:",
+			"City": "PL:",
+			"Country": "PL:",
+			"_dummy": ""
+		},
+		"exif": {
+			"Headline": "TI:",
+			"Keywords": "KW:",
+			"Location": "PL:",
+			"City": "PL:",
+			"Country": "PL:",
+			"_dummy": ""
+		}
 	}
 }
