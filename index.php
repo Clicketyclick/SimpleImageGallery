@@ -7,7 +7,7 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:19 / ErBa
- *   @version    2024-11-15T01:05:42
+ *   @version    @include version.txt
  */
 
 echo '
@@ -244,7 +244,6 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $
 
 
 /**
- *               breadcrumbs
  *   @brief      Build a breadcrumb trail from a file path
  *   
  *   @param [in]	$path	$(description)
@@ -268,13 +267,12 @@ function breadcrumbs( $path )
 
 
 /**
- *            	buildDirTree
  *   @brief     Build directory tree
  *   
- *   @param [in]	&$dirs	$(description)
- *   @return     $(Return description)
+ *   @param [in]	&$dirs	Root
+ *   @return     array of directory names
  *   
- *   @details    $(More details)
+ *   @details    Recursive scandir
  *   
  *   
  *   @see        https://
@@ -312,14 +310,6 @@ function buildDirTree( &$dirs )
  *   @param [in]	$current	Current directory
  *   @return     List of subdirectories to current directory
  *   
- *<!--
- *   @details    
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
- *-->
  *   @since      2024-11-15T01:29:30
  */
 function subdirsToCurrent( $haystack, $current )
@@ -332,15 +322,11 @@ function subdirsToCurrent( $haystack, $current )
 //----------------------------------------------------------------------
 
 /**
- *               show_thumb
  *   @brief      Build thumb display
  *   
  *   @param [in]	$filedata	Source file
  *   @return     HTML figure
  *   
- *   @details    
- *   
- *   @see        https://
  *   @since      2024-11-15T01:31:11
  */
 function show_thumb( $filedata )
@@ -371,13 +357,11 @@ function show_thumb( $filedata )
 
 
 /**
- *               show_image
  *   @brief      Build image display
  *   
  *   @param [in]	$filedata	Source file
  *   @return     HTML figure
  *   
- *   @details    
  *   
  *   @since      2024-11-15T01:32:29
  */
@@ -468,7 +452,7 @@ $b	= json_decode( $a, TRUE, 512, JSON_OBJECT_AS_ARRAY | JSON_INVALID_UTF8_IGNORE
 var_export( $b );
 echo PHP_EOL;
 var_export( array_flatten2($b) );
-@codeend
+@endcode
 
 @verbatim
 array (
@@ -490,7 +474,7 @@ array (
   ),
   'Single entry' => 'Just one',
 )
-@verbatimend
+@endverbatim
  *   
  *   @since      2024-11-14T13:39:47
  */
