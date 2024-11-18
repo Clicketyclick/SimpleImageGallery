@@ -87,8 +87,8 @@ if ( isset( $_REQUEST['resume'] ) )
 	verbose( 'Resume processing' );
 	$sql	= $dbCfg['sql']['select_files_resume'];
 	debug( $sql, 'SQL:' );
-	
 	$files 	= querySql( $db, $sql );
+
 	foreach($files as $no => $path)
 	{
 		$files[$no]	= $path['files'];
@@ -112,7 +112,7 @@ else
 	getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
 	debug( $files );
 
-	status( count( $files ), "Processing");
+	status( "Processing file", count( $files ));
 	// Put all files to database: images
 	putFilesToDatabase( $files );
 }
@@ -120,10 +120,10 @@ else
 
 verbose( '// Write meta data for each file' );
 
-
 $starttime	= microtime( TRUE );
 //foreach ( $files as $path )
-$total	= count($files);
+$images_total	= count($files);
+
 foreach ( $files as $file )
 {
 	$r  = $db->exec( "BEGIN TRANSACTION;" );
@@ -136,34 +136,41 @@ foreach ( $files as $file )
 	$note	= "";
 	debug( $file );
 
-	//debug(microtime( TRUE ) - $currenttime, "\nStart");
 	// Get image dimentions
 	list($width, $height, $type, $attr) = getimagesize($file);
-	//debug(microtime( TRUE ) - $currenttime, 'Get image dimentions');
+
 	// Get EXIF
 	$exif 		= exif_read_data( $file, 0, true);
 	if ( empty( $exif ) )
 	{
-		logging( "$src error in image EXIF" );
+		logging( "$file error in image EXIF" );
 		// Write to table: images
-		$r  = $db->exec( $sql );
-		continue;
+		//$r  = $db->exec( $sql );
+		//$r  = $db->exec( "COMMIT;" );
+		//continue;
+		$exifjson 	= 'EMPTY';
 	}
-
-	$exifjson 	= json_encode_db( $exif );
+	else
+	{
+		$exifjson 	= json_encode_db( $exif );
+	}
 	debug($exifjson, 'EXIF_json');
+
 	//debug(microtime( TRUE ) - $currenttime, 'EXIF_json');
 	// Get IPTC
 	$iptc		= parseIPTC( $file );
 	if ( empty( $iptc ) )
 	{
-		logging( "$src error in image IPTC" );
+		logging( "$file error in image IPTC" );
 		// Write to table: images
-		$r  = $db->exec( $sql );
-		continue;
+		//$r  = $db->exec( $sql );
+		//$r  = $db->exec( "COMMIT;" );
+		//continue;
+		$iptcjson 	= 'EMPTY';
 	}
-    $iptcjson 	= json_encode_db( $iptc );
-	//debug(microtime( TRUE ) - $currenttime, 'IPTC_json');
+	else
+		$iptcjson 	= json_encode_db( $iptc );
+
 	debug($iptcjson, 'IPTC_json');
 
 	// Get thumbnail
@@ -198,9 +205,10 @@ foreach ( $files as $file )
 	
 	if ( empty( $thumb ) )
 	{
-		$r  = $db->exec( "COMMIT;" );
+		//$r  = $db->exec( "COMMIT;" );
 		logging( "Skipping thumb $file" );
-		continue;
+		$thumb	= 'EMPTY';
+		//continue;
 	}
 	//debug(microtime( TRUE ) - $currenttime, 'get thumb');
 	// Rotate EXIF
@@ -219,10 +227,10 @@ foreach ( $files as $file )
 	if ( empty($view) )
 	{
 		//$view = file_get_contents($file);
-		$r  = $db->exec( "COMMIT;" );
+		//$r  = $db->exec( "COMMIT;" );
 		logging( "Skipping view $file" );
-		continue;
-
+		//continue;
+		$view	= 'EMPTY';
 	}
 	//debug(microtime( TRUE ) - $currenttime, 'view resize');
 	$view 		= base64_encode( $view );
@@ -236,28 +244,18 @@ foreach ( $files as $file )
 	,	$view
 	,	$dirname
 	);
-	//debug( $sql );
-	//echo( $sql );
-
-	// Write to table: images
+	debug( $sql );
 	$r  = $db->exec( $sql );
 
 	// Update meta
 	$sql	= sprintf($dbCfg['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
-	//debug( $sql  );
-	//echo "\n$sql\n";
-	
-	//$r  = $db->exec( sprintf($dbCfg['sql']['replace_into_meta'], $dirname,$basename, $exifjson, $iptcjson ) );
+	debug( $sql  );
+	//verbose( $sql  );
 	$r  = $db->exec( $sql );
 
-	//debug(microtime( TRUE ) - $currenttime, 'DB write');
-	
-	// Display status
-	//fprintf( STDOUT, "- [%-35.35s] [%s] %sx%s %s %s %s\n"
-	//verbose( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
 	logging( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
 		,	$count
-		,	$total
+		,	$images_total
 		,	$exif['FILE']['FileName']
 		,	date( 'c', $exif['FILE']['FileDateTime'] )
 		,	$exif['COMPUTED']['Width']
@@ -270,11 +268,33 @@ foreach ( $files as $file )
 	);
 	$r  = $db->exec( "COMMIT;" );
 	
-	echo progressbar($count, $total) . $file;
+	echo progressbar($count, $images_total) . $file;
 }
 
+verbose( "Post-processing", "\n- ");
+// Count all post action - names
+$post_total	= count( $dbCfg['post'], COUNT_RECURSIVE ) - count( $dbCfg['post'] );
+$count	= 0;
 
-//echo PHP_EOL . "Images processed: ". $count;
+foreach( $dbCfg['post'] as $group => $actions )
+{
+	//verbose($group);
+	//$post_total	+= count( $actions );
+	foreach( $actions as $sql )
+	{
+		if ( str_starts_with( $sql, '--') )
+		{
+			debug( $sql, 'skip:' );
+			$group	= '';
+		}
+		else
+		{
+			debug($sql);
+			$r  = $db->exec( $sql );
+		}
+		echo progressbar( ++$count, $post_total) . $group;
+	}
+}
 
 //----------------------------------------------------------------------
 
@@ -326,9 +346,32 @@ function initDatabase( &$db, $dbfile, &$dbCfg )
 {
 	if ( ! file_exists( $dbfile ) )
 	{
-		verbose( $dbfile, "Create database:\t" );
+		status(  "Create database", $dbfile );
 		$db	= createSqlDb($dbfile);
-		$r  = $db->exec( $dbCfg['sql']['create_images'] );
+
+		$GLOBALS['tables_total']	= count($dbCfg['tables']);
+		$count	= 0;
+		status("Create tables", $GLOBALS['tables_total']);
+		foreach( $dbCfg['tables'] as $action => $sql )
+		{
+			//verbose($action, 'Create: ');
+			debug($sql, $action);
+			if ( str_starts_with( $action, '_') || str_starts_with( $sql, '--') )
+			{
+				debug( $sql, 'skip: ') ;
+				$action	= '';
+			}
+			else
+			{
+				debug($sql);
+				$r  = $db->exec( $sql );
+			}
+			
+			//echo PHP_EOL;
+			echo progressbar( ++$count, $GLOBALS['tables_total']) . $action;
+		}
+		
+		//$r  = $db->exec( $dbCfg['sql']['create_images'] );
 		//$r  = $db->exec( $dbCfg['sql']['create_meta'] );
 	}
 	else
@@ -473,9 +516,11 @@ function shutdown( )
     echo PHP_EOL . 'Script executed with success', PHP_EOL;
 	*/
 	fputs( STDERR, "\n");
-	status( "Images processed", $GLOBALS['count']);
+	status( "Tables created", $GLOBALS['tables_total'] ?? 0);
+	status( "Images processed", $GLOBALS['images_total'] ?? 0);
+	status( "Post processes", $GLOBALS['post_total'] ?? 0);
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
-	status( "Runtime ", $Runtime );
+	//status( "Runtime ", $Runtime );
 	status( "Runtime ", microtime2human( $Runtime ) );
 	status( "Log", $GLOBALS['logfile']  ?? 'none');
 
