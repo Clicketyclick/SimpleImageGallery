@@ -15,7 +15,10 @@
 		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE path like '%s'\nAND\nfile like '%s';",
 		
 		"select_files_resume_count":  "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
-		"select_files_resume": "SELECT path||'/'||file FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
+		"select_files_resume": "SELECT path||'/'||file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
+		"_select_files_resume": "SELECT file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
+		"_select_files_resume": "SELECT file as files FROM images WHERE iptc IS NULL OR iptc = '' ;",
+		"_select_files_resume": "SELECT file FROM images;",
 
 		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
 		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
