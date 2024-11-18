@@ -1,23 +1,26 @@
 <?php
 /**
  *   @file       rebuild.php
- *   @brief      Rebuild database with files and metadata
- *   @details    Recursive processing file tree
- *   
+ *   @brief      Rebuild database with files and metadata,
+ *   @details    Recursive processing file tree. 
  *   
  *   @todo		Needs a resume action on broken rebuild (WHERE exif IS NULL)
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:36 / ErBa
- *   @version    2024-11-11T06:14:36
+ *   @version    @include version.txt
  */
 
 // Parse cli arguments and insert into $_REQUEST
 parse_cli2request();
 
-// Get DoxyIT header
-preg_match('/\/\*\*(.*?)\*\//s', implode( '', file( __FILE__ )), $match); fputs( STDERR, $match[1] . PHP_EOL );
+include_once( 'lib/getGitInfo.php');
+fputs( STDERR, getDoxygenHeader( __FILE__) );
+
+//exit;
+//$GitCommitInfo	= getGitCommitInfo();
+//$gitVersion		= getGitVersion();
 
 register_shutdown_function('shutdown');
 
@@ -36,12 +39,17 @@ include_once('lib/progress_bar.php');
 $GLOBALS['verbose']	= 1;
 //$GLOBALS['debug']	= 1;
 $GLOBALS['logging']	= 1;
+debug( $_REQUEST, 'Request' );
+
+
 //$GLOBALS['logfile.txt']	= 1;
 // Read configuration
 $cfg		= file_get_json( 'config/config.json' );
 $local		= file_get_json( 'config/local.json' );
 $dbCfg		= file_get_json( 'config/database.json' );
 $metatags	= file_get_json( 'config/meta.json' );
+// Update ALL
+$count	= 0;
 
 // Parse CLI / $_REQUEST
 /*
@@ -73,10 +81,20 @@ $db			= FALSE;
 initDatabase( $db, $cfg['database']['file_name'], $dbCfg );
 
 // Resume or process all?
-if ( ! empty( $cfg['resume '] ) )
+//if ( ! empty( $cfg['resume '] ) )
+if ( isset( $_REQUEST['resume'] ) )
 {	// Resume
+	verbose( 'Resume processing' );
 	$sql	= $dbCfg['sql']['select_files_resume'];
-	$files 	= $db->exec( $sql );
+	debug( $sql, 'SQL:' );
+	
+	$files 	= querySql( $db, $sql );
+	foreach($files as $no => $path)
+	{
+		$files[$no]	= $path['files'];
+	}
+	//var_export($files);exit;
+
 	foreach ( $files as $file )
 	{
 		if ( strpos( $file, "\\") )
@@ -85,10 +103,11 @@ if ( ! empty( $cfg['resume '] ) )
 			$files[]	= str_replace( "\\", '/', "$file");
 		}
 	}
-	status( count( $files ), "Resume");
+	status('Resume', count( $files ));
 }
 else
 {	// Process all
+	verbose( 'Process all' );
 	// Find all image files recursive
 	getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
 	debug( $files );
@@ -100,8 +119,6 @@ else
 
 
 verbose( '// Write meta data for each file' );
-// Update ALL
-$count	= 0;
 
 
 $starttime	= microtime( TRUE );
