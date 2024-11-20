@@ -261,6 +261,12 @@ function microtime2human( $microtime )
  *  @return     Log entry
  *  
 @code
+	$GLOBALS['timers']['resume']	= microtime(TRUE);
+	::
+	progress_log( $max, $count, $GLOBALS['timers']['resume'], $level = 1000 )
+@endcode
+ *
+@code
  *      $starttime  = microtime( TRUE );
  *      for ( $count = 1 ; $count <= $max ; $count++ ) 
  *      {
@@ -278,11 +284,12 @@ function microtime2human( $microtime )
  */
 function progress_log( $max, $count, $starttime, $level = 1000 )
 {
+    $count  = $count ? $count  : 1;
 
     if ( ! ( $count % $level ) )
     {
         $currenttime  = microtime( TRUE );
-        $av         = ($currenttime - $starttime ) / $count;
+        $av         = ( $currenttime - $starttime ) / $count;
         $remainder  = $max - $count;
         $msg        = sprintf(
                 "loop: %s/%s : duration: %s  - av. %.5s : %s.5‰: ETA %s"
@@ -293,7 +300,7 @@ function progress_log( $max, $count, $starttime, $level = 1000 )
                 ,   substr(microtime2human( $av * $level ), 0, 12)
                 ,   substr(microtime2human( $av * $remainder ), 0, 12)
             );
-        error_log( $msg );
+        //error_log( $msg );
         //setStatus( $msg );
         return( $msg );
     }
