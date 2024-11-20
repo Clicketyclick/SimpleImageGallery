@@ -7,16 +7,20 @@
 		"_dummy": ""
 	},
 	"sql": {
-		"insert_files": "INSERT OR IGNORE INTO %s( path, file, source ) VALUES( '%s','%s','%s' );",
+		"insert_files": "INSERT OR IGNORE INTO %s( source, path, file, name ) VALUES( '%s','%s','%s','%s' );",
 		"insert_search": "INSERT OR IGNORE INTO search( search_id, recno, entry, key ) VALUES( '%s','%s','%s','%s' );",
+		"delete_search": "DELETE FROM search WHERE search_id = '%s';",
 		"replace_into_images": "REPLACE INTO images( path, file, thumb, display, source ) VALUES( '%s', '%s', '%s', '%s', '%s');",
+		"replace_into_images": "REPLACE INTO images( path, file, thumb, display, source ) VALUES( '%s', '%s', '%s', '%s', '%s');",
+		"replace_into_images": "UPDATE images\nSET thumb = '%s',\ndisplay = '%s'\nWHERE source like '%s'\nAND\nfile like '%s';",
 		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE source like '%s'\nAND\nfile like '%s';",
 		"select_files_resume_count": "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_files_resume": "SELECT path||'/'||file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
-		"select_source_meta": "SELECT source||'/'||file as file, exif, iptc FROM images;",
-		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
-		"select_thumb": "SELECT path, file, thumb FROM IMAGES WHERE path like '%s'",
+		"select_source_meta": "SELECT rowid, source||'/'||file as file, exif, iptc FROM images;",
+		"_select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
+		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s';",
+		"select_thumb": "SELECT path, file, thumb FROM IMAGES WHERE path like '%s' ORDER BY path DESC, file DESC",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
 		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
@@ -29,7 +33,7 @@
 			"UPDATE images SET path = replace (path, './data', '.');"
 		],
 		"name": [
-			"UPDATE images SET name = file;",
+			"-- UPDATE images SET name = file;",
 			"-- Replace any case of '.jpg' length with ''",
 			"UPDATE images SET name = SUBSTR(name, 0, INSTR(LOWER(name), '.jpg')) || '' || SUBSTR(name, INSTR(LOWER(name), '.jpg')+4) WHERE name LIKE \"%.jpg%\"",
 			"-- Remove date prefix",
