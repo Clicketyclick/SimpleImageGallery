@@ -260,6 +260,27 @@ function ___( $key, $lang = FALSE )
 
 //----------------------------------------------------------------------
 
+
+/**
+ *   @brief      Detect browser language
+ *   
+ *   @param [in]	$acceptLang=['fr'	$(description)
+ *   @param [in]	'it'	$(description)
+ *   @param [in]	'en'	$(description)
+ *   @param [in]	'da']	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    $(More details)
+ *   
+ *   @example    
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://stackoverflow.com/a/3770616
+ *   @since      2024-11-20T13:02:55
+ */
 function getBrowserLanguage( $acceptLang = ['fr', 'it', 'en', 'da'] )
 {
     $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
