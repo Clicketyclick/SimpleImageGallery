@@ -314,28 +314,13 @@ CREATE INDEX idx_path ON images(path);
 .progress 1000
 SELECT count(name) FROM images WHERE name IS NULL;
 UPDATE images SET name = file WHERE name IS NULL;
-UPDATE images SET source = path WHERE source IS NULL;
+UPDATE images SET source = path;-- WHERE source IS NULL;
 
 
 
 	--UPDATE images SET name = file;
 	----------------------------------------------------------------------
 	-- Replace any case of '.jpg' length with ''
-	UPDATE images  
-	SET 
-	  name = SUBSTR(name, 0, INSTR(LOWER(name), '.jpg')) || '' || SUBSTR(name, INSTR(LOWER(name), '.jpg')+4)
-	WHERE 
-	  name LIKE "%.jpg%";
-	----------------------------------------------------------------------
-	-- Remove date prefix
-	-- -- 190xx-xx-xxTxx-xx-xx
-	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '19__-__-__T__-__-__%';
-	-- -- 20xx-xx-xxTxx-xx-xx
-	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__T__-__-__%';
-	-- 20xx-xx-xx_xx-xx-xx
-	UPDATE images SET name = substr( name, 21 ) WHERE name LIKE '20__-__-__\___-__-__%' ESCAPE '\' ;
-	-- 20xx-xx-xx_
-	UPDATE images SET name = substr( name, 11 ) WHERE name LIKE '20__-__-__\_%' ESCAPE '\' ;
 	----------------------------------------------------------------------
 	.output name_images.txt
 	SELECT name FROM images;
