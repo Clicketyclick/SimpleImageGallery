@@ -33,7 +33,7 @@
 function parseIPTC( $file )
 {
 	// Remap IPTC tags to human readables
-	$iptcHeaderArray	= $GLOBALS['metatags']['iptc'];
+	$iptcHeaderArray	= $_SESSION['metatags']['iptc'];
 
 	$size = getimagesize($file, $info);
 	if ( empty($info['APP13']) )

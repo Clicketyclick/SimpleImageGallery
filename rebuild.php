@@ -12,89 +12,34 @@
  *   @version    @include version.txt
  */
 
-// Parse cli arguments and insert into $_REQUEST
-parse_cli2request();
+include_once('lib/_header.php');
 
-include_once( 'lib/getGitInfo.php');
-fputs( STDERR, getDoxygenHeader( __FILE__) );
-
-//exit;
-//$GitCommitInfo	= getGitCommitInfo();
-//$gitVersion		= getGitVersion();
-
-register_shutdown_function('shutdown');
-
-// Dummy root
-$releaseroot	= __DIR__ . '/';
-
-// Include libraries
-include_once('lib/debug.php');
-include_once('lib/handleJson.php');
-include_once('lib/imageResize.php');
-include_once('lib/handleSqlite.php');
-include_once('lib/iptc.php');
-include_once('lib/jsondb.php');
-include_once('lib/progress_bar.php');
-// Verbose and debug
-$GLOBALS['verbose']	= 1;
-//$GLOBALS['debug']	= 1;
-$GLOBALS['logging']	= 1;
-debug( $_REQUEST, 'Request' );
-
-
-//$GLOBALS['logfile.txt']	= 1;
-// Read configuration
-$cfg		= file_get_json( 'config/config.json' );
-$local		= file_get_json( 'config/local.json' );
-$dbCfg		= file_get_json( 'config/database.json' );
-$metatags	= file_get_json( 'config/meta.json' );
-// Update ALL
-$count	= 0;
-
-// Parse CLI / $_REQUEST
-/*
--cfg:images:image_resize_type=scale
--cfg:images:image_resize_type=resized
--cfg:images:image_resize_type=resampled
-
--cfg:resume=1
-
-*/
-foreach ( $_REQUEST as $cmd => $cmdvalue )
-{
-	if ( str_starts_with( $cmd, 'cfg' ) )
-	{
-		setPathKey( array_slice(explode(':', $cmd ), 1), $cfg, $cmdvalue);
-	}
-}
-
-status( "Image resize type", $cfg['images']['image_resize_type'] );
-debug( $cfg, 'Config after $_REQUEST' );
+status( "Image resize type", $_SESSION['config']['images']['image_resize_type'] );
+debug( $_SESSION['config'], 'Config after $_REQUEST' );
 
 // Init global variables
 $files		= [];
-$db			= FALSE;
 
 //----------------------------------------------------------------------
 
-// Open - or create database
-initDatabase( $db, $cfg['database']['file_name'], $dbCfg );
-
 // Resume or process all?
-//if ( ! empty( $cfg['resume '] ) )
 if ( isset( $_REQUEST['resume'] ) )
 {	// Resume
 	verbose( 'Resume processing' );
-	$sql	= $dbCfg['sql']['select_files_resume'];
+	$_SESSION['timers']['resume']	= microtime(TRUE);
+
+	// Select resume files
+	$sql	= $_SESSION['database']['sql']['select_files_resume'];
 	debug( $sql, 'SQL:' );
 	$files 	= querySql( $db, $sql );
 
+	// Isolate file
 	foreach($files as $no => $path)
 	{
 		$files[$no]	= $path['files'];
 	}
-	//var_export($files);exit;
 
+	// Flatten
 	foreach ( $files as $file )
 	{
 		if ( strpos( $file, "\\") )
@@ -103,26 +48,34 @@ if ( isset( $_REQUEST['resume'] ) )
 			$files[]	= str_replace( "\\", '/', "$file");
 		}
 	}
+
 	status('Resume', count( $files ));
+	logging( progress_log( count( $files ), count( $files ), $_SESSION['timers']['resume'], 1 ) );
 }
 else
 {	// Process all
 	verbose( 'Process all' );
+	$_SESSION['timers']['get_images_recursive']	= microtime(TRUE);
+
 	// Find all image files recursive
-	getImagesRecursive( $GLOBALS['cfg']['data']['data_root'], $GLOBALS['cfg']['data']['image_ext'], $files, ['jpg'] );
+	getImagesRecursive( $_SESSION['config']['data']['data_root'], $_SESSION['config']['data']['image_ext'], $files, ['jpg'] );
+	logging( progress_log( count( $files ), 1, $_SESSION['timers']['get_images_recursive'], 1 ) );
 	debug( $files );
 
 	status( "Processing file", count( $files ));
+	$_SESSION['timers']['put_files_to_database']	= microtime(TRUE);
+	
 	// Put all files to database: images
 	putFilesToDatabase( $files );
+	logging( progress_log( count( $files ), 1, $_SESSION['timers']['put_files_to_database'], 1 ) );
 }
 
 
 verbose( '// Write meta data for each file' );
 
-$starttime	= microtime( TRUE );
-//foreach ( $files as $path )
-$images_total	= count($files);
+$_SESSION['timers']['add_meta']     = microtime(TRUE);
+$_SESSION['tmp']['images_total']    = count($files);
+$count      = 0;
 
 foreach ( $files as $file )
 {
@@ -130,24 +83,18 @@ foreach ( $files as $file )
 	$currenttime	= microtime( TRUE );
 	++$count;
 
-	//['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-	['basename' => $basename, 'dirname' => $dirname] = pathinfo( $file );
-	//$file	= "$dirname/$basename";
+    ['basename' => $basename, 'dirname' => $dirname] = pathinfo( $file );
 	$note	= "";
 	debug( $file );
 
 	// Get image dimentions
 	list($width, $height, $type, $attr) = getimagesize($file);
 
-	// Get EXIF
-	$exif 		= exif_read_data( $file, 0, true);
+	// Get EXIF - in quiet mode
+	$exif 	= @exif_read_data( $file, 0, true);
 	if ( empty( $exif ) )
 	{
 		logging( "$file error in image EXIF" );
-		// Write to table: images
-		//$r  = $db->exec( $sql );
-		//$r  = $db->exec( "COMMIT;" );
-		//continue;
 		$exifjson 	= 'EMPTY';
 	}
 	else
@@ -156,16 +103,11 @@ foreach ( $files as $file )
 	}
 	debug($exifjson, 'EXIF_json');
 
-	//debug(microtime( TRUE ) - $currenttime, 'EXIF_json');
 	// Get IPTC
 	$iptc		= parseIPTC( $file );
 	if ( empty( $iptc ) )
 	{
 		logging( "$file error in image IPTC" );
-		// Write to table: images
-		//$r  = $db->exec( $sql );
-		//$r  = $db->exec( "COMMIT;" );
-		//continue;
 		$iptcjson 	= 'EMPTY';
 	}
 	else
@@ -173,23 +115,22 @@ foreach ( $files as $file )
 
 	debug($iptcjson, 'IPTC_json');
 
-	// Get thumbnail
-	$thumb 		= exif_thumbnail( $file );
+	// Get thumbnail - in quiet mode
+	$thumb 		= @exif_thumbnail( $file );
 	if ( empty( $thumb) )
 	{
 		$note			.= "Thumb build";
-		//list($width, $height, $type, $attr) = getimagesize($file);
-		$thumb_width	= 100;
-		$thumb_height	= 100;
+		$thumb_width	= $_SESSION['config']['display']['thumb_max_width'];
+		$thumb_height	= $_SESSION['config']['display']['thumb_max_height'];
 		$dst			= "FALSE";
 		$thumb			= image_resize( 
 				$file
 			,	$dst
-			,	$cfg['images']['thumb_max_width']
-			,	$cfg['images']['thumb_max_height']
+			,	$_SESSION['config']['images']['thumb_max_width']
+			,	$_SESSION['config']['images']['thumb_max_height']
 			,	$exif['IFD0']['Orientation'] ?? 0
-			,	$cfg['images']['image_resize_type']
-			,	$cfg['images']['crop']
+			,	$_SESSION['config']['images']['image_resize_type']
+			,	$_SESSION['config']['images']['crop']
 			);
 	}
 	else
@@ -218,10 +159,10 @@ foreach ( $files as $file )
 	$view 		= image_resize( 
 					$file
 				,	$dst
-				,	$cfg['images']['display_max_width']
-				,	$cfg['images']['display_max_height']
+				,	$_SESSION['config']['images']['display_max_width']
+				,	$_SESSION['config']['images']['display_max_height']
 				,	$exif['IFD0']['Orientation'] ?? 0
-				,	$cfg['images']['image_resize_type']
+				,	$_SESSION['config']['images']['image_resize_type']
 				,	$crop=0
 				);
 	if ( empty($view) )
@@ -237,25 +178,32 @@ foreach ( $files as $file )
 
 	// Update thumb and view
 	$sql	= sprintf( 
-		$dbCfg['sql']['replace_into_images']
+		$_SESSION['database']['sql']['replace_into_images']
 	,	$dirname
 	,	$basename
 	,	$thumb
 	,	$view
 	,	$dirname
 	);
+	$sql	= sprintf( 
+		$_SESSION['database']['sql']['replace_into_images']
+	,	$thumb
+	,	$view
+	,	$dirname
+	,	$basename
+	);
 	debug( $sql );
 	$r  = $db->exec( $sql );
 
 	// Update meta
-	$sql	= sprintf($dbCfg['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
+	$sql	= sprintf($_SESSION['database']['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
 	debug( $sql  );
 	//verbose( $sql  );
 	$r  = $db->exec( $sql );
 
 	logging( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
 		,	$count
-		,	$images_total
+		,	$_SESSION['tmp']['images_total']
 		,	$exif['FILE']['FileName']
 		,	date( 'c', $exif['FILE']['FileDateTime'] )
 		,	$exif['COMPUTED']['Width']
@@ -267,34 +215,46 @@ foreach ( $files as $file )
 	,	"Image: "
 	);
 	$r  = $db->exec( "COMMIT;" );
-	
-	echo progressbar($count, $images_total) . $file;
+
+	logging( progress_log( $_SESSION['tmp']['images_total'], $count, $_SESSION['timers']['add_meta'], 1 ) );
+	echo progressbar($count, $_SESSION['tmp']['images_total'], $_SESSION['config']['process']['progressbar_size'], $file, $_SESSION['config']['process']['progressbar_lenght'] );
 }
+logging( progress_log( $_SESSION['tmp']['images_total'], $count, $_SESSION['timers']['add_meta'], 1 ) );
 
 verbose( "Post-processing", "\n- ");
 // Count all post action - names
-$post_total	= count( $dbCfg['post'], COUNT_RECURSIVE ) - count( $dbCfg['post'] );
+$_SESSION['tmp']['post_total']  = count( $_SESSION['database']['post'], COUNT_RECURSIVE ) - count( $_SESSION['database']['post'] );
 $count	= 0;
 
-foreach( $dbCfg['post'] as $group => $actions )
+$_SESSION['timers']['post']	= microtime(TRUE);
+foreach( $_SESSION['database']['post'] as $group => $actions )
 {
+	$_SESSION['timers']["post_{$group}"]	= microtime(TRUE);
 	//verbose($group);
 	//$post_total	+= count( $actions );
+	$action_no	= 0;
 	foreach( $actions as $sql )
 	{
+		$action_no++;
+		$_SESSION['timers']["post_{$group}_{$action_no}"]	= microtime(TRUE);
 		if ( str_starts_with( $sql, '--') )
 		{
 			debug( $sql, 'skip:' );
-			$group	= '';
+			//$group	= '';
 		}
 		else
 		{
 			debug($sql);
 			$r  = $db->exec( $sql );
 		}
-		echo progressbar( ++$count, $post_total) . $group;
+		$count++;
+		//logging( "$count/$post_total: $group " . microtime2human( microtime( TRUE ) - $microtime_start ));
+		logging( progress_log( $_SESSION['tmp']['post_total'], $count, $_SESSION['timers']["post_{$group}_{$action_no}"], 1 ) );
+    echo progressbar($count, $_SESSION['tmp']['post_total'], $_SESSION['config']['process']['progressbar_size'], "{$group}: {$sql}", $_SESSION['config']['process']['progressbar_lenght'] );
 	}
+    logging( progress_log( $_SESSION['tmp']['post_total']   , $count, $_SESSION['timers']["post_{$group}"], 1 ) );
 }
+logging( progress_log( $_SESSION['tmp']['post_total'], $count, $_SESSION['timers']["post"], 1 ) );
 
 //----------------------------------------------------------------------
 
@@ -311,13 +271,12 @@ foreach( $dbCfg['post'] as $group => $actions )
 function putFilesToDatabase( $files )
 {
 	global $db;
-	global $dbCfg;
 	verbose( '// Write all file names to table' );
 	$r  = $db->exec( "BEGIN TRANSACTION;" );
 	foreach ( $files as $path )
 	{
 		['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-		$sql	= sprintf( $dbCfg['sql']['insert_files'], 'images', $dirname, $basename, $dirname );
+		$sql	= sprintf( $_SESSION['database']['sql']['insert_files'], 'images', $dirname, $dirname, $basename, $basename );
 		debug( $sql );
 		$r  = $db->exec( $sql );
 	}
@@ -326,80 +285,6 @@ function putFilesToDatabase( $files )
 
 //----------------------------------------------------------------------
 
-/**
- *            initDatabase
- *   @brief      Open or create database w. tables
- *   
- *   @param [in]	&$db	Handle to database
- *   @param [in]	$dbfile	Database file name
- *   @param [in]	&$dbCfg	Database schemas from JSON
- *   @return     TRUE if open | FALSE
- *   
- *   @details
- *	* Create database if not exists
- *      * Create tables
- *  * Open data if exists
- *   
- *   @since      2024-11-13T13:47:53
- */
-function initDatabase( &$db, $dbfile, &$dbCfg )
-{
-	if ( ! file_exists( $dbfile ) )
-	{
-		status(  "Create database", $dbfile );
-		$db	= createSqlDb($dbfile);
-
-		$GLOBALS['tables_total']	= count($dbCfg['tables']);
-		$count	= 0;
-		status("Create tables", $GLOBALS['tables_total']);
-		foreach( $dbCfg['tables'] as $action => $sql )
-		{
-			//verbose($action, 'Create: ');
-			debug($sql, $action);
-			if ( str_starts_with( $action, '_') || str_starts_with( $sql, '--') )
-			{
-				debug( $sql, 'skip: ') ;
-				$action	= '';
-			}
-			else
-			{
-				debug($sql);
-				$r  = $db->exec( $sql );
-			}
-			
-			//echo PHP_EOL;
-			echo progressbar( ++$count, $GLOBALS['tables_total']) . $action;
-		}
-		
-		//$r  = $db->exec( $dbCfg['sql']['create_images'] );
-		//$r  = $db->exec( $dbCfg['sql']['create_meta'] );
-	}
-	else
-	{
-		//verbose( $dbfile, "Opening database:\t");
-		status("Opening database",  $dbfile);
-		$db	= openSqlDb($dbfile);
-	}
-	return( ! empty( $db ) );
-}	// initDatabase()
-
-//----------------------------------------------------------------------
-
-/**
- *   @brief      Localisation function
- *   
- *   @param [in]	$key	Lookup key for local
- *   @param [in]	$lang='en'	Language code [Default:en]
- *   @return     Translation | [$key][$lang]
- *   
- *   @since      2024-11-13T13:43:14
- */
-function ___( $key, $lang = 'en' )
-{
-	return( $GLOBALS['local'][$key][$lang] ?? "[$key][$lang]" );
-}	// ___()
-
-//----------------------------------------------------------------------
 
 /**
  *   @brief      Get a list of images recursive from root
@@ -419,6 +304,16 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 	$it = new RecursiveDirectoryIterator( $root, RecursiveDirectoryIterator::SKIP_DOTS );
 	$display = Array ( 'jpeg', 'jpg' );
 
+	
+	$count	= 0;
+	$_SESSION['tmp']['files_total']	= 0;
+	//$it2	= new RecursiveIteratorIterator($it);
+	//$it3 = new RegexIterator($it2, '/^.+\.jpg$/i', RecursiveRegexIterator::GET_MATCH);
+
+	foreach(new RecursiveIteratorIterator($it) as $file)
+		$_SESSION['tmp']['files_total']++;
+	
+	//foreach( $it3 as $file)
 	foreach(new RecursiveIteratorIterator($it) as $file)
 	{
 		if ( ! empty( $allowed ) )
@@ -430,63 +325,12 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 		}
 		else
 			$files[]	= str_replace( "\\", '/', "$file");
+		
+		echo progressbar( ++$count, $_SESSION['tmp']['files_total'], $_SESSION['config']['process']['progressbar_size'], $file, $_SESSION['config']['process']['progressbar_lenght'] );
 	}
+    echo PHP_EOL;
 	return( ! empty($files) );
 }	// getImagesRecursive()
-
-//----------------------------------------------------------------------
-
-
-/**
- *  @brief     Parse cli arguments and insert into $_REQUEST
- *  
- *  @details   Store in global variable
- *  
-@code
-parse_cli2request(); var_export( $_REQUEST );
-@endcode
- *  
- *  @see       https://stackoverflow.com/a/37600661
- *  @since     2024-06-25T09:09:12 / erba
- */
-function parse_cli2request()
-{
-    global $argv;
-    
-    // CLI or HTTP
-    // https://stackoverflow.com/a/37600661
-    if (php_sapi_name() === 'cli') {
-        // Remove '-' and '/' from keys
-        for ( $x = 0 ; $x < count($argv) ; $x++ )
-            $argv[$x]   = ltrim($argv[$x], '-/');
-        // Concatenate and parse string into $_REQUEST
-        parse_str(implode('&', array_slice($argv, 1)), $_REQUEST);
-    }
-}   // parse_cli2request()
-
-//----------------------------------------------------------------------
-
-
-/**
- *   @brief      Encode mixed data for database
- *   
- *   @param [in]	$arr	Mixed data
- *   @return     json with escaped values
- *   
- *   @details    
- *   - json_encode w. JSON_INVALID_UTF8_IGNORE
- *   - SQLite3::escapeString
- *   
- *   @code
- *   $exifjson 	= json_encode_db( $exif );
- *   @endcode
- *   
- *   @since      2024-11-16T10:56:57
- */
-function json_encode_db( $arr )
-{
-	return( SQLite3::escapeString( json_encode( $arr,  JSON_INVALID_UTF8_IGNORE ) ) );
-}	// json_encode_db()
 
 //----------------------------------------------------------------------
 
@@ -505,26 +349,14 @@ function json_encode_db( $arr )
  */
 function shutdown( )
 {
-	/*
-	if ( ! empty($args) )
-	{
-		echo PHP_EOL . implode( "\n", $args ) . PHP_EOL ;
-	}
-	* /
-	echo PHP_EOL . "Images processed: ". $GLOBALS['count'];
-	echo PHP_EOL . "Runtime: " . microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"] .  PHP_EOL;
-    echo PHP_EOL . 'Script executed with success', PHP_EOL;
-	*/
 	fputs( STDERR, "\n");
-	status( "Tables created", $GLOBALS['tables_total'] ?? 0);
-	status( "Images processed", $GLOBALS['images_total'] ?? 0);
-	status( "Post processes", $GLOBALS['post_total'] ?? 0);
+	status( "Tables created",   $_SESSION['tmp']['tables_total'] ?? 0);
+	status( "Images processed", $_SESSION['tmp']['images_total'] ?? 0);
+	status( "Post processes",   $_SESSION['tmp']['post_total'] ?? 0);
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	//status( "Runtime ", $Runtime );
 	status( "Runtime ", microtime2human( $Runtime ) );
-	status( "Log", $GLOBALS['logfile']  ?? 'none');
-
+	status( "Log", $_SESSION['config']['logfile']  ?? 'none');
 }	// shutdown()
-
 
 ?>
