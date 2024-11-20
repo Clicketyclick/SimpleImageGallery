@@ -9,13 +9,8 @@
  *   @since      2024-11-11T06:14:19 / ErBa
  *   @version    @include version.txt
  */
-/*
-session_name('SimpleImageGallery_'.trim(file_get_contents('version.txt')) ?? '' );
-session_start();
-*/
+
 include_once('lib/_header.php');
-
-
 
 echo '
 <!DOCTYPE html>
@@ -121,6 +116,7 @@ echo '/'. basename($_REQUEST['path']);
 echo "<script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
 
 // Change language https://stackoverflow.com/a/22040376/7485823
+// https://stackoverflow.com/a/22040376
 $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 $url = preg_replace("/&browser:language=../", "", $url);
 $escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
@@ -129,6 +125,9 @@ echo "<a class='translate' href='{$escaped_url}&browser:language="
         'en' == $_SESSION['browser']['language'] ? 'da' : 'en'
     )
 .   "' title='". ___('shift_language') ."'>A文</span></a>";
+
+// Clear before folders
+echo "<br clear=both>";
 
 // Get subdirectories to current directory
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
@@ -533,4 +532,5 @@ function shutdown()
 {
     //echo "Goodnight";
 }
+
 ?>
