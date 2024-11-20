@@ -209,6 +209,8 @@ function getClockface( $pct )
  *   @param [in]	$done		Count
  *   @param [in]	$total		Total 
  *   @param [in]	$size=30	Length of bar
+ *   @param [in]	$trailer    String to append
+ *   @param [in]	$langth=30	Max. length of string
  *   @return     Bar as string
  *   
  *   @details    
@@ -220,11 +222,11 @@ for($x=1;$x<=100;$x++){
 }
 @endcode
  *   
- *   
- *   @see        https://
  *   @since      2024-11-16T13:04:08
  */
-function progressbar($done, $total, $size=30) {
+function progressbar($done, $total, $size=30, $trailer = FALSE, $length = 30 ) 
+{
+    include_once( __DIR__.'./handleStrings.php');
     static $width;
 	static $wheel	= ['-','\\', '|','/'];
 	
@@ -237,6 +239,7 @@ function progressbar($done, $total, $size=30) {
     $perc=(double)($done/$total);
  
     $bar=floor($perc*$size);
+    
     if ( 0 > $bar )
         $bar    = 1;
  
@@ -245,7 +248,7 @@ function progressbar($done, $total, $size=30) {
     if($bar<$size){
         //$progressbar.=">";
         $progressbar.= $wheel[ $done % 4];
-        $progressbar.=str_repeat(" ", $size-$bar);
+        $progressbar.=str_repeat(" ", $size - $bar);
     } else {
         $progressbar.="=";
     }
@@ -254,12 +257,15 @@ function progressbar($done, $total, $size=30) {
  
     $left = $total - $done;
 
-    $progressbar.= sprintf( "] %3.3s%% %*s/%-*s "
+    $progressbar.= sprintf( "] %3.3s%% %*s/%-*s %s"
     ,   $disp
     ,   $width
     ,   $done
     ,   $width
     ,   $total
+    ,   ( FALSE === $trailer )    // Format trailing string
+        ?   ''
+        :   str_pad( truncate_center_word( "$trailer", $length - 5), $length)
     );
 
     return( "$progressbar" );
