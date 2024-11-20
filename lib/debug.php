@@ -4,6 +4,15 @@
  *  @brief      Verbose and debug functions
  *   
  *  @details    Debug and verbose for multi levels of info
+ *  Activated from either:
+ *  
+ *  1.Session
+ *  : $_SESSION['debug']
+ *  2. Globals
+ *  : $GLOBALS['debug']
+ *  3. Environment
+ *  : getenv('DEBUG')
+ *
  *  debug           Debug message with location
  *  verbose         Verbose message
  *  logging         Generates log intry in $GLOBALS['logfile'] if $GLOBALS['logging'] flag set
@@ -47,7 +56,7 @@
  */
 function debug ( $str, $extend = FALSE ) 
 {
-    if ( $GLOBALS['debug'] ?? false || getenv('DEBUG') ?? false ) 
+    if ( ($_SESSION['debug'] ?? false) || ($GLOBALS['debug'] ?? false) || (getenv('DEBUG') ?? false) ) 
 	{
         $backtrace  = debug_backtrace()[1] ?? debug_backtrace()[0] ;
         if ( $extend ) {
@@ -106,7 +115,7 @@ function verbose( $str, $extend = FALSE )
 {
     //global $verbose;
     //if ( $GLOBALS['verbose'] ?? false )
-	if ( $GLOBALS['verbose'] ?? false || getenv('VERBOSE') ?? false ) 
+	if ( ( $_SESSION['verbose'] ?? false ) || ( $GLOBALS['verbose'] ?? false ) || ( getenv('VERBOSE') ?? false ) ) 
     {
         //$bt     = debug_backtrace();
         //$caller = array_shift($bt);
@@ -116,7 +125,7 @@ function verbose( $str, $extend = FALSE )
 
         if ('cli' === PHP_SAPI ) {
             //fprintf( STDERR, "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
-            fprintf( STDERR, "- %s%s\n", $extend ?? '?', $str );
+            fprintf( STDERR, "- %s%s\n", ($extend ?? '?') , $str );
         } else {
             printf( "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
         }
@@ -146,7 +155,7 @@ function verbose( $str, $extend = FALSE )
 function logging( $str )
 {
     //global $logging;
-    if ( $GLOBALS['logging'] ?? false ) 
+    if ( $_SESSION['logging'] ?? false || $GLOBALS['logging'] ?? false ) 
     {
         $bt     = debug_backtrace()[1] ?? debug_backtrace()[0] ;
         $caller = $bt;
