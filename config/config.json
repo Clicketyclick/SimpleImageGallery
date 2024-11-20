@@ -1,4 +1,4 @@
-{
+      {
 	"process": {
 		"progressbar_size": 30,
 		"progressbar_lenght": 50
@@ -55,7 +55,7 @@
 				"embed_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}&output=embed&hl=en"
 			},
 			"osm": {
-				"tag": "See on <b>Open Street map</b>",
+				"tag": "<b>Open Street map</b>",
 				"link_stub": "https://www.openstreetmap.org/#map={$zoom}/{$lat}/{$lon}",
 				"embed_tag": "Image map",
 				"embed_stub": "https://www.openstreetmap.org/export/embed.html?bbox={$lon_margin_lower}%%2C{$lat_margin_lower}%%2C{$lon_margin_higher}%%2C{$lat_margin_higher}&amp;layer=mapnik"
