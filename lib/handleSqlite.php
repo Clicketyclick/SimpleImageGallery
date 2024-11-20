@@ -69,7 +69,7 @@
   *  @version    2024-04-11 13:23:27
   */
 
-require_once( $GLOBALS['releaseroot'] . "config/sql.php");
+require_once( ($GLOBALS['releaseroot'] ?? './') . "config/sql.php");
 
 // Boolean expressions
 $booleans   = [
