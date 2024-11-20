@@ -1,7 +1,18 @@
 {
+	"process": {
+		"progressbar_size": 30,
+		"progressbar_lenght": 50
+	},
+	"display": {
+		"thumb_max_width": 100,
+		"thumb_max_height": 100,
+		"home_url": "https://clicketyclick.github.io/",
+		"app_name": "Simple Image Gallery",
+		"copyright": "&copy;%s Erik Bachmann",
+		"breadcrumptrail": "&#x1F35E;&hellip;: "
+	},
 	"data": {
 		"data_root": "./data/",
-		"_data_root": "C:/Users/Bruger/Documents/GitHub/SimpleImageGallery",
 		"_data_root": "W:/gallery",
 		"image_ext": [
 			"jpg",
@@ -36,7 +47,7 @@
 		"map_window_margin": 0.0005,
 		"map_types": {
 			"google": {
-				"tag": "See on Google map",
+				"tag": "Google map",
 				"link_stub": "https://maps.google.com/maps?q={$lat},{$lon}",
 				"link_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}",
 				"embed_tag": "Image map",
@@ -54,6 +65,7 @@
 	"exif": {},
 	"database": {
 		"_file_name": "data.w.db",
+		"_file_name": "data.w2.db",
 		"file_name": "data.db",
 		"image_ext": [
 			"jpg",
