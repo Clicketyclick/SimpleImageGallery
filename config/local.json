@@ -1,4 +1,40 @@
 {
+	"shift_language": {
+		"en": "Shift language [da]",
+		"da": "Skift sprog [en]"
+	},
+	"breadcrumptrail": {
+		"en": "Breadcrump Trail",
+		"da": "Brødkrummespor"
+	},
+	"up_to_index": {
+		"en": "Up to index",
+		"da": "Tilbage til indeks"
+	},
+	"prev_image": {
+		"en": "Previous image",
+		"da": "Forrige billede"
+	},
+	"next_image": {
+		"en": "Next image",
+		"da": "Næste billede"
+	},
+	"link_to_external_map": {
+		"en": "Link to external map",
+		"da": "Link til eksternt kort"
+	},
+	"see_on_map": {
+		"en": "See on",
+		"da": "Se på"
+	},
+	"iptc": {
+		"en": "IPTC metadata (iptc.org) is a set of metadata properties that can be applied to images,",
+		"da": "IPTC metadata (iptc.org) er et sæt metadata, således fotografer kan tilføje digitale fotografier tekstinformationer"
+	},
+	"exif": {
+		"en": "Exchangeable image file format is a standard that specifies formats for images, sound, and ancillary tags used by digital camera (https://en.wikipedia.org/wiki/Exif)",
+		"da": "EXIF (Exchangeable Image File Format) er en specifikation som angiver en række informationer i forbindelse med fotografier taget med de fleste digitale kameraer. (https://da.wikipedia.org/wiki/Exif)"
+	},
 	"database_already_exists": {
 		"en": "Database already exists",
 		"da": "Database eksisterer allerede"
@@ -7,7 +43,411 @@
 		"en": "Database not open",
 		"da": "Database ikke åben"
 	},
-	"dummy": {
+	"iptc_ApplicationRecordVersion": {
+		"en": "Application Record Version",
+		"da": "Applikationsoptegnelsesversion"
+	},
+	"iptc_ObjectTypeReference": {
+		"en": "Object Type Reference",
+		"da": "Objekttypereference"
+	},
+	"iptc_ObjectAttributeReference": {
+		"en": "Object Attribute Reference",
+		"da": "Objektattributreference"
+	},
+	"iptc_ObjectName": {
+		"en": "Object Name",
+		"da": "Objektnavn"
+	},
+	"iptc_EditStatus": {
+		"en": "Edit Status",
+		"da": "Redigeringsstatus"
+	},
+	"iptc_EditorialUpdate": {
+		"en": "Editorial Update",
+		"da": "Redaktionel opdatering"
+	},
+	"iptc_Urgency": {
+		"en": "Urgency",
+		"da": "Haster"
+	},
+	"iptc_SubjectReference": {
+		"en": "Subject Reference",
+		"da": "Emnehenvisning"
+	},
+	"iptc_Category": {
+		"en": "Category",
+		"da": "Kategori"
+	},
+	"iptc_SupplementalCategories": {
+		"en": "Supplemental Categories/People",
+		"da": "Supplerende kategorier/Personer"
+	},
+	"iptc_FixtureIdentifier": {
+		"en": "Fixture Identifier",
+		"da": "Opspændingsidentifikator"
+	},
+	"iptc_Keywords": {
+		"en": "Keywords",
+		"da": "Emneord"
+	},
+	"iptc_ContentLocationCode": {
+		"en": "Content Location Code",
+		"da": "Indholdsplaceringskode"
+	},
+	"iptc_ContentLocationName": {
+		"en": "Content Location Name",
+		"da": "Indholdsstedsnavn"
+	},
+	"iptc_ReleaseDate": {
+		"en": "Release Date",
+		"da": "Udgivelsesdato"
+	},
+	"iptc_ReleaseTime": {
+		"en": "Release Time",
+		"da": "Udgivelsestidspunkt"
+	},
+	"iptc_ExpirationDate": {
+		"en": "Expiration Date",
+		"da": "Udløbsdato"
+	},
+	"iptc_ExpirationTime": {
+		"en": "ExpirationTime",
+		"da": "Udløbstidspunkt"
+	},
+	"iptc_SpecialInstructions": {
+		"en": "Special Instructions",
+		"da": "Særlige instruktioner"
+	},
+	"iptc_ActionAdvised": {
+		"en": "Action Advised",
+		"da": "Anbefalet handling"
+	},
+	"iptc_ReferenceService": {
+		"en": "Reference Service",
+		"da": "Referenceservice"
+	},
+	"iptc_ReferenceDate": {
+		"en": "Reference Date",
+		"da": "Referencedato"
+	},
+	"iptc_ReferenceNumber": {
+		"en": "Reference Number",
+		"da": "Referencenummer"
+	},
+	"iptc_DateCreated": {
+		"en": "Date Created",
+		"da": "Dato oprettet"
+	},
+	"iptc_TimeCreated": {
+		"en": "Time Created",
+		"da": "Tid oprettet"
+	},
+	"iptc_DigitalCreationDate": {
+		"en": "Digital Creation Date",
+		"da": "Digital oprettelsesdato"
+	},
+	"iptc_DigitalCreationTime": {
+		"en": "Digital Creation Time",
+		"da": "Digital oprettelsestidspunkt"
+	},
+	"iptc_OriginatingProgram": {
+		"en": "Originating Program",
+		"da": "Oprindeligt program"
+	},
+	"iptc_ProgramVersion": {
+		"en": "Program Version",
+		"da": "Programversion"
+	},
+	"iptc_ObjectCycle": {
+		"en": "Object Cycle",
+		"da": "Objekt cyklus"
+	},
+	"iptc_By-line": {
+		"en": "By-line",
+		"da": "Af"
+	},
+	"iptc_By-lineTitle": {
+		"en": "By-line Title",
+		"da": "Af [Titel]"
+	},
+	"iptc_City": {
+		"en": "City",
+		"da": "By"
+	},
+	"iptc_Sub-location": {
+		"en": "Sub-location",
+		"da": "Underplacering"
+	},
+	"iptc_Province-State": {
+		"en": "Province-State",
+		"da": "Provins-stat"
+	},
+	"iptc_Country-PrimaryLocationCode": {
+		"en": "Country-Primary Location Code",
+		"da": "Primær landekode"
+	},
+	"iptc_Country-PrimaryLocationName": {
+		"en": "Country-PrimaryLocationName",
+		"da": "Primær landenavn"
+	},
+	"iptc_OriginalTransmissionReference": {
+		"en": "Original Transmission Reference",
+		"da": "Original transmissionsreference"
+	},
+	"iptc_Headline": {
+		"en": "Headline",
+		"da": "Overskrift"
+	},
+	"iptc_Credit": {
+		"en": "Credit",
+		"da": "Kreditering"
+	},
+	"iptc_Source": {
+		"en": "Source",
+		"da": "Kilde"
+	},
+	"iptc_CopyrightNotice": {
+		"en": "Copyright Notice",
+		"da": "Ophavsretsmeddelelse"
+	},
+	"iptc_Contact": {
+		"en": "Contact",
+		"da": "Kontakt"
+	},
+	"iptc_Caption-Abstract": {
+		"en": "Caption-Abstract",
+		"da": "Billedtekst-abstrakt"
+	},
+	"iptc_LocalCaption": {
+		"en": "Local Caption",
+		"da": "Lokal billedtekst"
+	},
+	"iptc_Writer-Editor": {
+		"en": "Writer-Editor",
+		"da": "Forfatter-redaktør"
+	},
+	"iptc_RasterizedCaption": {
+		"en": "Rasterized Caption",
+		"da": "Rasteriseret billedtekst"
+	},
+	"iptc_ImageType": {
+		"en": "Image Type",
+		"da": "Billedtype"
+	},
+	"iptc_ImageOrientation": {
+		"en": "Image Orientation",
+		"da": "Billedretning"
+	},
+	"iptc_LanguageIdentifier": {
+		"en": "Language Identifier",
+		"da": "Sprogkode"
+	},
+	"iptc_AudioType": {
+		"en": "Audio Type",
+		"da": "Lydtype"
+	},
+	"iptc_AudioSamplingRate": {
+		"en": "Audio Sampling Rate",
+		"da": "Lydsamplinghastighed"
+	},
+	"iptc_AudioSamplingResolution": {
+		"en": "Audio Sampling Resolution",
+		"da": "Lydprøveopløsning"
+	},
+	"iptc_AudioDuration": {
+		"en": "Audio Duration",
+		"da": "Lydens varighed"
+	},
+	"iptc_AudioOutcue": {
+		"en": "Audio Outcue",
+		"da": "Lydudgang"
+	},
+	"iptc_JobID": {
+		"en": "Job ID",
+		"da": "Job ID"
+	},
+	"iptc_MasterDocumentID": {
+		"en": "Master Document ID",
+		"da": "Hoveddokument ID"
+	},
+	"iptc_ShortDocumentID": {
+		"en": "Short Document ID",
+		"da": "Kort dokument ID"
+	},
+	"iptc_UniqueDocumentID": {
+		"en": "Unique Document ID",
+		"da": "Unikt dokument ID"
+	},
+	"iptc_OwnerID": {
+		"en": "Owner ID",
+		"da": "Ejer ID"
+	},
+	"iptc_ObjectPreviewFileFormat": {
+		"en": "Object Preview File Format",
+		"da": "Objekteksempelfilformat"
+	},
+	"iptc_ObjectPreviewFileVersion": {
+		"en": "Object Preview File Version",
+		"da": "Objekteksempelfilversion"
+	},
+	"iptc_ObjectPreviewData": {
+		"en": "Object Preview Data",
+		"da": "Objekteksempelfilformat"
+	},
+	"iptc_Prefs": {
+		"en": "Prefs",
+		"da": "Præf"
+	},
+	"iptc_ClassifyState": {
+		"en": "Classify State",
+		"da": "Klassifikationsstatus"
+	},
+	"iptc_SimilarityIndex": {
+		"en": "Similarity Index",
+		"da": "Lighedsindeks"
+	},
+	"iptc_DocumentNotes": {
+		"en": "Document Notes",
+		"da": "Documentnoter"
+	},
+	"iptc_DocumentHistory": {
+		"en": "Document History",
+		"da": "Documenthistorik"
+	},
+	"iptc_ExifCameraInfo": {
+		"en": "Exif Camera Info",
+		"da": "Exif kamera info"
+	},
+	"iptc_CatalogSets": {
+		"en": "Catalog Sets",
+		"da": "Katalogsæt"
+	},
+	"iptc_EnvelopeRecordVersion": {
+		"en": "Envelope Record Version",
+		"da": "Konvolutpostversion"
+	},
+	"iptc_Destination": {
+		"en": "Destination",
+		"da": "Bestemmelsessted"
+	},
+	"iptc_FileFormat": {
+		"en": "File Format",
+		"da": "Filformat"
+	},
+	"iptc_FileVersion": {
+		"en": "File Version",
+		"da": "Filversion"
+	},
+	"iptc_ServiceIdentifier": {
+		"en": "Service Identifier",
+		"da": "Tjenesteidentifikator"
+	},
+	"iptc_EnvelopeNumber": {
+		"en": "Envelope Number",
+		"da": "Kuvert nummer"
+	},
+	"iptc_ProductID": {
+		"en": "Product ID",
+		"da": "Produkt ID"
+	},
+	"iptc_EnvelopePriority": {
+		"en": "Envelope Priority",
+		"da": "Konvolutprioritet"
+	},
+	"iptc_DateSent": {
+		"en": "Date Sent",
+		"da": "Afsendelsesdato"
+	},
+	"iptc_TimeSent": {
+		"en": "Time Sent",
+		"da": "Afsendelsestidspunkt"
+	},
+	"dc_creator": {
+		"en": "creator",
+		"da": "skaber"
+	},
+	"dc_description": {
+		"en": "description",
+		"da": "beskrivelse"
+	},
+	"dc_rights": {
+		"en": "rights",
+		"da": "rettigheder"
+	},
+	"dc_subject": {
+		"en": "subject",
+		"da": "Emne"
+	},
+	"dc_title": {
+		"en": "title",
+		"da": "Titel"
+	},
+	"photoshop_AuthorsPosition": {
+		"en": "Authors Position",
+		"da": "Forfatternes stilling"
+	},
+	"photoshop_CaptionWriter": {
+		"en": "Caption Writer",
+		"da": "Billedtekstforfatter"
+	},
+	"photoshop_Category": {
+		"en": "Category",
+		"da": "Kategori"
+	},
+	"photoshop_City": {
+		"en": "City",
+		"da": "By"
+	},
+	"photoshop_ColorMode": {
+		"en": "Color Mode",
+		"da": "Farvetilstand"
+	},
+	"photoshop_Country": {
+		"en": "Country",
+		"da": "Land"
+	},
+	"photoshop_Credit": {
+		"en": "Credit",
+		"da": "Kredit"
+	},
+	"photoshop_DateCreated": {
+		"en": "Date Created",
+		"da": "Oprettelsesdato"
+	},
+	"photoshop_Headline": {
+		"en": "Headline",
+		"da": "Overskrift"
+	},
+	"photoshop_ICCProfile": {
+		"en": "ICC Profile",
+		"da": "ICC Profil"
+	},
+	"photoshop_Instructions": {
+		"en": "Instructions",
+		"da": "Instruktioner"
+	},
+	"photoshop_LegacyIPTCDigest": {
+		"en": "Legacy IPTC Digest",
+		"da": "IPTC-sammenfatning"
+	},
+	"photoshop_Source": {
+		"en": "Source",
+		"da": "Kilde"
+	},
+	"photoshop_State": {
+		"en": "State",
+		"da": "Stat"
+	},
+	"photoshop_SupplementalCategories": {
+		"en": "SupplementalCategories",
+		"da": "Supplerende kategorier/Personer"
+	},
+	"xmpRights_UsageTerms": {
+		"en": "Usage Terms",
+		"da": "Brugsrettigheder"
+	},
+	"_dummy": {
 		"en": "Dummy",
 		"da": "Dummy"
 	}
