@@ -31,6 +31,7 @@
 GOTO :EOF
 
 :run
+    TITLE %_PORT%
     ECHO: Plain 
     START /B /MIN http://localhost:%_PORT%/index.php
 GOTO :EOF

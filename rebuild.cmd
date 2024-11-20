@@ -1,1 +1,1 @@
-cls&php rebuild.php 
+cls&php rebuild.php %*

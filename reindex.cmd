@@ -1,1 +1,1 @@
-cls&php reindex.php 
+cls&php reindex.php %*
