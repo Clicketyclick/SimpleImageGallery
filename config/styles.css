@@ -17,6 +17,7 @@ a {
 	color: cyan;
 }
 
+
 .display {
 	float: right;
 	max-width: 1200px;
@@ -52,6 +53,7 @@ a {
 	color: yellow;
 }
 .subfolder {
+	background-color: #003030;
 	float: left;
 	border: 1px solid white;
 	max-width:	100px;
@@ -66,4 +68,35 @@ a {
 	
 	max-width:	100%;
 	max-height:	80px;
+}
+
+
+button {
+  transition-duration: 0.4s;
+  border-radius: 8px;	/*Rounded corner*/
+}
+
+button:hover {
+  background-color: #04AA6D; /* Green */
+  color: white;
+}
+button:hover:disabled {
+  background-color: gray;
+  color: yellow;
+  opacity: 0.6;
+  cursor: not-allowed;	/* Not allowed sign */
+}
+
+
+.iptc_key {
+	color: yellow;
+}
+
+.iptc_value {
+	color: lightgreen;
+}
+
+.translate {
+		float: right;
+
 }
