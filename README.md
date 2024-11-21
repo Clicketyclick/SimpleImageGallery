@@ -20,7 +20,6 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 [^watermark]: If you put a watermark into your display images, the original are unaffected.
 
-
 ## Setup
 
 ### Local
@@ -57,9 +56,56 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 ```
 
+## Startup
 
-### Configuration
 
+### Preperation
+
+
+
+
+### Run
+
+
+- ***`path`***`=./2024`
+	: Content of directory: `root`/2024
+- ***`show``***`=IMG20240128114147.jpg`
+    : Show specific image
+- ***`db`***`=database/data.db`
+    : Select alternative database
+- ``
+    : 
+- ``
+    : 
+
+```console
+
+```
+```console
+
+```
+```console
+
+```
+```console
+
+```
+
+
+```console
+&show=IMG20240128114147.jpg
+```
+
+```console
+&db=database/data.db
+```
+http://localhost:8083/index.php?path=.&db=database/data.db
+
+
+
+
+
+## S
 
 Group|Key|Example|Note
 ---|---|---|---
@@ -409,3 +455,33 @@ SELECT count(*) FROM wordclouds;
 -- SELECT count(*) FROM wordcloudblobs;
 
 ```
+
+<!--
+SNØVL
+
+select name, path, file, source from images WHERE file like "2024-01-14T13-08-35_IMGP2121.JPG";
+select name, path, file, source from images limit 2;
+
+UPDATE images SET path = './2024/2024-01-14_Pingo_X' WHERE path LIKE "W:/gallery/2024/2024-01-14_Pingo_X";
+
+UPDATE images SET path = replace (path, 'W:/gallery/', './');
+
+str_replace( 'W:/gallery/', './', $path )
+
+
+.timer on
+UPDATE images SET path = replace (path, 'W:/gallery/', './')
+	WHERE rowid >=1 AND rowid < 1000;
+ 
+
+git describe --tags
+
+> v.0.0.1-alpha-36-gb9d6aaa
+
+:: list alle tags by committerdate
+git tag --sort=committerdate
+v.0.0.1-alpha
+
+
+
+-->

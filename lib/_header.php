@@ -29,7 +29,7 @@ $_SESSION['logging']    = 1;
 $db			= FALSE;
 
 // Include libraries
-foreach ( [ 'debug', 'getGitInfo', 'handleJson', 'imageResize', 'handleSqlite', 'iptc', 'jsondb', 'progress_bar'] as $lib )
+foreach ( [ 'debug', 'getGitInfo', 'handleStrings', 'handleJson', 'imageResize', 'handleSqlite', 'iptc', 'jsondb', 'progress_bar'] as $lib )
     include_once("lib/{$lib}.php");
 
 // Set configuration files
@@ -136,6 +136,7 @@ function __initDatabase( &$db, $dbfile, &$dbCfg )
  */
 function initDatabase( &$db, $dbfile )
 {
+    status(  "Database", $dbfile );
 	if ( ! file_exists( $dbfile ) )
 	{
 		status(  "Create database", $dbfile );
@@ -283,7 +284,7 @@ function ___( $key, $lang = FALSE )
  */
 function getBrowserLanguage( $acceptLang = ['fr', 'it', 'en', 'da'] )
 {
-    $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+    $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
 
     $lang = in_array($lang, $acceptLang) ? $lang : 'en';
     $_SESSION['browser']['language']    = $lang;

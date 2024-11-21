@@ -1,9 +1,27 @@
-      {
+{
+	"system": {
+		"name": "Simple Image Gallery",
+		"favicon": "./config/ebp.icon.ico"
+	},
 	"process": {
 		"progressbar_size": 30,
 		"progressbar_lenght": 50
 	},
 	"display": {
+		"exif": {
+			"icon": "./icons/exif_32.jpg",
+			"logo": "./icons/exif_200x260.jpg"
+		},
+		"iptc": {
+			"icon": "./icons/iptc-logo-32px.jpg",
+			"logo": "./icons/iptc-logo-400px.jpg"
+		},
+		"slide": {
+			"loop": true,
+			"delay": 10
+		},
+		"figure_template": "<figure class='subfolder'>\n\t<figcaption>&#x1F5BC;<span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
+		"figure_template_dir": "<figure class='subfolder'>\n\t<figcaption>&#x1F4C1;<span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
 		"thumb_max_width": 100,
 		"thumb_max_height": 100,
 		"home_url": "https://clicketyclick.github.io/",
@@ -12,8 +30,10 @@
 		"breadcrumptrail": "&#x1F35E;&hellip;: "
 	},
 	"data": {
+		"virtual_root": "./",
 		"data_root": "./data/",
-		"_data_root": "W:/gallery",
+		"data_root": "W:/gallery/",
+		"_data_root": "W:/gallery_test/",
 		"image_ext": [
 			"jpg",
 			"JPEG"
@@ -27,16 +47,12 @@
 		"thumb_max_height": 300,
 		"Simple_display_max_width": 1200,
 		"Simple_display_max_height": 1200,
-		
 		"UHD_display_max_width": 3840,
 		"UHD_display_max_height": 2160,
-
 		"4K_display_max_width": 4096,
 		"4K_display_max_height": 2160,
-		
 		"CAM_display_max_width": 3872,
 		"CAM_display_max_height": 2592,
-		
 		"display_max_width": 3872,
 		"display_max_height": 2592,
 		"crop": 0
@@ -64,9 +80,9 @@
 	},
 	"exif": {},
 	"database": {
-		"_file_name": "data.w.db",
-		"_file_name": "data.w2.db",
-		"file_name": "data.db",
+		"_file_name": "database/data.w.db",
+		"file_name": "database/data.w2.db",
+		"_file_name": "database/data.db",
 		"image_ext": [
 			"jpg",
 			"JPEG"

@@ -18,62 +18,10 @@ echo '
 <head>
   <title>SIG - Simple Image Gallery</title>
   <link rel="stylesheet" href="config/styles.css">
-
-<script>
-home=\'.\';
-
-//>>> Keybord events
-	document.onkeydown = function (e) { 
-		e = e || window.event; 
-		var charCode = e.charCode || e.keyCode, 
-			character = String.fromCharCode(charCode); 
-
-	  //console.log(character+"_"+charCode);
-	  
-	  switch(charCode) {
-			case 36:// Home
-				// Home
-				if (typeof(close_image) === typeof(Function) )
-                    close_image( home );
-				break;
-			case 37:// Left / Previous
-				if (typeof(prev_image) === typeof(Function) )
-					prev_image( path, prev );
-				break;
-			case 38:// Up / Close
-				// Close
-				if (typeof(close_image) === typeof(Function) )
-					close_image( path );
-				break;
-			case 39:// Right / Next
-				if (typeof(next_image) === typeof(Function) )
-					next_image( path, next );
-				break;
-			default:
-				// code block
-                console.log(charCode);
-		}
-	  
-	};
-//<<< Keybord events
-
-
-function prev_image( path, prev ) { 
-    console.log( "?path="+path+"&show="+prev ); 
-    document.location.href = "?path="+path+"&show="+prev;
-}   // prev_image()
-
-function close_image( path ) { 
-    console.log( "?path="+path ); 
-    document.location.href = "?path="+path;
-}   // close_image()
-
-function next_image( path, next ) { 
-    console.log( "?path="+path+"&show="+next ); 
-    document.location.href = "?path="+path+"&show="+next;
-}   // function next_image()
-
-</script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config/display.js"></script>
+  <script src="display.js"></script>
+  <link rel="icon" type="image/x-icon" href="{$_SESSION[\'config\'][\'system\'][\'favicon\']}">
 </head>
 <body>
 ';
@@ -111,9 +59,11 @@ debug( $tree, 'tree' );
 
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "<span title='".___('breadcrumptrail')."'>". $_SESSION['config']['display']['breadcrumptrail'] . "</span>";
-echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' );
+//echo breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
+$trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
+echo ( empty($trail) ? "<span title='".___('empty_breadcrumb_trail')."'>." : $trail ) ;
 echo '/'. basename($_REQUEST['path']);
-echo "<script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
+echo "</span><script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
 
 // Change language https://stackoverflow.com/a/22040376/7485823
 // https://stackoverflow.com/a/22040376
@@ -131,44 +81,37 @@ echo "<br clear=both>";
 
 // Get subdirectories to current directory
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
+debug($subdirs);
 
 foreach( $subdirs as $subdir )
 {
-	$dir	= pathinfo( $subdir, PATHINFO_BASENAME);
-
+	$dir	= $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
+    debug( $dir);
 	// get newest image 	"newest_picture_in_path"
-	$sql	= sprintf( $_SESSION['database']['sql']['newest_picture_in_path'], $_REQUEST['path'] .'/'. $dir );
+	$sql	= sprintf( $_SESSION['database']['sql']['newest_picture_in_path'], $dir );
 
 	$newestthumb	= querySql( $db, $sql );
 	$newestthumb	= $newestthumb[0];
+    
+    $newestthumb['path']    = $dir;
 
-	printf( "
-	<figure class='subfolder'>
-		<figcaption>&#x1F4C1;<small>%s</small></figcaption>
-		<a href='?path={$subdir}'>
-			<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>
-		</a>
-	</figure>"
-	//,	$newestthumb['file']
-	,	$dir
-	,	$newestthumb['thumb']
-	,	$newestthumb['path'] . '/' . $newestthumb['file'] 
-	);
+    // Print figure for directories
+    echo show_thumb( $newestthumb, TRUE );
 }
-
+//exit;
 echo "</pre><br clear=both><hr>";
 
 if( empty($_REQUEST['show']) )
 {	// Thumb list
 	$sql	= sprintf($_SESSION['database']['sql']['select_thumb'], $_REQUEST['path'] );
 	debug( $sql );
+
 	$files	= querySql( $db, $sql );
-	debug( "Files:<pre>" );
-	debug($files);
-	debug( "</pre>" );
+	debug($files, 'Files:"');
+
 	foreach ( $files as $no => $filedata )
 	{
-		echo show_thumb( $filedata );
+		echo show_thumb( $filedata, FALSE, TRUE );
 	}
 }
 else
@@ -181,6 +124,8 @@ else
 	debug("Files:<pre>");
 	debug($files);
 	debug("</pre>" );
+    $first  = $files[0]['file'];
+    $last   = $files[count($files)-1]['file'];
 	foreach ( $files as $no => $filedata )
 	{
 		if ( $_REQUEST['show'] == $filedata['file'] )
@@ -193,11 +138,11 @@ else
             .   var_export($files, TRUE )
             .   "</pre>"
             );
+            
 			if ( 0 < $no )
 				$prev	= $files[$no-1]['file'];
 			if ( count( $files )-1 > $no )
 				$next	= $files[$no+1]['file'];
-            
             echo( ($no+1).'/'.count( $files ) );
 		}
 	}
@@ -213,36 +158,57 @@ else
 	// Previous
     $prev_active_button = $prev ? "" : " disabled";
     $next_active_button = $next ? "" : " disabled";
+    
+    if (empty($next) && $_SESSION['config']['display']['slide']['loop'] )
+    {
+        //trigger_error( "no next", E_USER_ERROR );
+        $next   = $first;
+    }
+    
 	echo "<button 
         id='prevButton' 
         class='float-left submit-button' 
-        onclick = 'prev_image( \"{$_REQUEST['path']}\", \"$prev\" );' 
+        onclick = 'goto_image( \"{$_REQUEST['path']}\", \"$prev\" );' 
         title='".___('prev_image')."'
         {$prev_active_button}
-    ><big>&#x2BAA;</big></button>
-    <script>
+    ><big>&#x2BAA;</big></button>";
+    echo "<script>
         path=\"{$_REQUEST['path']}\";
         prev=\"$prev\";
         next=\"$next\";
+        first=\"$first\";
+        last=\"$last\";
     </script>
 	";
     
 	// Close
 	echo "<button id='prevButton' class='float-left submit-button' onclick = 'close_image(\"{$_REQUEST['path']}\");'  title='".___('up_to_index')."'><big>&#x2BAC;</big></button>";
-    
+
 	// Next
 	echo "<button 
         id='nextButton' 
         class='float-left submit-button' 
-        onclick = 'next_image( \"{$_REQUEST['path']}\", \"$next\" );' 
+        onclick = 'goto_image( \"{$_REQUEST['path']}\", \"$next\" );' 
         title='".___('next_image')."'
         {$next_active_button}
     ><big>&#x2BAB;</big></button>
     ";
+
+	// slideshow
+	echo "<button id='slideshowButton' class='float-left submit-button' onclick = 'slideshow( true , {$_SESSION['config']['display']['slide']['delay']}, {$_SESSION['config']['display']['slide']['loop']} );'  title='".___('slideshow_title')."'><big>&#x1F4FD; ".___('slideshow')." <span id='slide_id' class='slide_id'></span></big></button>";
+    
 	echo show_image( $file[0] );
 }
 
-printf( "<br clear=both><hr><small>{$_SESSION['config']['display']['copyright']} - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['display']['app_name']}</a></small>", date('Y'));
+printf( "<br clear=both><hr><small>{$_SESSION['config']['display']['copyright']} 
+- <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['display']['app_name']}</a></small> %s"
+,   date('Y')
+,   getGitVersion()
+);
+
+
+if ( ! empty( $_REQUEST['slide'] ) )
+	echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
 
 //----------------------------------------------------------------------
 
@@ -350,8 +316,13 @@ function buildDirTree( &$dirs )
  */
 function subdirsToCurrent( $haystack, $current )
 {
+    debug( $haystack, '<pre>$haystack' );
+    debug( $current, '$current' );
+
 	$pattern	= '/^' . SQLite3::escapeString( str_replace( '/', '\/', $current ) ) . '\/[^\/]*$/i';
 	$matches  = preg_grep( $pattern, array_values($haystack) );
+    rsort( $matches );
+    debug( $matches, '$matches' );
 	return($matches);
 }
 
@@ -365,24 +336,32 @@ function subdirsToCurrent( $haystack, $current )
  *   
  *   @since      2024-11-15T01:31:11
  */
-function show_thumb( $filedata )
+function show_thumb( $filedata, $dir = false, $show = false )
 {
 	global $db;
 	$output	= '';
-
+    
+    //var_export($filedata['path']);
+    //var_export($dir);
+    //var_export( $filedata['path'] );
+/*
 	$sql	= sprintf( $_SESSION['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
 	$meta	= querySql( $db, $sql );
 	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
+*/
+	$output	.= sprintf( 
+        // Print figure for thumb display
+        //SESSION['config']['display']['figure_template']
+        $dir ? $_SESSION['config']['display']['figure_template_dir'] : $_SESSION['config']['display']['figure_template']
+	,	$dir
+        ?   basename($filedata['path']) 
+        :   $filedata['name'] // dir ?  dir name : image name
+    .   " "
+    .   (( $filedata['exif'] ?? FALSE ) ? "<img src='{$_SESSION['config']['display']['exif']['icon']}' class='type_icon' title='EXIF'>" : '' ) // EXIF icon
+    .   (( $filedata['iptc'] ?? FALSE ) ? "<img src='{$_SESSION['config']['display']['iptc']['icon']}' class='type_icon' title='IPTC'>" : '' ) // IPTC icon
 
-	$output	.= sprintf( "
-	<figure style='float: left;border=1;' width=32px>
-		<figcaption><small>%s</small></figcaption>
-		<a href='?path={$filedata['path']}&show={$filedata['file']}'>
-			<img class='cover' src='data:jpg;base64, %s' title='%s'>
-		</a>
-	</figure>"
-	,	$filedata['file']
-	,	$filedata['thumb']
+    ,   $filedata['path'] . ( $show ? '&show=' . $filedata['file'] : '' ) // Link
+	,	$filedata['thumb']  // thump to display
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
 
@@ -421,24 +400,30 @@ function show_image( $filedata )
 	// Header
 	if($iptc)
 	{
+
+	// Flag
+	$flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
+	$output	.= "<img "
+	.	"src='config/.flags/{$flag}.svg' "
+	.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
+	.	"class='flag' "
+	.">";
+
 		$headline	= $iptc['Headline'][0] ?? '...';
 		$output .= "<span class='headline'>{$headline}</span><br>";
-		$caption	= $iptc['Caption-Abstract'][0] ?? '';
 
+		$caption	= $iptc['Caption-Abstract'][0] ?? '';
 		$output .= $caption;
+
 		$supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
 
 		$output .= "<br><small>"
 		.	$supcat
 		.	"</small>";
 	}
-	// EXIF
-	$output	.= "<details><summary title='".___('exif')."'>&#x1F5BB;EXIF</summary><pre>";
-	$output	.= var_export( $exif, TRUE );
-	$output	.= "</pre></details>";
 
 	// IPTC
-	$output	.= "<details open><summary title='".___('iptc')."'>&#x1F5BA;IPTC</summary><table border=1>";
+	$output	.= "<br clear=both><details open><summary title='".___('iptc')."'><img src='{$_SESSION['config']['display']['iptc']['icon']}'>IPTC</summary><table border=1>";
     foreach ( array_flatten2($iptc) as $iptc_key => $itpc_value )
     {
         if ( 'CodedCharacterSet' == $iptc_key ) continue;
@@ -448,15 +433,37 @@ function show_image( $filedata )
     }
 	$output	.= "</table></details>";
 
+	// EXIF
+/** /
+	$output	.= "<details><summary title='".___('exif')."'><img src='{$_SESSION['config']['display']['exif']['icon']}'>EXIF</summary><pre>";
+	$output	.= var_export( $exif, TRUE );
+	$output	.= "</pre></details>";
+/**/
+	$output	.= "<details><summary title='".___('exif_title')."'><img src='{$_SESSION['config']['display']['exif']['icon']}'>exif</summary><table border=1>";
+    foreach ( array_flatten2($exif) as $exif_section => $exif_block )
+    {
+        if ( ! is_array( $exif_block ) )
+            continue;
+        //if ( 'CodedCharacterSet' == $exif_key ) continue;
+        $output	.= "<tr><td class='exif_group'>".___("exif_{$exif_section}"). "</td><td><table border>";
 
-	// Flag
-	$flag	= $iptc['Country-PrimaryLocationCode'][0] ?? '00';
-	$output	.= "<img "
-	.	"src='config/.flags/{$flag}.svg' "
-	.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
-	.	"class='flag' "
-	.">";
+        foreach ( $exif_block as $exif_key => $exif_value )
+        {
+            $output	.= "<tr><td class='exif_key'>".___("exif_{$exif_key}"). "</td><td class='exif_value'>". (
+            ( 'array' == gettype($exif_value) ) ? implode( ' ; ', $exif_value) : $exif_value )
+            .   "</td></tr>\n";
+        }
 
+        $output	.= "</table></td></tr>\n";
+    }
+	$output	.= "</table>";
+    	$output	.= "<details><summary title='".___('exif_title')."'><!--img src='{$_SESSION['config']['display']['exif']['icon']}'-->".___('exif_array')."</summary><pre>";
+	$output	.= var_export( $exif, TRUE );
+	$output	.= "</pre></details>";
+
+
+
+    // Maps
 	if ( ! empty($exif['GPS']["GPSLongitude"]) )
 	{
 		$lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
@@ -516,11 +523,16 @@ array (
  *   @since      2024-11-14T13:39:47
  */
 function array_flatten2( $arr, $out=array() )  {
+    if (empty($arr))
+    {
+        $out=[];
+        return $out;
+    }
 	foreach( $arr as $key => $item ) {
 		if ( is_array( $item ) && 1 < count( $item ) ) {
 			$out[$key] = $item;
 		} else {
-			$out[$key] = $item[0];
+			$out[$key] = $item[0] ?? '';
 		}
 	}
 	return $out;

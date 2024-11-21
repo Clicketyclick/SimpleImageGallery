@@ -30,6 +30,7 @@ a {
 }
 
 .flag {
+	float: left;
 	width:64px;
 	height:auto;
 	border: 1px solid white;
@@ -52,22 +53,39 @@ a {
 	font-weight: bold;
 	color: yellow;
 }
+
+.figcaption_text {
+	font-size: x-small;
+}
+.figcaption_image {
+  /* Center image in figure */
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+}
 .subfolder {
 	background-color: #003030;
 	float: left;
 	border: 1px solid white;
-	max-width:	100px;
+	max-width:	120px;
 	max-height:	120px;
-	_width:	100px;
+	width:	100px;
+	width:	120px;
+
+	max-width:	220px;
+	max-height:	220px;
+	width:	150px;
+	height:	160px;
 	padding: 2px;
 	margin: 2px;
+  display: block;
+  vertical-align: middle;
 }
 .subfolder_icon {
-	float: left;
 	border: 1px solid white;
-	
 	max-width:	100%;
 	max-height:	80px;
+	max-height:	120px;
 }
 
 
@@ -88,15 +106,29 @@ button:hover:disabled {
 }
 
 
-.iptc_key {
+.iptc_key, .exif_key {
 	color: yellow;
+}
+.exif_group {
+	color: cyan;
 }
 
 .iptc_value {
 	color: lightgreen;
 }
-
+.slide_id {
+	font-size: x-small;
+	 
+ }
 .translate {
 		float: right;
 
 }
+
+.type_icon {
+	max-height:	16px;
+	max-width:	16px;
+	max-height:	12px;
+	max-width:	12px;
+}
+
