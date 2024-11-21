@@ -1,0 +1,6 @@
+Allow from all
+AuthName "SDUB test"
+AuthType Basic
+AuthUserFile /customers/a/3/a/bibit.dk/httpd.www/ByteMARC/ebp/.htpasswd
+AuthGroupFile /dev/null 
+require valid-user
