@@ -82,6 +82,7 @@
 	"database": {
 		"_file_name": "database/data.w.db",
 		"file_name": "database/data.w2.db",
+		"_file_name": "database/data.w3.db",
 		"_file_name": "database/data.db",
 		"image_ext": [
 			"jpg",

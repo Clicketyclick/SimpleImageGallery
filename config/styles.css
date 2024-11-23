@@ -132,3 +132,6 @@ button:hover:disabled {
 	max-width:	12px;
 }
 
+.db_name {
+	float: right;
+}

@@ -1,4 +1,12 @@
 {
+	"no_of_subdirs": {
+		"en": "Subdirs",
+		"da": "Kataloger"
+	},
+	"no_of_images": {
+		"en": "No of images",
+		"da": "Antal billeder"
+	},
 	"slideshow": {
 		"en": "Slideshow",
 		"da": "Billedviser"

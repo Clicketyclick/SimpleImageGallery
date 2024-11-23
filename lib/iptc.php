@@ -40,6 +40,8 @@ function parseIPTC( $file )
 		return(FALSE);
 
 	$iptc = iptcparse($info['APP13']);
+    if ( empty( $iptc ) )
+        return(FALSE);
 
 	foreach ( $iptc as $key => $value)
 	{

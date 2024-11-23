@@ -127,7 +127,8 @@ function verbose( $str, $extend = FALSE )
             //fprintf( STDERR, "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
             fprintf( STDERR, "- %s%s\n", ($extend ?? '?') , $str );
         } else {
-            printf( "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
+            //printf( "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
+            printf( "<tr><th>%s</th><td>%s</td></tr>\n", ($extend ?? '?') , $str );
         }
     }
 }   // verbose()

@@ -82,6 +82,16 @@ debug( $_SESSION, 'SESSION:');
 // Open - or create database
 initDatabase( $db, $_SESSION['config']['database']['file_name'], $_SESSION['database'] );
 
+// Get no of images
+$sql	= $_SESSION['database']['sql']['select_files_count'];
+$_SESSION['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
+
+
+
+parse_str( $_SERVER['QUERY_STRING'], $_SESSION['url']['args'] );
+var_export($_SESSION['url']['args']);
+echo http_build_query($_SESSION['url']['args']);
+
 
 
 /**
@@ -136,7 +146,7 @@ function __initDatabase( &$db, $dbfile, &$dbCfg )
  */
 function initDatabase( &$db, $dbfile )
 {
-    status(  "Database", $dbfile );
+    //status(  "Database", $dbfile );
 	if ( ! file_exists( $dbfile ) )
 	{
 		status(  "Create database", $dbfile );

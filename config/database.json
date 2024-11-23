@@ -2,8 +2,14 @@
 	"tables": {
 		"create_images": "CREATE TABLE IF NOT EXISTS images (\n    name    TEXT,           -- Display name\n    path    TEXT not null,  -- Search path\n    file    TEXT not null,  -- Base file\n    source  TEXT,           -- Source path\n    exif    TEXT,           -- EXIF as JSON\n    iptc    TEXT,           -- IPTC as JSON\n    thumb   TEXT,         -- Thumb Base64 encoded\n    display TEXT,         -- Display Base64 encoded\n    PRIMARY KEY (source,file)\n);",
 		"create_images_idx": "CREATE INDEX idx_images ON images(\n    path, file\n);\nCREATE INDEX idx_images_path ON images(\n    path\n);\n",
+
 		"create_search": "CREATE TABLE IF NOT EXISTS search\n(\n    search_id   TEXT NOT NULL\n,   recno       NUMERIC NOT NULL\n,   entry       TEXT NOT NULL\n,   key         TEXT\n);",
+
 		"create_wordclouds": "CREATE TABLE IF NOT EXISTS wordclouds (\n    cloudname   TEXT NOT NULL,\n    key         TEXT NOT NULL,\n    entry       TEXT NOT NULL,\n    count       TEXT NOT NULL,\n    tag         TEXT NOT NULL,\n    norm        TEXT NOT NULL\n);\n",
+
+		"create_dirs": "CREATE TABLE IF NOT EXISTS dirs\n(\n    path    TEXT PRIMARY KEY,\n    thumb   TEXT\n);",
+		"create_dirs_idx": "CREATE INDEX idx_dirs\nON dirs\n(\n    path\n);",
+
 		"_dummy": ""
 	},
 	"sql": {
@@ -16,18 +22,22 @@
 		"replace_into_images": "REPLACE INTO images( path, file, thumb, display, source ) VALUES( '%s', '%s', '%s', '%s', '%s');",
 		"replace_into_images": "UPDATE images\nSET thumb = '%s',\ndisplay = '%s'\nWHERE source like '%s'\nAND\nfile like '%s';",
 		"replace_into_meta": "UPDATE images\nSET exif = '%s',\niptc = '%s'\nWHERE source like '%s'\nAND\nfile like '%s';",
+		"select_files_count": "SELECT count(*) as no_of_images FROM images;",
 		"select_files_resume_count": "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_files_resume": "SELECT path||'/'||file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
 		"select_source_meta": "SELECT rowid, source||'/'||file as file, exif, iptc FROM images;",
-		"_select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s%%';",
 		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s';",
 		"select_all_files": "SELECT source||'/'||file as files FROM images;",
 		"select_thumb": "SELECT name, path, file, thumb, exif, iptc FROM IMAGES WHERE path like '%s' ORDER BY path DESC, file DESC",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
+
 		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
 		"oldest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path ASC, file ASC LIMIT 1;",
+
+		"_thumb_from_dirs": "SELECT thumb FROM dirs WHERE path = '%s';",
+		"thumb_from_dirs": "SELECT path, thumb FROM dirs WHERE path IN ( '%s' ) ;",
 		"_dummy": ""
 	},
 	"post": {
@@ -53,18 +63,18 @@
 			"-- UPDATE images SET name = substr( name, 11 ) WHERE name LIKE '20__-__-__\\_%' ESCAPE '\\' ;"
 		],
 		"grouping": [
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-08%\";",
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-10%\";",
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-11%\";",
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-12%\";",
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-13%\";",
-			"UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-14%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-08%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-10%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-11%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-12%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-13%\";",
+			"-- UPDATE images SET path = './2017/2017-04_Malaga' WHERE path LIKE \"./2017/2017-04-14%\";",
 
-			"UPDATE images SET path = './2024/2024-04_Lissabon' WHERE path LIKE \"./2024/2024-04%_Lissabon\";",
-			"UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE \"./2024/2024-08%_Blåvand\";"
+			"-- UPDATE images SET path = './2024/2024-04_Lissabon' WHERE path LIKE \"./2024/2024-04%_Lissabon\";",
+			"-- UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE \"./2024/2024-08%_Blåvand\";"
 		],
 		"vacuum": [
-			"VACUUM;"
+			"--VACUUM;"
 		]
 	},
 	"search": {

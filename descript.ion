@@ -1,0 +1,10 @@
+config Configuration for SIG
+sql SQL statements for admin perpuses
+database Database directory
+sandbox Sandbox for testing functionality
+lib Function library
+.git GIT data
+icons Icons for index
+doc Doxygen doc
+descript.ion This list of file and directory descriptions
+index.php Main page for accessing the databases

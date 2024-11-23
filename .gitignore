@@ -3,3 +3,13 @@
 data.db
 /doc/html
 /data2
+data.w.db
+/error
+logFile.txt
+tail.cmd
+doc/doxygen_log.txt
+data.w2.db
+/doc/.privat
+/sandbox
+/database
+/doc
