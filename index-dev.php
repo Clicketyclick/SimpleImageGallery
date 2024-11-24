@@ -52,7 +52,7 @@ $dirs	= querySql( $db, $sql );
 $tree	= buildDirTree( $dirs );
 debug( $tree, 'tree' );
 
-
+// >>> Top menu
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "<span title='".___('breadcrumptrail')."'>". $_SESSION['config']['display']['breadcrumptrail'] . "</span>";
 //$trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
@@ -62,24 +62,38 @@ echo '/'. basename($_REQUEST['path']);
 echo "</span><script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
 
 
+// Language
 // Change language https://stackoverflow.com/a/22040376/7485823
 // https://stackoverflow.com/a/22040376
+//!!! Use: $_SESSION['url']['args']
+/**/
+if ( ! empty( $_SESSION['url']['args']['browser:language'] ))
+    unset($_SESSION['url']['args']['browser:language']);
+$escaped_url    = '?'.http_build_query($_SESSION['url']['args']);
+
+/**/
+/* * /
 $url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 $url = preg_replace("/&browser:language=../", "", $url);
 $escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
+$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
+/**/
 echo "<a class='translate' href='{$escaped_url}&browser:language="
 .   (
         'en' == $_SESSION['browser']['language'] ? 'da' : 'en'
     )
 .   "' title='". ___('shift_language') ."'>A文</span></a>";
 
+
 // Database name on top
 echo "<span class='db_name'>{$_SESSION['config']['database']['file_name']}</span>";
+// Clear before folders
+echo "<br clear=both><hr>";
+
+// <<< Top menu
 
 //----------------------------------------------------------------------
 
-// Clear before folders
-echo "<br clear=both><hr>";
 
 // Get subdirectories to current directory
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
@@ -245,6 +259,10 @@ else
 
 	// slideshow
 	echo "<button id='slideshowButton' class='float-left submit-button' onclick = 'slideshow( true , {$_SESSION['config']['display']['slide']['delay']}, {$_SESSION['config']['display']['slide']['loop']} );'  title='".___('slideshow_title')."'><big>&#x1F4FD; ".___('slideshow')." <span id='slide_id' class='slide_id'></span></big></button>";
+
+	// Random image
+	echo "<button id='randomButton' class='float-left submit-button' onclick = \"window.location = '".getRandomImage()."'\"  
+    title=\"".___('random_title')."\"><big>&#x1F3B2;</big> ".___('random')."</button>";
     
 	echo show_image( $file[0] );
 }
@@ -445,14 +463,13 @@ function show_image( $filedata )
 	// Header
 	if($iptc)
 	{
-
-	// Flag
-	$flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
-	$output	.= "<img "
-	.	"src='config/.flags/{$flag}.svg' "
-	.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
-	.	"class='flag' "
-	.">";
+        // Flag
+        $flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
+        $output	.= "<img "
+        .	"src='config/.flags/{$flag}.svg' "
+        .	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
+        .	"class='flag' "
+        .">";
 
 		$headline	= $iptc['Headline'][0] ?? '...';
 		$output .= "<span class='headline'>{$headline}</span><br>";
@@ -587,5 +604,22 @@ function array_flatten2( $arr, $out=array() )  {
 }	// array_flatten2()
 
 //----------------------------------------------------------------------
+
+function getRandomImage()
+{
+    global $db;
+    $rand   = rand( 1 , $_SESSION['tmp']['no_of_images']);
+    $img    = querySqlSingleRow( $db, "SELECT file, path FROM images WHERE rowid = {$rand};" );
+    
+    // ?path=./Gamle%20album/OdenseBilleder/1943-08-19_Asylgade&show=7393192296_9f54c9ff59_h.jpg
+    $url    = "?path={$img['path']}&show={$img['file']}";
+    //$url    = "<a href='{$url}'>random</a>";
+    
+    return( $url );
+    return( var_export( $url, TRUE ) );
+    return( var_export( $img, TRUE ) );
+    return( $rand  );
+}   //getRandomImage()
+
 
 ?>

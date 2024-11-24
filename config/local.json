@@ -3,6 +3,17 @@
 		"en": "Directories",
 		"da": "Kataloger"
 	},
+	"random": {
+		"en": "Random",
+		"da": "Tilfældig",
+
+		"en": "",
+		"da": ""
+	},
+	"random_title": {
+		"en": "'And now to something completely different...'",
+		"da": "'Og nu til noget helt andet'"
+	},
 	"no_of_images": {
 		"en": "No of images",
 		"da": "Antal billeder"

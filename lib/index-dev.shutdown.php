@@ -38,6 +38,8 @@ function shutdown()
 	//status( "Log", $_SESSION['config']['logfile']  ?? 'none');
 	verbose( $_SESSION['config']['logfile']  ?? 'none', 'Log');
 
+	verbose( getRandomImage()  , 'Random');
+
     echo "</table>";
 
     echo "</details>";
