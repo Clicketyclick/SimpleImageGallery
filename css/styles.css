@@ -17,6 +17,26 @@ a {
 	color: cyan;
 }
 
+.preformatted {
+    font-family: monospace;
+    white-space: pre;
+}
+
+summary.debug {
+	background-color: black;
+	background-color: yellow;
+	color: red;
+	text-indent: 5px;
+}
+details.debug {
+	background-color: black;
+	display: block;
+	color: yellow;
+	text-indent: 25px;
+	/* Preformatted*/
+    font-family: monospace;
+    white-space: pre;
+}
 
 .display {
 	float: right;

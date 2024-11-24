@@ -64,7 +64,8 @@ if (typeof(close_image) === typeof(Function) )
  */
 function close_image( path ) { 
     console.log( "?path="+path ); 
-    document.location.href = "?path="+path;
+    //document.location.href = "?path="+path;
+    document.location.href = "?"+path;
 }   // close_image()
 
 //----------------------------------------------------------------------
@@ -87,7 +88,8 @@ function close_image( path ) {
  */
 function goto_image( path, img ) { 
     console.log( "?path="+path+"&show="+img ); 
-    document.location.href = "?path="+path+"&show="+img;
+    //document.location.href = "?path="+path+"&show="+img;
+    document.location.href = "?"+path+"&show="+img;
 }   // goto_image()
 
 slideshowSec=0;

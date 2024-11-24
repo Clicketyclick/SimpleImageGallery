@@ -29,7 +29,6 @@
 //---------------------------------------------------------------------
 
 /**
- *  @fn        debug
  *  @brief     Debug message with location
  *  
  *  @param [in] $str	String to write
@@ -39,19 +38,36 @@
  *  @details   Displaying in depth information with backtrace 
  *      for debugging if debug flag is active
  *
- *  @example
+ *@code
  *      $debug  = TRUE;
  *      debug "this you'll see", "Debug: on");
  *      $debug  = FALSE;
  *      debug( "this you won't", "Debug: on");
- *  @todo      Update globally
- *  <!--
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
- *	-->
+ *@endcode
+ *
+ * Increase visability with a CSS like:
+ *
+ *@code{css}
+summary.debug {
+	background-color: black;
+	background-color: yellow;
+	color: red;
+	text-indent: 5px;
+}
+details.debug {
+	background-color: black;
+	display: block;
+	color: yellow;
+	text-indent: 25px;
+	/* Preformatted* /
+    font-family: monospace;
+    white-space: pre;
+}
+@endcode
+ *
+ *
+ *
+ *
  *  @since     2022-12-03T08:57:29 / Erik Bachmann Pedersen
  */
 function debug ( $str, $extend = FALSE ) 
@@ -59,26 +75,41 @@ function debug ( $str, $extend = FALSE )
     if ( ($_SESSION['debug'] ?? false) || ($GLOBALS['debug'] ?? false) || (getenv('DEBUG') ?? false) ) 
 	{
         $backtrace  = debug_backtrace()[1] ?? debug_backtrace()[0] ;
-        if ( $extend ) {
-            $msg    = sprintf( "%s[%s](%s): %s\n"
+        if ( $extend ) 
+        {
+            // Build backtracking
+            $header     = sprintf( "%s[%s](%s) %s "
             ,   basename($backtrace['file'])
             ,   $backtrace['line']
             //,   $backtrace['function']
             ,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : $backtrace['function']
+            ,   $extend
+            );
+            // Append msg
+            $msg    = sprintf( "%s: %s\n"
+            ,   $header
             ,   var_export( $str, TRUE )
             );
         } else {
-            $msg    = sprintf(  "%s[%s](%s): %s\n"
-			,   basename($backtrace['file'])
+            // Build backtracking
+            $header     = sprintf( "%s[%s](%s) %s "
+            ,   basename($backtrace['file'])
             ,   $backtrace['line']
             ,   $backtrace['function']
+            //,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : $backtrace['function']
+            ,   $extend
+            );
+            // Append msg
+            $msg    = sprintf( "%s: %s\n"
+            ,   $header
             ,   var_export( $str, TRUE )
             );
         }
+        logging( $msg );
         if ('cli' === PHP_SAPI ) {
             fputs( STDERR, $msg );
         } else {
-            print( $msg );
+            print( "<details class='debug'><summary class='debug'><kbd>!{$header}</kbd></summary>{$msg}</details>\n" );
         }
     }
 }   //*** debug() ***
@@ -86,7 +117,6 @@ function debug ( $str, $extend = FALSE )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        verbose
  *  @brief     Verbose message
  *  
  *  @param [in] $str	String to display on STDERR if in verbose mode
@@ -97,18 +127,13 @@ function debug ( $str, $extend = FALSE )
  *      Uses the global value of verbose $GLOBALS['verbose']
  *      CLI writes to STDERR and CGI to browser
  *  
- *  
- *  @example   
+ *  @code
  *      $verbose  = TRUE;
  *      verbose( "this you'll see", "verbose on");
  *      $verbose  = FALSE;
  *      verbose( "this you won't", "Verbose off");
+ *  @endcode  
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2022-12-03T08:55:38 / Erik Bachmann Pedersen
  */
 function verbose( $str, $extend = FALSE )
@@ -136,7 +161,6 @@ function verbose( $str, $extend = FALSE )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        logging
  *  @brief     Generates log intry in $GLOBALS['logfile'] if $GLOBALS['logging'] flag set
  *  
  *  @param [in] $str        Log string
@@ -144,11 +168,6 @@ function verbose( $str, $extend = FALSE )
  *  
  *  @details   More details
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
  *  
  *  @see       https://www.php.net/manual/en/function.error-log.php#128965
  *  @since     2024-02-28T06:19:58 / erba
@@ -181,7 +200,6 @@ function logging( $str )
 //---------------------------------------------------------------------
 
 /**
- *  @fn           self
  *  @brief        Return string w. file.function.stringtoken
  *  
  *  @param [in]   $str      Token to return
@@ -189,15 +207,14 @@ function logging( $str )
  *  
  *  @details      Used to locate function calls and localisation
  *  
- *  @example   print __( self('me') );
+ *  @code
+ *      print __( self('me') );
+ *  @endcode
  *  
- *      file.function.me
+@verbatim
+    file.function.me
+@endverbatim
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see         https://
  *  @since       2023-11-01T07:57:52 / Erik Bachmann Pedersen
  */
 function self( $str = false )

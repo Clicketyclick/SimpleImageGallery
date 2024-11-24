@@ -87,14 +87,16 @@ $sql	= $_SESSION['database']['sql']['select_files_count'];
 $_SESSION['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
 
 
-
-
 // Save Query from URL
-parse_str( $_SERVER['QUERY_STRING'], $_SESSION['url']['args'] );
-var_export($_SESSION['url']['args']);
-// Build new query for linking
-echo http_build_query($_SESSION['url']['args']);
+parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $_SESSION['url']['args'] );
+unset($_SESSION['url']['args']['show']);    // Remove show to avoid dublication
 
+//$debug=1;
+debug($_SESSION['url']['args'], 'URL args');
+
+// Build new query for linking
+debug( http_build_query($_SESSION['url']['args']), 'http_build_query' );
+$debug=0;
 
 
 /**

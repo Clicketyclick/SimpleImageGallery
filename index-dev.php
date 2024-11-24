@@ -55,6 +55,7 @@ debug( $tree, 'tree' );
 
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "<span title='".___('breadcrumptrail')."'>". $_SESSION['config']['display']['breadcrumptrail'] . "</span>";
+//$trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
 $trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
 echo ( empty($trail) ? "<span title='".___('empty_breadcrumb_trail')."'>." : $trail ) ;
 echo '/'. basename($_REQUEST['path']);
@@ -78,7 +79,7 @@ echo "<span class='db_name'>{$_SESSION['config']['database']['file_name']}</span
 //----------------------------------------------------------------------
 
 // Clear before folders
-echo "<br clear=both>";
+echo "<br clear=both><hr>";
 
 // Get subdirectories to current directory
 $subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
@@ -216,12 +217,12 @@ else
 	echo "<button 
         id='prevButton' 
         class='float-left submit-button' 
-        onclick = 'goto_image( \"{$_REQUEST['path']}\", \"$prev\" );' 
+        onclick = 'goto_image( \"".http_build_query($_SESSION['url']['args'])."\", \"$prev\" );' 
         title='".___('prev_image')."'
         {$prev_active_button}
     ><big>&#x2BAA;</big></button>";
     echo "<script>
-        path=\"{$_REQUEST['path']}\";
+        path=\"".http_build_query($_SESSION['url']['args'])."\";
         prev=\"$prev\";
         next=\"$next\";
         first=\"$first\";
@@ -230,13 +231,13 @@ else
 	";
     
 	// Close
-	echo "<button id='prevButton' class='float-left submit-button' onclick = 'close_image(\"{$_REQUEST['path']}\");'  title='".___('up_to_index')."'><big>&#x2BAC;</big></button>";
+	echo "<button id='prevButton' class='float-left submit-button' onclick = 'close_image(\"".http_build_query($_SESSION['url']['args'])."\");'  title='".___('up_to_index')."'><big>&#x2BAC;</big></button>";
 
 	// Next
 	echo "<button 
         id='nextButton' 
         class='float-left submit-button' 
-        onclick = 'goto_image( \"{$_REQUEST['path']}\", \"$next\" );' 
+        onclick = 'goto_image( \"".http_build_query($_SESSION['url']['args'])."\", \"$next\" );' 
         title='".___('next_image')."'
         {$next_active_button}
     ><big>&#x2BAB;</big></button>

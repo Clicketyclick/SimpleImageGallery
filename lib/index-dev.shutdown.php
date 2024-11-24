@@ -7,12 +7,12 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-23T21:01:30 / ErBa
- *   @version    2024-11-23T21:01:30
+ *   @version    2024-11-24T08:13:34
  */
 
 function shutdown()
 {
-    echo "<details><summary>Outtro</summary>";
+    echo "<details><summary title='Outtro'>&#x1F52C;</summary>";
     echo "<table border=1>\n";
     
     if ( 'da' == $_SESSION['browser']['language'] ?? 'en' )
