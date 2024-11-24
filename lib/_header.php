@@ -88,8 +88,11 @@ $_SESSION['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
 
 
 
+
+// Save Query from URL
 parse_str( $_SERVER['QUERY_STRING'], $_SESSION['url']['args'] );
 var_export($_SESSION['url']['args']);
+// Build new query for linking
 echo http_build_query($_SESSION['url']['args']);
 
 
