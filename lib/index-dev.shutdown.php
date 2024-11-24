@@ -12,6 +12,17 @@
 
 function shutdown()
 {
+    // Footer
+    printf( "<br clear=both><hr><small>{$_SESSION['config']['display']['copyright']} 
+    - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['display']['app_name']}</a></small> %s"
+    ,   date('Y')
+    ,   getGitVersion()
+    );
+
+
+    if ( ! empty( $_REQUEST['slide'] ) )
+        echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
+
     echo "<details><summary title='Outtro'>&#x1F52C;</summary>";
     echo "<table border=1>\n";
     

@@ -262,6 +262,36 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 	}
 	return( $gitVersion );
 }	// getGitVersion()
+function getVersion($level = 0)
+{
+	$lifecycle	= [
+		'π'	// Pró or Pre-alpha refers to all activities performed during the software project before formal testing.
+	,	'α'	// Alpha software is not thoroughly tested by the developer before it is released to customers.
+	,	'β'	// Beta phase generally begins when the software is feature-complete but likely to contain several known or unknown bugs.
+	,	'γ'	// Gamma or release candidate (RC) is a beta version with the potential to be a stable product, which is ready to release unless significant bugs emerge.
+	,	'ω'	// Omega or stable release is the last release candidate (RC) which has passed all stages of verification and tests. Any known remaining bugs are considered acceptable. This release goes to production.
+	,	'τ'	// Tau or EOL When software is no longer sold or supported, the product is said to have reached end-of-life, to be discontinued, retired, deprecated, abandoned, or obsolete
+	];
+
+	$GitCommitInfo	= getGitCommitInfo();
+	
+	// Get version from `version.txt`: v.0.0.1-alpha
+	$gitVersion		= trim( @file_get_contents( './version.txt' ) );
+	
+	if ( empty( $gitVersion ) )	// Else build
+	{
+		$gitVersion	= sprintf( "v.%s.%s.%s"
+		,	$major
+		,	$minor
+		,	$GitCommitInfo['commitno'] ?? $patch
+		);
+	}
+	/*else
+	{
+		$gitVersion .= '_' . $GitCommitInfo['commitno'] ?? $patch;
+	}*/
+	return( $gitVersion );
+}	// getGitVersion()
 
 //----------------------------------------------------------------------
 
