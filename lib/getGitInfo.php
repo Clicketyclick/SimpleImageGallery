@@ -14,7 +14,7 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-13T10:25:46 / ErBa
- *   @version    2024-11-18T09:46:03
+ *   @version    @include version.txt
  */
 
 //----------------------------------------------------------------------

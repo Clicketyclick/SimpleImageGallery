@@ -1,5 +1,5 @@
 Allow from all
-AuthName "SDUB test"
+AuthName "Simple Image Gallery"
 AuthType Basic
 AuthUserFile /customers/a/3/a/bibit.dk/httpd.www/ByteMARC/ebp/.htpasswd
 AuthGroupFile /dev/null 

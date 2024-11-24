@@ -7,4 +7,14 @@ lib Function library
 icons Icons for index
 doc Doxygen doc
 descript.ion This list of file and directory descriptions
-index.php Main page for accessing the databases
+index.php Main page for accessing the databases\nLoad database and display image gallery [Production]Â
+reindex.cmd WinDos: Start reindexing
+rebuild.cmd WinDos: Start rebuilding
+index-dev.php Load database and display image gallery [Developper edition]
+version.txt Version from GIT
+.gitignore GIT ignore list
+README.md Main documentation file
+run.cmd WinDos: Start local PHP webserver for testing
+sqlite.cmd WinDos: Open SQLite database w. database as argument
+LICENSE Licens file
+.htaccess .htaccess files (or "distributed configuration files") provide a way to make configuration changes on a per-directory basis.\nIn root used for activating authentification.Â

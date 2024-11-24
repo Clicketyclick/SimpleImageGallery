@@ -1,16 +1,17 @@
 # Simple Image Gallery 	
 
-List and display images by folder showing metadata like EXIF and IPTC.
+List and display images by folder showing metadata like EXIF and IPTC from images.
 
-All functionallity is build in PHP on top of a SQLite database.
+All functionallity is build in PHP, JavaScript and SQL on top of a SQLite database.
 
 This is heavyly inspired by [Single File PHP Gallery](https://sye.dk/sfpg/), but build from scratch.
-_Single File PHP Gallery_ is a nice out-of-the-box gallery app. But has it's issues with handling larger collection of images.
+_Single File PHP Gallery_ is a nice out-of-the-box gallery app. But has it's issues with handling larger collection of images (YES! I'm impatient).
 
-My own collection holds more than 58,000 images in 3,800 directories (or ~228GB).
+My own collection holds more than 89,000 images in 1,700 directories (or >~ 630GB).
 And I do NOT want to load that onto a webserver!
 
-## Pros and cons
+
+## Pros and cons of **Simple Image Gallery**
 
 Pros | cons
 ---|---
@@ -20,468 +21,134 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 [^watermark]: If you put a watermark into your display images, the original are unaffected.
 
+
+> [!WARNING]  
+> Do *NOT* any personal/private images online!!! This is *not* a security system - and you "share with the world" online!
+
+
 ## Setup
 
-### Local
-
 ```
-./rebuild.php
-./data.db 
+index.php *     The Gallery
+version.txt *   Version identification
+LICENSE         License 
 .
-├───config
-│   └───.flags
-├───data
-│   ├───2003
-│   └───2023
-│       ├───..
-│       ├───.. 
-│       └───..
-│           ├───..
-│           └───..
-├───doc
-│   └───html
-│       └───search
-└───lib
+├───config *    Configuration files.
+│   └───.flags* National flags (in SVG).
+├───css*        Style Sheets.
+├───database*   Database file(s).
+├───doc         Documentation.
+│   └───HTML    Doxygen doc.
+├───examples    Examples for test run
+├───icons*      Icons for display.
+├───js*         Javascripts.
+├───lib*        Function libraries.
+├───sql         SQLscript for administration.
+└───util        Utilities: rebuild, reindex.
 ```
 
-### Web
+* Files and directories needed on web. If you only run it locally, just ignore.
 
-```
-./index.php
-.
-├───config
-│   └───.flags
-├───data		data.db 
-└───lib
 
-```
+> [!CAUTION]
+> The directories marked * will include a default .htaccess file for Apache servers to prevent users from poking in your data file.
+
 
 ## Startup
 
+Prepare you images in a folder structure (See: `./examples`) like this:
 
-### Preperation
+```
+├───2023
+│   ├───Giza
+│   ├───Odense
+│   └───Öland
+│       ├───Borgholm1
+│       └───Borgholm2
+└───Externals
+    ├───DanmarkSetFraLuften
+    └───OdenseBilleder
+        └───1943-08-19_Asylgade
+```
 
-
-
-
-### Run
-
-
-- ***`path`***`=./2024`
-	: Content of directory: `root`/2024
-- ***`show``***`=IMG20240128114147.jpg`
-    : Show specific image
-- ***`db`***`=database/data.db`
-    : Select alternative database
-- ``
-    : 
-- ``
-    : 
+From the root directory of the Gallery run:
 
 ```console
-
-```
-```console
-
-```
-```console
-
-```
-```console
-
+php util/rebuild.php 
 ```
 
+And the database `./database/data.db` will be populated the data from the images in `./examples`:
 
 ```console
-&show=IMG20240128114147.jpg
+ *   @file       rebuild.php
+ *   @brief      Rebuild database with files and metadata,
+ *   @details    Recursive processing file tree.
+ *
+ *   @todo              Needs a resume action on broken rebuild (WHERE exif IS NULL)
+ *
+ *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
+ *   @since      2024-11-11T06:14:36 / ErBa
+ *   @version    v.0.1.0-alpha 2024-11-13T07:26:33+00:00
+
+- Image resize type              [scale]
+- Process all
+- Clear tables
+- // Find all image files recursive
+[===============================] 100% 31/31 ./examples\Externals\...2296_9f54c9ff59_h.jpg
+- Processing files               [31]
+- // Write all file names to table
+- Update
+- // Write meta data, thumb and view for each file
+[===============================] 100% 31/31 ./examples/Externals/...2296_9f54c9ff59_h.jpg     -
+- Post-processing
+[===============================] 100% 26/26 vacuum: --VACUUM;
+- Tables created                 [0]
+- Images processed               [31]
+- Post processes                 [26]
+- Runtime                        [00:00:07.5467638969421]
+- Log                            [none]
 ```
+
+You can now test the gallery by:
+
+1. Running php webserver:
+```console
+php -S localhost:8083
+```
+2. Opening a broswer window with the address: `http://localhost:8083/index.php`
+3. Et voila! The Gallery is up and running.
+
+## Configuration
+
+Suppose that you want to build your own database `./database/xyz` with your own images from `W:/gallery_test/` try setting the arguments to rebuild:
 
 ```console
-&db=database/data.db
-```
-http://localhost:8083/index.php?path=.&db=database/data.db
-
-
-
-
-
-## S
-
-Group|Key|Example|Note
----|---|---|---
-data |
-||data_root | ./data/ | 
-||image_ext|[jpg,JPEG]
-images|
-||image_resize_type | resampled | Best, but slow 3,45 sec per image (4K)
-||image_resize_type | resized | 1 sec  per image (4K)
-||image_resize_type | scale | 0,76 sec per image (4K)
-||thumb_max_width|300
-||thumb_max_height | 300
-||display_max_width | 4200
-||display_max_height | 4200
-||crop | 0	| 0=off/else on
-exif|
-||exif_map_tag | See on Google map | 
-||exif_map_link_stub | [^google_maps]?q={$lat},{$lon} | External map without zoom
-||exif_map_link_stub | [^google_maps]?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom} | External map w. zoom
-||exif_map_embed_tag | Image map | 
-||exif_map_embed_stub | [^google_maps]?q={$lat},{$lon}&output=embed  | Simple embedded map w/o zoom
-||exif_map_embed_stub | [^google_maps]?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}&output=embed&hl=en" | Embedded map w zoom
-maps|
-maps/map_source	| google	| google or osm
-maps/map_window_margin|0.0005|
-maps/map_types|
-maps/map_types/google/|tag|"See on Google map"|
-maps/map_types/google/|link_stub|[^google_maps]?q={$lat},{$lon}
-maps/map_types/google/|embed_stub|[^google_maps]?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}
-maps/map_types/osm/|link_stub|[^osm_maps]#map={$zoom}/{$lat}/{$lon}"	|
-maps/map_types/osm/|embed_stub|[^osm_maps]export/embed.html?bbox={$lon_margin_lower}%%2C{$lat_margin_lower}%%2C{$lon_margin_higher}%%2C{$lat_margin_higher}&amp;layer=mapnik"
-database | 
-||file_name | data.db | Database file
-||image_ext | [jpg,JPEG]
-
-
-[^google_maps]: https://maps.google.com/maps
-[^osm_maps]: https://www.openstreetmap.org/
-
-## SQLite
-
-### Create table: images
-
-```sql
-CREATE TABLE IF NOT EXISTS images (
-    name    TEXT,           -- Display name
-    file    TEXT not null,  -- Base file
-
-    source  TEXT,           -- Source path
-    path    TEXT not null,  -- Search path
-
-    exif    TEXT,           -- EXIF as JSON
-    iptc    TEXT,           -- IPTC as JSON
-
-    thumb   TEXT,            -- Thumb Base64 encoded
-    display TEXT,            -- Display Base64 encoded
-
-    PRIMARY KEY (source,file)
-);
-
+php util/rebuild.php -config:data:data_root="W:/gallery_test/" -config:database:file_name=./database/xyz.db
 ```
 
-```sql
+`config:data:data_root` and `config:database:file_name` are the paths to data in the configuration file `./config/config.json`
+
+So you can either set the arguments on the command line - OR edit the configuration file.
+
+(Snap from the configuration file)
+```json
+{
+	"data": {
+		"virtual_root": "./",
+		"data_root": "./data/",
+		"data_root": "W:/gallery_test/",
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
+	},
+	"database": {
+		"file_name": "database/data.db",
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
+	}
+}
 ```
-
-
-
-
-
-
-
-```sql
--- Reset path
--- UPDATE images SET path = source;
--- Remove root dir
-UPDATE images SET path = replace (path, './data', '.');
-```
-
-
-### Grouping
-
-```sql
--- Find all directories from 2024-08 Blåvand
-SELECT path, count(file) AS files FROM images WHERE path LIKE "./2024/2024-08%_Blåvand" GROUP BY path;
-```
-
-```console
-┌───────────────────────────┬───────┐
-│           path            │ files │
-├───────────────────────────┼───────┤
-│ ./2024/2024-08-05_Blåvand │ 1     │
-│ ./2024/2024-08-10_Blåvand │ 5     │
-└───────────────────────────┴───────┘
-```
-
-Blåvand
-```sql
--- Join in virtual display directory: './2024/2024-08_Blåvand'
-UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE "./2024/2024-08%_Blåvand";
-SELECT path, count(file) AS files FROM images WHERE path LIKE "./2024/2024-08%_Blåvand" GROUP BY path;
-```
-
-```console
-┌────────────────────────┬───────┐
-│          path          │ files │
-├────────────────────────┼───────┤
-│ ./2024/2024-08_Blåvand │ 6     │
-└────────────────────────┴───────┘
-```
-
-
-Borgholm
-```sql
--- Gouping: Merge all 'Borgholm%' to 'Borgholm'
-UPDATE images	SET path = './2023/Öland/Borgholm'
-	WHERE path like './2023/Öland/Borgholm%'
-;
-```
-
-Grouping
-```sql
-
-DROP TABLE grouping;
-CREATE TABLE IF NOT EXISTS grouping (
-	pattern	TEXT,
-	destination	TEXT
-);
-
-SELECT path, count(file) AS file FROM images GROUP BY path;
-
-┌───────────────────────────┬─────────────┐
-│           path            │ files       │
-├───────────────────────────┼─────────────┤
-│ .                         │ 2           │
-│ ./2023/Giza               │ 1           │
-│ ./2023/Odense             │ 1           │
-│ ./2023/Öland              │ 3           │
-│ ./2023/Öland/Borgholm1    │ 3           │
-│ ./2023/Öland/Borgholm2    │ 3           │
-│ ./2024/2024-08-05_Blåvand │ 1           │
-│ ./2024/2024-08-10_Blåvand │ 5           │
-└───────────────────────────┴─────────────┘
-
-INSERT OR IGNORE INTO grouping( pattern, destination) VALUES( './2023/Öland/Borgholm%','./2023/Öland/Borgholm' );
-INSERT OR IGNORE INTO grouping( pattern, destination) VALUES( './2024/2024-08%_Blåvand','./2024/2024-08_Blåvand' );
-SELECT * FROM grouping;
-┌─────────────────────────┬────────────────────────┐
-│         pattern         │      destination       │
-├─────────────────────────┼────────────────────────┤
-│ ./2023/Öland/Borgholm%  │ ./2023/Öland/Borgholm  │
-│ ./2024/2024-08%_Blåvand │ ./2024/2024-08_Blåvand │
-└─────────────────────────┴────────────────────────┘
-
-UPDATE images
-SET 
-  path=t.destination
-FROM (
-  SELECT * FROM grouping
-) t
-WHERE images.path like t.pattern;
-
-
-SELECT path, count(file) AS Files FROM images GROUP BY path;
-
-┌────────────────────────┬─────────────┐
-│          path          │ files       │
-├────────────────────────┼─────────────┤
-│ .                      │ 2           │
-│ ./2023/Giza            │ 1           │
-│ ./2023/Odense          │ 1           │
-│ ./2023/Öland           │ 3           │
-│ ./2023/Öland/Borgholm  │ 6           │
-│ ./2024/2024-08_Blåvand │ 6           │
-└────────────────────────┴─────────────┘
-```
-
-
-
-
-
-
-Oldest
-
-```sql
--- Oldest image in path
-SELECT path, file FROM images WHERE path LIKE "./data/%"
-ORDER BY
-  path, file ASC
- LIMIT 1
-;
-```
-
-Newest
-
-```sql
--- Newest picture in path
-SELECT path, file FROM images WHERE path LIKE "./data/%" ORDER BY 
-  path, file DESC
- LIMIT 1
-;
-```
-Missing
-```
--- .read config/missing.sql
--- Select all images w/o updateded metadata
-SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;
-```
-
-Update path
-
-```
-UPDATE images SET path = replace (path, './data', './');
-UPDATE images SET path = replace (path, '/20', './20');
-UPDATE images SET path = replace (path, './20', '/20');
-
-UPDATE images SET source = replace (path, './20', './data/20');
-
-
-
-
-ALTER TABLE images ADD COLUMN source  TEXT;
-ALTER TABLE images ADD COLUMN name    TEXT;
-
-UPDATE images SET source = path;
-UPDATE images SET path = source;
-
-
-
-
-
-
-
-
-	-- Update path
-	UPDATE images SET path = replace (path, './data', '.');
-	-- Grouping
-	SELECT DISTINCT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
-	UPDATE images SET path = './2024/2024-08_Blåvand' WHERE path LIKE "./2024/2024-08%_Blåvand";
-	SELECT path FROM images WHERE path LIKE "./2024/2024-08%_Blåvand";
-
-
-
-	-- name -----------------------------
-	-- ALTER TABLE images ADD COLUMN name;
-
-
-.progress 1000
-CREATE INDEX idx_name ON images(name);
-CREATE INDEX idx_source ON images(source);
-CREATE INDEX idx_file ON images(file);
-CREATE INDEX idx_path ON images(path);
-.progress 1000
-SELECT count(name) FROM images WHERE name IS NULL;
-UPDATE images SET name = file WHERE name IS NULL;
-UPDATE images SET source = path;-- WHERE source IS NULL;
-
-
-
-	--UPDATE images SET name = file;
-	----------------------------------------------------------------------
-	-- Replace any case of '.jpg' length with ''
-	----------------------------------------------------------------------
-	.output name_images.txt
-	SELECT name FROM images;
-	.output
-
-
-	SELECT name FROM images2 WHERE length(name) > 15 AND ( name like "19%" OR name like "20%" );
-```
-
-### Configuration
-
-```sql
--- Configuration
-CREATE TABLE IF NOT EXISTS config (
-    key             TEXT NOT NULL,
-    value           TEXT NOT NULL,  -- String or JSON
-    section         TEXT NOT NULL,  -- Section specific
-    language        TEXT default NULL,           -- ISO 639-1 (two-letter)
-    note            TEXT default NULL,            -- Internal comment
-    PRIMARY KEY ( key, section, language )
-);
-CREATE INDEX idx_config
-ON
-    config(key, section, language)
-;
-
--- Default configuration
-INSERT INTO "config" VALUES('name','SimpleImageGallery','database',NULL,NULL);
-INSERT INTO "config" VALUES('version','00.01','database',NULL,NULL);
-INSERT INTO "config" VALUES('release','2024-11-17T22:12:32','database',NULL,NULL);
-INSERT INTO "config" VALUES('level','alpha','database',NULL,NULL);
-INSERT INTO "config" VALUES('min_image_size_bytes','300','database',NULL,'Minimum image size in bytes');
-INSERT INTO "config" VALUES('readme','','database','da',NULL);
-INSERT INTO "config" VALUES('readme','','database','en',NULL);
-INSERT INTO "config" VALUES('title','Erik's gallery','database','en',NULL);
-INSERT INTO "config" VALUES('title','Eriks galleri','database','da',NULL);
-
-```
-
-### search
-
-```sql
-CREATE TABLE IF NOT EXISTS search
-(
-    search_id   TEXT NOT NULL
-,   recno       NUMERIC NOT NULL
-,   entry       TEXT NOT NULL
-,   key         TEXT
-);
-
-CREATE TABLE IF NOT EXISTS wordclouds (
-    cloudname   TEXT NOT NULL,
-    key         TEXT NOT NULL,
-    entry       TEXT NOT NULL,
-    count       TEXT NOT NULL,
-    tag         TEXT NOT NULL,
-    norm        TEXT NOT NULL
-);
-
-┌──────────────────────────────────────┬───────┬──────────────────────────────┬──────────────────────────────┐
-│              search_id               │ recno │            entry             │             key              │
-├──────────────────────────────────────┼───────┼──────────────────────────────┼──────────────────────────────┤
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ </pre><pre>                  │ </pre><pre>                  │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ROW:1                        │ row:1                        │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ID:50387798-b870970-fa004r:n │ id:50387798-b870970-fa004r:n │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ 004r:n                       │ 004r:n                       │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ 004a:h                       │ 004a:h                       │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ CL:Kontor                    │ cl:kontor                    │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ CL:Fagreol                   │ cl:fagreol                   │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ ISIL:EBP                     │ isil:ebp                     │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ AU:Deleuran, Claus           │ au:deleuran, claus           │
-│ e4aea517-f553-415c-ab7a-dc9d7f710fe3 │ 1     │ KW:DM2                       │ kw:dm2                       │
-└──────────────────────────────────────┴───────┴──────────────────────────────┴──────────────────────────────┘
-
-
-
-/*
-CREATE TABLE IF NOT EXISTS wordcloudblobs (
-    cloudname   TEXT NOT NULL,
-    entry       TEXT NOT NULL
-);
-*/
-
-SELECT count(*) FROM search;
-SELECT count(*) FROM wordclouds;
--- SELECT count(*) FROM wordcloudblobs;
-
-```
-
-<!--
-SNØVL
-
-select name, path, file, source from images WHERE file like "2024-01-14T13-08-35_IMGP2121.JPG";
-select name, path, file, source from images limit 2;
-
-UPDATE images SET path = './2024/2024-01-14_Pingo_X' WHERE path LIKE "W:/gallery/2024/2024-01-14_Pingo_X";
-
-UPDATE images SET path = replace (path, 'W:/gallery/', './');
-
-str_replace( 'W:/gallery/', './', $path )
-
-
-.timer on
-UPDATE images SET path = replace (path, 'W:/gallery/', './')
-	WHERE rowid >=1 AND rowid < 1000;
- 
-
-git describe --tags
-
-> v.0.0.1-alpha-36-gb9d6aaa
-
-:: list alle tags by committerdate
-git tag --sort=committerdate
-v.0.0.1-alpha
-
-
-
--->

@@ -6,7 +6,7 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T06:14:19 / ErBa
- *   @version    2024-11-11T06:14:19
+ *   @version    @include version.txt
  */
 
 body {
@@ -54,6 +54,7 @@ details.debug {
 	width:64px;
 	height:auto;
 	border: 1px solid white;
+	margin: 5px;
 }
 
 .flag_mini {
@@ -83,29 +84,52 @@ details.debug {
   text-align: center;
   vertical-align: middle;
 }
+
+.figure_icon {
+	background-color: black;
+	color: yellow;
+}
+
 .subfolder {
 	background-color: #003030;
 	float: left;
 	border: 1px solid white;
-	max-width:	120px;
+/*	max-width:	120px;
 	max-height:	120px;
 	width:	100px;
 	width:	120px;
-
+*/
 	max-width:	220px;
 	max-height:	220px;
+/*
 	width:	150px;
 	height:	160px;
+*/
+	width:	220px;
+	height:	180px;
+
 	padding: 2px;
 	margin: 2px;
-  display: block;
-  vertical-align: middle;
+	display: block;
+	vertical-align: middle;
 }
 .subfolder_icon {
 	border: 1px solid white;
+/*
 	max-width:	100%;
 	max-height:	80px;
 	max-height:	120px;
+*/
+}
+.thumb {
+	border: 1px solid white;
+/*
+	max-width:	100%;
+	max-height:	80px;
+	max-height:	120px;
+	*/
+	max-width:	210px;
+	max-height:	210px;
 }
 
 
@@ -154,4 +178,19 @@ button:hover:disabled {
 
 .db_name {
 	float: right;
+}
+
+
+.iptc_location_tag,
+.iptc_credit_tag,
+.iptc_source_tag,
+.iptc_location_tag {
+	font-weight: bold;
+}
+
+.iptc_location,
+.iptc_credit,
+.iptc_source,
+.iptc_location {
+	color: cyan;
 }

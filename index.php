@@ -459,7 +459,6 @@ function show_image( $filedata )
 		$output .= $caption;
 
 		$supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
-
 		$output .= "<br><small>"
 		.	$supcat
 		.	"</small>";

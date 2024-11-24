@@ -29,6 +29,19 @@ $cfg_normalise    = [
 
 switch ( $_REQUEST['action'] ?? 'noaction')
 {
+    case 'update':
+        // Rebuild metadata
+        // Build indexes
+        rebuild_update();
+    break;
+    case 'resume':
+        // Read all files
+            // add_new_files
+            // Rebuild metadata
+            // Build indexes
+        rebuild_resume();
+    break;
+    default:
     case 'full':
         // clear Tables
         // Read all files
@@ -37,19 +50,6 @@ switch ( $_REQUEST['action'] ?? 'noaction')
         rebuild_full();
         rebuild_update();
         post_proccessing();
-    break;
-    case 'update':
-        // Rebuild metadata
-        // Build indexes
-        rebuild_update();
-    break;
-    case 'resume':
-    default:
-        // Read all files
-            // add_new_files
-            // Rebuild metadata
-            // Build indexes
-        rebuild_resume();
     break;
 }
 

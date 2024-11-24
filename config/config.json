@@ -1,6 +1,7 @@
 {
 	"system": {
-		"name": "Simple Image Gallery",
+		"app_name": "Simple Image Gallery",
+		"copyright": "&copy;%s Erik Bachmann",
 		"favicon": "./config/ebp.icon.ico"
 	},
 	"process": {
@@ -20,20 +21,20 @@
 			"loop": true,
 			"delay": 10
 		},
-		"figure_template": "<figure class='subfolder'>\n\t<figcaption>&#x1F5BC;<span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
-		"figure_template_dir": "<figure class='subfolder'>\n\t<figcaption>&#x1F4C1;<span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='subfolder_icon' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
-		"thumb_max_width": 100,
-		"thumb_max_height": 100,
+		"figure_template": "<figure class='subfolder'>\n\t<figcaption><span class='figure_icon'>&#x1F5BC;</span><span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='thumb' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
+		
+		"figure_template_dir": "<figure class='subfolder'>\n\t<figcaption><span class='figure_icon'>&#x1F4C1;</span><span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='thumb' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
+		
+		"thumb_max_width": 300,
+		"thumb_max_height": 300,
 		"home_url": "https://clicketyclick.github.io/",
-		"app_name": "Simple Image Gallery",
-		"copyright": "&copy;%s Erik Bachmann",
 		"breadcrumptrail": "&#x1F35E;&hellip;: "
 	},
 	"data": {
 		"virtual_root": "./",
 		"data_root": "./data/",
 		"data_root": "W:/gallery/",
-		"_data_root": "W:/gallery_test/",
+		"data_root": "./examples/",
 		"image_ext": [
 			"jpg",
 			"JPEG"
@@ -80,10 +81,9 @@
 	},
 	"exif": {},
 	"database": {
-		"_file_name": "database/data.w.db",
-		"file_name": "database/data.w2.db",
+		"_file_name": "database/data.w2.db",
 		"_file_name": "database/data.w3.db",
-		"_file_name": "database/data.db",
+		"file_name": "database/data.db",
 		"image_ext": [
 			"jpg",
 			"JPEG"

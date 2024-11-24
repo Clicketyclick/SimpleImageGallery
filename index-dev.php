@@ -105,11 +105,11 @@ printf( "%s: %s<br>"
 );
 $count  = 0;
 
-//echo "<pre>";
 $sql	= sprintf( $_SESSION['database']['sql']['thumb_from_dirs'], implode( "', '", $subdirs ) );
 debug($sql, 'thumb_from_dirs');
 $thumbs	= querySql( $db, $sql );
 
+// flatten
 foreach( $thumbs as $no => $thumbdata )
 {
     unset ( $thumbs[$no] );
@@ -444,15 +444,17 @@ function show_thumb( $filedata, $dir = false, $show = false )
  */
 function show_image( $filedata )
 {
-	$output	= '';
 	global $db;
+	$output	= '';
+
 	debug( $filedata['file']);
 	debug( $filedata['path'] );
 	
 	$sql	= sprintf( $_SESSION['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
 	$meta	= querySql( $db, $sql );
 	debug( $sql );
-	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
+
+	$exif	= json_decode( $meta[0]['exif'] ?? "", TRUE );
 	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 
 	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
@@ -471,48 +473,107 @@ function show_image( $filedata )
         .	"class='flag' "
         .">";
 
+        // Headline
 		$headline	= $iptc['Headline'][0] ?? '...';
 		$output .= "<span class='headline'>{$headline}</span><br>";
 
+        // Caption
 		$caption	= $iptc['Caption-Abstract'][0] ?? '';
 		$output .= $caption;
 
-		$supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
+        // Location
+        $ContentLocationName	= [
+            $iptc['Sub-location'][0] ?? ''                  //Sub-location	Grydehøjvej 62
+        ,	$iptc['City'][0] ?? ''                          //City	Gundsømagle
+        ,	$iptc['Province-State'][0] ?? ''                //Province-State	DK-4000 Roskilde
+        ,	$iptc['Country-PrimaryLocationName'][0] ?? ''   //Country-PrimaryLocationName	Denmark
+        ,	$iptc['Country-PrimaryLocationCode'][0] ?? ''   //Country-PrimaryLocationCode	DNK
+        ];
 
-		$output .= "<br><small>"
-		.	$supcat
-		.	"</small>";
+        $output .= "<br clear=both><span class='iptc_location_tag'>"
+        .   ___('iptc_location_tag')
+        .   "</span>: <span class='iptc_location'>"
+        .   ( $iptc['ContentLocationName'][0] ?? implode( ', ', $ContentLocationName ) )
+        .   '</span>'
+        ;
+
+        // Persons
+        if ( ! empty( $iptc['SupplementalCategories'] ) )
+        {
+            $supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
+            $output .= "<br><span class='iptc_location_tag'>". ___('iptc_SupplementalCategories') . "</span>: <span class='iptc_location'>{$supcat}</span>";
+        }
+
+
+        // Credit and source
+        /*
+        Credit	E. Christoffersen
+        Source	https://www.flickr.com/photos/nationalmuseet/7393192296
+        */
+        if ( ! empty( $iptc['Credit'] ) )
+            $output .= "<br><span class='iptc_credit_tag'>". ___('iptc_Credit') . "</span>: <span class='iptc_credit'>{$iptc['Credit'][0]}</span>";
+        
+        if ( ! empty( $iptc['Source'] ) )
+        {
+            $source = $iptc['Source'][0];
+            if ( str_starts_with( $source, 'https:') )
+                $source = sprintf( "<a href='%s' title='%s'>%s</a>"
+                    ,   $source
+                    ,   ___('link_to_source')
+                    ,   $source
+                    );
+
+            $output .= "<br><span class='iptc_source_tag'>". ___('iptc_Source') . "</span>: <span class='iptc_Source'>{$source}</span>";
+        }
 	}
 
+    echo "<br clear=both>";
+    
 	// IPTC
-	$output	.= "<br clear=both><details open><summary title='".___('iptc')."'><img src='{$_SESSION['config']['display']['iptc']['icon']}'>IPTC</summary><table border=1>";
+	$output	.= "<br clear=both><br><details><summary title='"
+    .   ___('iptc')
+    .   "'><img src='{$_SESSION['config']['display']['iptc']['icon']}'>IPTC</summary><table border=1>";
+    
     foreach ( array_flatten2($iptc) as $iptc_key => $itpc_value )
     {
         if ( 'CodedCharacterSet' == $iptc_key ) continue;
-        $output	.= "<tr><td class='iptc_key'>".___("iptc_{$iptc_key}"). "</td><td class='iptc_value'>". (
-        ( 'array' == gettype($itpc_value) ) ? implode( ' ; ', $itpc_value) : $itpc_value )
-        .   "</td></tr>\n";
+        $output	.= "<tr><td class='iptc_key'>"
+        .   ___("iptc_{$iptc_key}")
+        .   "</td><td class='iptc_value'>"
+        .   (
+                ( 'array' == gettype($itpc_value) ) ? implode( ' ; ', $itpc_value) : $itpc_value 
+            )
+        .   "</td></tr>\n"
+        ;
     }
 	$output	.= "</table></details>";
 
+
 	// EXIF
-/** /
-	$output	.= "<details><summary title='".___('exif')."'><img src='{$_SESSION['config']['display']['exif']['icon']}'>EXIF</summary><pre>";
-	$output	.= var_export( $exif, TRUE );
-	$output	.= "</pre></details>";
-/**/
-	$output	.= "<details><summary title='".___('exif_title')."'><img src='{$_SESSION['config']['display']['exif']['icon']}'>exif</summary><table border=1>";
+	$output	.= "<br clear=both><details><summary title='"
+    .   ___('exif_title')
+    .   "'><img src='{$_SESSION['config']['display']['exif']['icon']}'>EXIF</summary><table border=1>";
+
     foreach ( array_flatten2($exif) as $exif_section => $exif_block )
     {
         if ( ! is_array( $exif_block ) )
             continue;
         //if ( 'CodedCharacterSet' == $exif_key ) continue;
-        $output	.= "<tr><td class='exif_group'>".___("exif_{$exif_section}"). "</td><td><table border>";
+        $output	.= "<tr><td class='exif_group'>"
+        .   ___("exif_{$exif_section}")
+        .   "</td><td><table border>"
+        ;
 
         foreach ( $exif_block as $exif_key => $exif_value )
         {
-            $output	.= "<tr><td class='exif_key'>".___("exif_{$exif_key}"). "</td><td class='exif_value'>". (
-            ( 'array' == gettype($exif_value) ) ? implode( ' ; ', $exif_value) : $exif_value )
+            $output	.= "<tr><td class='exif_key'>"
+            .   ___("exif_{$exif_key}")
+            .   "</td><td class='exif_value'>"
+            .   (
+                    ( 'array' == gettype($exif_value) )
+                    ?   implode( ' ; ', $exif_value)
+                    :   $exif_value 
+                )
             .   "</td></tr>\n";
         }
 
@@ -522,8 +583,6 @@ function show_image( $filedata )
     	$output	.= "<details><summary title='".___('exif_title')."'><!--img src='{$_SESSION['config']['display']['exif']['icon']}'-->".___('exif_array')."</summary><pre>";
 	$output	.= var_export( $exif, TRUE );
 	$output	.= "</pre></details>";
-
-
 
     // Maps
 	if ( ! empty($exif['GPS']["GPSLongitude"]) )

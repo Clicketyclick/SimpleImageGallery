@@ -1,4 +1,8 @@
 {
+	"iptc_location_tag": {
+		"en": "Location",
+		"da": "Sted"
+	},
 	"no_of_subdirs": {
 		"en": "Directories",
 		"da": "Kataloger"

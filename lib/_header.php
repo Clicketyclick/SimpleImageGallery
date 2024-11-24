@@ -7,7 +7,7 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-19T20:49:51 / ErBa
- *   @version    2024-11-19T20:49:51
+ *   @version    @include version.txt
  */
 
 // Start session

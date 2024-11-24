@@ -7,14 +7,14 @@
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-23T21:01:30 / ErBa
- *   @version    2024-11-23T21:01:30
+ *   @version    @include version.txt
  */
 
 function shutdown()
 {
     // Footer
-    printf( "<br clear=both><hr><small>{$_SESSION['config']['display']['copyright']} 
-    - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['display']['app_name']}</a></small> %s"
+    printf( "<br clear=both><hr><small>{$_SESSION['config']['system']['copyright']} 
+    - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['system']['app_name']}</a></small> %s"
     ,   date('Y')
     ,   getVersion()
     );
@@ -24,6 +24,7 @@ function shutdown()
         echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
 
     //----------------------------------------------------------------------
+/*
     echo "<details><summary>Outtro</summary>";
     echo "<table border=1>\n";
 	verbose( $_SESSION['tmp']['no_of_images'] , ___('no_of_images'));
@@ -35,8 +36,7 @@ function shutdown()
 
     echo "</table>";
     echo "</details>";
-    
-    
+*/    
 }   // shutdown()
 
 ?>
