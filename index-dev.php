@@ -515,9 +515,12 @@ function show_image( $filedata )
 		$lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
 		$zoom	= $_REQUEST['zoom'] ?? 15;
 
-		echo getMapLink( $lat, $lon, $zoom, $_SESSION['config']['maps']['map_source'] );
-		echo " @ $lon,$lat<br>";
+        echo "<br>";
 		echo getMapEmbed( $lat, $lon, $zoom, $_SESSION['config']['maps']['map_source'] );
+        echo "<br>";
+        echo getMapLink( $lat, $lon, $zoom, $_SESSION['config']['maps']['map_source'] );
+		echo " @ $lon,$lat<br>";
+
 	}
 	$output	.= "<br clear=both><hr>";
 	
