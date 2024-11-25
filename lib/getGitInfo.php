@@ -262,6 +262,7 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 	}
 	return( $gitVersion );
 }	// getGitVersion()
+
 function getVersion($level = 0)
 {
 	$lifecycle	= [
@@ -276,13 +277,13 @@ function getVersion($level = 0)
 	$GitCommitInfo	= getGitCommitInfo();
 	
 	// Get version from `version.txt`: v.0.0.1-alpha
-	$gitVersion		= trim( @file_get_contents( './version.txt' ) );
-	
+	$gitVersion		= trim( @file_get_contents( ( $GLOBALS['releaseroot'] ??'../' ) . 'version.txt' ) );
+
 	if ( empty( $gitVersion ) )	// Else build
 	{
 		$gitVersion	= sprintf( "v.%s.%s.%s"
-		,	$major
-		,	$minor
+		,	$major ?? 0
+		,	$minor ?? 0
 		,	$GitCommitInfo['commitno'] ?? $patch
 		);
 	}
