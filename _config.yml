@@ -1,2 +1,2 @@
-title: Simple Image Gallery                              <script async type="text/javascript">var REPO="SIG";var DESC="Simple Image Gallery (SIG)";</script><script async type="text/javascript" src="/topmenu.js"></script>
+title: Simple Image Gallery                              <script async type="text/javascript">var REPO="SimpleImageGallery";var DESC="Simple Image Gallery";</script><script async type="text/javascript" src="/topmenu.js"></script>
 description: List and display images by folder showing metadata like EXIF and IPTC from images.

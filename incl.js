@@ -1,7 +1,7 @@
 console.log("Incl.js loaded");
 //document.getElementsByTagName("body")[0].innerHTML = "HEADER HERE<div align='right'><a href='..' title='Up'><kbd>&#x2303;</kbd></a><a href='/' title='Home'><kbd>&#x1F3E0;</kbd></a></div></a> HEADER END" + document.getElementsByTagName("body")[0].innerHTML;
 var SITE  = "Clicketyclick";
-var REPO  = "SIG";
+var REPO  = "SimpleImageGallery";
 var DOMAIN  = "Clicketyclick.dk";
 var TIME  = "";//2022-11-17T16:19:58";
 const d = new Date();
