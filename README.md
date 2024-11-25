@@ -26,6 +26,11 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 > Do *NOT* any personal/private images online!!! This is *not* a security system - and you "share with the world" online!
 
 
+## Demo
+
+Take a look at the latest [demo](https//gallery.clicketyclick.dk)
+
+
 ## Setup
 
 ```
