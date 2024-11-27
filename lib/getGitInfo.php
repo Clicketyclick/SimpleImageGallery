@@ -242,7 +242,7 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 	$GitCommitInfo	= getGitCommitInfo();
 	
 	// Get version from `version.txt`: v.0.0.1-alpha
-	$gitVersion		= trim( @file_get_contents( './version.txt' ) );
+	$gitVersion		= trim( @file_get_contents( ( $GLOBALS['releaseroot'] ?? '.') .'/version.txt' ) );
 	
 	if ( empty( $gitVersion ) )	// Else build
 	{
@@ -251,14 +251,14 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 		,	$minor
 		,	$GitCommitInfo['commitno'] ?? $patch
 		,	$lifecycle[ $level ?? 0 ]
-		,	str_replace( ' ', 'T', $GitCommitInfo['commitdate'] )
+		,	str_replace( ' ', 'T', $GitCommitInfo['commitdate'] ?? '_' )
 		,	$GitCommitInfo['shorthash']
 		//,	$GitCommitInfo[]
 		);
 	}
 	else
 	{
-		$gitVersion .= '_' . $GitCommitInfo['commitno'] ?? $patch;
+		$gitVersion .= '_' . ( $GitCommitInfo['commitno'] ?? $patch );
 	}
 	return( $gitVersion );
 }	// getGitVersion()

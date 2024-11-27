@@ -13,8 +13,13 @@
 // Include script specific shutdown function. BEFORE _header.php !
 include_once( 'lib/'.basename(__FILE__,".php").'.shutdown.php');
 
+//timer_start('_header');
 include_once('lib/_header.php');
+//timer_end('_header');
 
+//unlink( $_SESSION['timers'] );
+
+timer_start('header');
 echo '
 <!DOCTYPE html>
 <html lang="en">
@@ -42,15 +47,26 @@ $verbose=1;
 if ( empty( $_REQUEST['path']) )
 	$_REQUEST['path'] = '.';
 
+timer_end('header');
 
+timer_start('open_db');
 $db	= openSqlDb( $_REQUEST['db'] ?? $_SESSION['config']['database']['file_name']);
+timer_end('open_db');
 
+/*
+echo "<pre>";
+var_export( $_SESSION['timers'] );
+exit;
+*/
+
+timer_start('build_dir_tree');
 //"SELECT DISTINCT path FROM images WHERE path LIKE '%s%%'"
 $sql	= sprintf( $_SESSION['database']['sql']['select_path'], $_REQUEST['path']  );
 $dirs	= querySql( $db, $sql );
 
 $tree	= buildDirTree( $dirs );
 debug( $tree, 'tree' );
+timer_end('build_dir_tree');
 
 // >>> Top menu
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
@@ -121,7 +137,8 @@ debug($thumbs, 'thumbs');
 foreach( $subdirs as $subdir )
 {
     logging( "Start: $subdir");
-    $_SESSION['timers'][$subdir]['start']	= microtime(TRUE);
+    //$_SESSION['timers'][$subdir]['start']	= microtime(TRUE);
+    timer_start( $subdir );
     
 	$dir	= $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
     debug( $dir);
@@ -152,6 +169,7 @@ foreach( $subdirs as $subdir )
     // Print figure for directories
     echo show_thumb( $newestthumb, TRUE );
     
+    timer_end( $subdir );
     logging( progress_log( ++$count, $count_subdirs, $_SESSION['timers'][$subdir]['start'], 1 ) );
 }
 echo "</pre><br clear=both><hr>";
@@ -167,10 +185,10 @@ if( empty($_REQUEST['show']) )
 	$files	= querySql( $db, $sql );
 	debug($files, 'Files:"');
 
-printf( "%s: %s<br>"
-,   ___('no_of_images')
-,   count( $files )
-);
+    printf( "%s: %s<br>"
+    ,   ___('no_of_images')
+    ,   count( $files )
+    );
 
 	foreach ( $files as $no => $filedata )
 	{
@@ -253,7 +271,7 @@ else
         class='float-left submit-button' 
         onclick = 'goto_image( \"".http_build_query($_SESSION['url']['args'])."\", \"$next\" );' 
         title='".___('next_image')."'
-        {$next_active_button}
+,        {$next_active_button}
     ><big>&#x2BAB;</big></button>
     ";
 
@@ -265,10 +283,23 @@ else
     title=\"".___('random_title')."\"><big>&#x1F3B2;</big> ".___('random')."</button>";
     
 	echo show_image( $file[0] );
+	var_export( strlen( $file[0]['display'] ) );
 }
 
+
+ob_flush();
+flush();
 //----------------------------------------------------------------------
 
+function timer_start( $key )
+{
+    $_SESSION['timers'][$key]['start'] = microtime( TRUE) ;
+}
+
+function timer_end( $key )
+{
+    $_SESSION['timers'][$key]['end'] = microtime( TRUE) ;
+}
 
 //----------------------------------------------------------------------
 
@@ -457,10 +488,22 @@ function show_image( $filedata )
 	$exif	= json_decode( $meta[0]['exif'] ?? "", TRUE );
 	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 
-	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
+/*
+	//$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
+	$output	.= sprintf( "<br><small></small>[img class='display' src='data:jpg;base64, %s' title='%s'>"
 	,	$filedata['display']
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
+* /
+echo '
+<div style="
+        width: 10px;
+        height: 10px;
+        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==) no-repeat;">
+    A dot.
+</div>
+';
+*/
 
 	// Header
 	if($iptc)

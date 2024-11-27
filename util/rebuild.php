@@ -152,7 +152,7 @@ function rebuild_update()
         if ( empty( $exif ) )
         {
             logging( "$file error in image EXIF" );
-            $exifjson 	= 'EMPTY';
+            $exifjson 	= '';
         }
         else
         {
@@ -165,7 +165,7 @@ function rebuild_update()
         if ( empty( $iptc ) )
         {
             logging( "$file error in image IPTC" );
-            $iptcjson 	= 'EMPTY';
+            $iptcjson 	= '';
         }
         else
             $iptcjson 	= json_encode_db( $iptc );
@@ -205,7 +205,7 @@ function rebuild_update()
         {
             //$r  = $db->exec( "COMMIT;" );
             logging( "Skipping thumb $file" );
-            $thumb	= 'EMPTY';
+            $thumb	= '';
             //continue;
         }
         //debug(microtime( TRUE ) - $currenttime, 'get thumb');
@@ -228,7 +228,7 @@ function rebuild_update()
             //$r  = $db->exec( "COMMIT;" );
             logging( "Skipping view $file" );
             //continue;
-            $view	= 'EMPTY';
+            $view	= '';
         }
         //debug(microtime( TRUE ) - $currenttime, 'view resize');
         $view 		= base64_encode( $view );

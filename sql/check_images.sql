@@ -4,12 +4,13 @@
 
 .mode box
 SELECT "-- Check if thumb is empty";
-SELECT path,
+SELECT path, file,
 CASE ifnull(thumb, 'NUL')	-- If NULL set dummy string
   WHEN 'NUL' THEN 'empty'	-- Check for dummy
            ELSE 'ok' 
-       END  status
-FROM   dirs
+       END  status,
+	   length(display)
+FROM   images
 ORDER BY path
 ;
 

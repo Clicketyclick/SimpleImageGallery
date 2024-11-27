@@ -23,7 +23,7 @@ function shutdown()
     if ( ! empty( $_REQUEST['slide'] ) )
         echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
 
-    echo "<details><summary title='Outtro'>&#x1F52C;</summary>";
+    echo "<details open><summary title='Outtro'>&#x1F52C;</summary>";
     echo "<table border=1>\n";
     
     if ( 'da' == $_SESSION['browser']['language'] ?? 'en' )
@@ -41,6 +41,29 @@ function shutdown()
 	verbose( getRandomImage()  , 'Random');
 
     echo "</table>";
+    echo "<table>";
+
+foreach( $_SESSION['timers'] as $timer => $timerdata )
+{
+    $valid_start    = $timerdata['start'] ?? FALSE;
+    $valid_end      = $timerdata['end'] ?? FALSE;
+    $dif1            = ( $timerdata['end'] ?? 0 ) - ($timerdata['start'] ?? 0 );
+    $dif            = $timerdata['end'] - $timerdata['start'] ;
+    //printf( "<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><tr>"
+    //printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><tr>"
+    printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%f</td><td>%s</td><tr>"
+    ,   $timer ?? '--'
+    ,   isset( $timerdata['start'] ) ? $timerdata['start'] : '!!' 
+    ,   isset( $timerdata['end'] ) ? $timerdata['end'] : '!!'
+    ,   1 < intval($dif) ? $dif . '!!' : $dif . '_'
+    ,   isset( $timerdata['note'] ) ? $timerdata['note'] : '?'
+    //,   var_export( $timerdata, TRUE )
+    
+    );
+}
+
+    echo "</table>";
+
 
     echo "</details>";
 }   // shutdown()

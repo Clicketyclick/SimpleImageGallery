@@ -34,6 +34,7 @@
 		"virtual_root": "./",
 		"data_root": "./data/",
 		"data_root": "W:/gallery/",
+		"data_root": "W:/gallery_test/",
 		"data_root": "./examples/",
 		"image_ext": [
 			"jpg",
@@ -81,7 +82,7 @@
 	},
 	"exif": {},
 	"database": {
-		"_file_name": "database/data.w2.db",
+		"file_name": "database/data.w2.db",
 		"_file_name": "database/data.w3.db",
 		"file_name": "database/data.db",
 		"image_ext": [

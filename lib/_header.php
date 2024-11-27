@@ -14,6 +14,10 @@
 session_name('SimpleImageGallery_'.str_replace( ['v.','.'],['','_'], trim(file_get_contents('version.txt')) ?? '' ) );
 session_start();
 
+$_SESSION['timers'] = [];
+timer_start('_header');
+
+timer_start('def_io');
 if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
@@ -22,44 +26,64 @@ if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
 $_SESSION['verbose']    = 1;
 //$_SESSION['debug']      = 1;
 $_SESSION['logging']    = 1;
+timer_end('def_io');
 
 
 // Init global variables
 //$files		= [];
 $db			= FALSE;
 
+timer_start('load_libs');
+
 // Include libraries
 foreach ( [ 'debug', 'getGitInfo', 'handleStrings', 'handleJson', 'imageResize', 'handleSqlite', 'iptc', 'jsondb', 'progress_bar'] as $lib )
     include_once("lib/{$lib}.php");
+timer_end('load_libs');
+
+timer_start('set_configs');
 
 // Set configuration files
 $_SESSION['cfgfiles']    = ['config'=>'config', 'local'=>'local', 'database'=>'database', 'metatags'=>'meta'];
 //$_SESSION['cfgfiles']    = ['config'=>'config'];
 //$_SESSION['cfgfiles']    = [];
+timer_end('set_configs');
 
+
+timer_start('parse_cli');
 // Parse cli arguments and insert into $_REQUEST
 parse_cli2request();
 debug( $_REQUEST, 'Request' );
+timer_end('parse_cli');
 
+timer_start('read_config');
 // Read configuration
 foreach( $_SESSION['cfgfiles'] as $config_key => $config_value )
 {
     $_SESSION[$config_key]        = file_get_json( "./config/{$config_value}.json" );
     debug( $_SESSION );
 }
+timer_end('read_config');
 
+timer_start('get_language');
 getBrowserLanguage( );
+timer_end('get_language');
 
+
+timer_start('print_header');
 
 // Print header
 //fputs( STDERR, getDoxygenHeader( __FILE__ ) );
 fputs( STDERR, getDoxygenHeader( debug_backtrace()[0]['file'] ) );
+timer_end('print_header');
+
+timer_start('shutdown');
 register_shutdown_function('shutdown');
+timer_end('shutdown');
 
-
+timer_start('parse_cli');
 // Parse CLI / $_REQUEST
 /*
--config:images:image_resize_type=scale
+    -config:images:image_resize_type=scale
 -config:images:image_resize_type=resized
 -config:images:image_resize_type=resampled
 -config:resume=1
@@ -78,15 +102,20 @@ foreach ( $_REQUEST as $cmd => $cmdvalue )
         $_SESSION[$cmd] *= 1;
 }
 debug( $_SESSION, 'SESSION:');
+timer_end('parse_cli');
 
+timer_start('init_db');
 // Open - or create database
 initDatabase( $db, $_SESSION['config']['database']['file_name'], $_SESSION['database'] );
+timer_end('init_db');
 
+timer_start('get_no_images');
 // Get no of images
 $sql	= $_SESSION['database']['sql']['select_files_count'];
 $_SESSION['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
+timer_end('get_no_images');
 
-
+timer_start('save_query_from_str');
 // Save Query from URL
 parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $_SESSION['url']['args'] );
 unset($_SESSION['url']['args']['show']);    // Remove show to avoid dublication
@@ -97,6 +126,9 @@ debug($_SESSION['url']['args'], 'URL args');
 // Build new query for linking
 debug( http_build_query($_SESSION['url']['args']), 'http_build_query' );
 $debug=0;
+timer_end('save_query_from_str');
+
+timer_end('_header');
 
 
 /**
