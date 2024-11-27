@@ -10,77 +10,81 @@
  *   @version    @include version.txt
  */
 
+/*
 // Start session
 session_name('SimpleImageGallery_'.str_replace( ['v.','.'],['','_'], trim(file_get_contents('version.txt')) ?? '' ) );
 session_start();
+*/
+// Verbose and debug
+$GLOBALS['verbose']    ??= 1;
+$GLOBALS['debug']      ??= 0;
+$GLOBALS['logging']    ??= 1;
+$GLOBALS['timer']      ??= 0;
 
-$_SESSION['timers'] = [];
-timer_start('_header');
+if ( ! isset($GLOBALS['timers']) )
+    $GLOBALS['timers'] = [];
+timer_set('_header');
 
-timer_start('def_io');
+timer_set('def_io');
 if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
 
-// Verbose and debug
-$_SESSION['verbose']    = 1;
-//$_SESSION['debug']      = 1;
-$_SESSION['logging']    = 1;
-timer_end('def_io');
+timer_set('def_io');
 
 
 // Init global variables
 //$files		= [];
 $db			= FALSE;
 
-timer_start('load_libs');
+timer_set('load_libs');
 
 // Include libraries
 foreach ( [ 'debug', 'getGitInfo', 'handleStrings', 'handleJson', 'imageResize', 'handleSqlite', 'iptc', 'jsondb', 'progress_bar'] as $lib )
     include_once("lib/{$lib}.php");
-timer_end('load_libs');
+timer_set('load_libs');
 
-timer_start('set_configs');
+timer_set('set_configs');
 
 // Set configuration files
-$_SESSION['cfgfiles']    = ['config'=>'config', 'local'=>'local', 'database'=>'database', 'metatags'=>'meta'];
-//$_SESSION['cfgfiles']    = ['config'=>'config'];
-//$_SESSION['cfgfiles']    = [];
-timer_end('set_configs');
+$GLOBALS['cfgfiles']    = ['config'=>'config', 'local'=>'local', 'database'=>'database', 'metatags'=>'meta'];
+//$GLOBALS['cfgfiles']    = ['config'=>'config'];
+//$GLOBALS['cfgfiles']    = [];
+timer_set('set_configs');
 
 
-timer_start('parse_cli');
+timer_set('parse_cli');
 // Parse cli arguments and insert into $_REQUEST
 parse_cli2request();
 debug( $_REQUEST, 'Request' );
-timer_end('parse_cli');
+timer_set('parse_cli');
 
-timer_start('read_config');
+timer_set('read_config');
 // Read configuration
-foreach( $_SESSION['cfgfiles'] as $config_key => $config_value )
+foreach( $GLOBALS['cfgfiles'] as $config_key => $config_value )
 {
-    $_SESSION[$config_key]        = file_get_json( "./config/{$config_value}.json" );
-    debug( $_SESSION );
+    $GLOBALS[$config_key]        = file_get_json( "./config/{$config_value}.json" );
+    debug( $GLOBALS );
 }
-timer_end('read_config');
+timer_set('read_config');
 
-timer_start('get_language');
+timer_set('get_language');
 getBrowserLanguage( );
-timer_end('get_language');
+timer_set('get_language');
 
 
-timer_start('print_header');
+timer_set('print_header');
 
 // Print header
 //fputs( STDERR, getDoxygenHeader( __FILE__ ) );
 fputs( STDERR, getDoxygenHeader( debug_backtrace()[0]['file'] ) );
-timer_end('print_header');
+timer_set('print_header');
 
-timer_start('shutdown');
+timer_set('shutdown');
 register_shutdown_function('shutdown');
-timer_end('shutdown');
+timer_set('shutdown');
 
-timer_start('parse_cli');
+timer_set('parse_cli');
 // Parse CLI / $_REQUEST
 /*
     -config:images:image_resize_type=scale
@@ -93,42 +97,42 @@ foreach ( $_REQUEST as $cmd => $cmdvalue )
 {
 	if ( strpos( $cmd, ':' ) )
 	{   // Parse complex arguments
-		setPathKey( array_slice(explode(':', $cmd ), 0), $_SESSION, $cmdvalue);
+		setPathKey( array_slice(explode(':', $cmd ), 0), $GLOBALS, $cmdvalue);
 	}
     else    // Parse simple arguments
-        $_SESSION[$cmd] = $cmdvalue;
+        $GLOBALS[$cmd] = $cmdvalue;
     // Convert numbers to numeric
     if ( is_numeric($cmdvalue) )
-        $_SESSION[$cmd] *= 1;
+        $GLOBALS[$cmd] *= 1;
 }
-debug( $_SESSION, 'SESSION:');
-timer_end('parse_cli');
+debug( $GLOBALS, 'SESSION:');
+timer_set('parse_cli');
 
-timer_start('init_db');
+timer_set('init_db');
 // Open - or create database
-initDatabase( $db, $_SESSION['config']['database']['file_name'], $_SESSION['database'] );
-timer_end('init_db');
+initDatabase( $db, $GLOBALS['config']['database']['file_name'], $GLOBALS['database'] );
+timer_set('init_db');
 
-timer_start('get_no_images');
+timer_set('get_no_images');
 // Get no of images
-$sql	= $_SESSION['database']['sql']['select_files_count'];
-$_SESSION['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
-timer_end('get_no_images');
+$sql	= $GLOBALS['database']['sql']['select_files_count'];
+$GLOBALS['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
+timer_set('get_no_images');
 
-timer_start('save_query_from_str');
+timer_set('save_query_from_str');
 // Save Query from URL
-parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $_SESSION['url']['args'] );
-unset($_SESSION['url']['args']['show']);    // Remove show to avoid dublication
+parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $GLOBALS['url']['args'] );
+unset($GLOBALS['url']['args']['show']);    // Remove show to avoid dublication
 
 //$debug=1;
-debug($_SESSION['url']['args'], 'URL args');
+debug($GLOBALS['url']['args'], 'URL args');
 
 // Build new query for linking
-debug( http_build_query($_SESSION['url']['args']), 'http_build_query' );
+debug( http_build_query($GLOBALS['url']['args']), 'http_build_query' );
 $debug=0;
-timer_end('save_query_from_str');
+timer_set('save_query_from_str');
 
-timer_end('_header');
+timer_set('_header');
 
 
 /**
@@ -189,13 +193,13 @@ function initDatabase( &$db, $dbfile )
 		status(  "Create database", $dbfile );
 		$db	= createSqlDb($dbfile);
 
-		$_SESSION['tmp']['tables_total']    = count($_SESSION['database']['tables']);
+		$GLOBALS['tmp']['tables_total']    = count($GLOBALS['database']['tables']);
 		$count	= 0;
 		
-		status("Create tables", $_SESSION['tmp']['tables_total'] );
-		foreach( $_SESSION['database']['tables'] as $action => $sql )
+		status("Create tables", $GLOBALS['tmp']['tables_total'] );
+		foreach( $GLOBALS['database']['tables'] as $action => $sql )
 		{
-			$_SESSION['timers'][$action]    = microtime(TRUE);
+			$GLOBALS['timers'][$action]    = microtime(TRUE);
 			
 			debug($sql, $action);
 			if ( str_starts_with( $action, '_') || str_starts_with( $sql, '--') )
@@ -209,19 +213,19 @@ function initDatabase( &$db, $dbfile )
 				$r  = $db->exec( $sql );
 			}
 			
-			echo progressbar( ++$count, $_SESSION['tmp']['tables_total'], 30, $action, 30 );
+			echo progressbar( ++$count, $GLOBALS['tmp']['tables_total'], 30, $action, 30 );
 			//logging( "{$count}/{$GLOBALS['tables_total']} {$group}: " . microtime2human( microtime( TRUE ) - $microtime_start ));
             /*
             echo "total";
-            var_export($_SESSION['tmp']['tables_total']);
+            var_export($GLOBALS['tmp']['tables_total']);
             echo " count";
             var_export($count);
             echo " action";
             var_export($action);
             echo " timer";
-            var_export($_SESSION['timers'][$action]);
+            var_export($GLOBALS['timers'][$action]);
             */
-			logging( progress_log( $_SESSION['tmp']['tables_total'], $count, $_SESSION['timers'][$action], 1 ) );
+			logging( progress_log( $GLOBALS['tmp']['tables_total'], $count, $GLOBALS['timers'][$action], 1 ) );
             //echo "\n";
 		}
         echo "\n";
@@ -302,8 +306,8 @@ function parse_cli2request()
 function ___( $key, $lang = FALSE )
 {
     if ( FALSE === $lang )
-        $lang   = $_SESSION['browser']['language'] ?? 'en';
-	return( $_SESSION['local'][$key][$lang] ?? "[$key][$lang]" );
+        $lang   = $GLOBALS['browser']['language'] ?? 'en';
+	return( $GLOBALS['local'][$key][$lang] ?? "[$key][$lang]" );
 }	// ___()
 
 //----------------------------------------------------------------------
@@ -334,7 +338,7 @@ function getBrowserLanguage( $acceptLang = ['fr', 'it', 'en', 'da'] )
     $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
 
     $lang = in_array($lang, $acceptLang) ? $lang : 'en';
-    $_SESSION['browser']['language']    = $lang;
+    $GLOBALS['browser']['language']    = $lang;
     //require_once "index_{$lang}.php"; 
 }
 //----------------------------------------------------------------------

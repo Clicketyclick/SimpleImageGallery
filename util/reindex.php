@@ -17,7 +17,7 @@ include_once('lib/_header.php');
 // Update ALL
 $count	= 0;
 
-status( "Image resize type", $_SESSION['config']['images']['image_resize_type'] );
+status( "Image resize type", $GLOBALS['config']['images']['image_resize_type'] );
 
 //----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ status( "Image resize type", $_SESSION['config']['images']['image_resize_type'] 
 if ( isset( $_REQUEST['resume'] ) )
 {	// Resume
 	verbose( 'Indexing: Resume processing' );
-	$sql	= $_SESSION['database']['sql']['select_source_meta'];
+	$sql	= $GLOBALS['database']['sql']['select_source_meta'];
 	debug( $sql, 'SQL:' );
 	
 	$files 	= querySql( $db, $sql );
@@ -44,13 +44,13 @@ if ( isset( $_REQUEST['resume'] ) )
 			unset( $files[$file] );
 			$files[]	= str_replace( "\\", '/', "$file");
 		}
-        echo progressbar($count, $total, $_SESSION['config']['process']['progressbar_size'], $file );
+        echo progressbar($count, $total, $GLOBALS['config']['process']['progressbar_size'], $file );
 	}
 	status('Resume', count( $files ));
 }   //<<< Resume
 else
 {	// Process all
-	$sql	= $_SESSION['database']['sql']['select_source_meta'];
+	$sql	= $GLOBALS['database']['sql']['select_source_meta'];
 	debug( $sql, 'SQL:' );
 	
 	$files 	= querySql( $db, $sql );
@@ -58,12 +58,12 @@ else
 	debug( $files, 'Files');
 
 	$loadfile	= fopen( 'loadfile.txt', 'w');
-    $_SESSION['tmp']['keycount']    = 0;
-    $_SESSION['tmp']['imagecount']  = 0;
+    $GLOBALS['tmp']['keycount']    = 0;
+    $GLOBALS['tmp']['imagecount']  = 0;
     
 	foreach($files as $no => $data)
 	{
-		$_SESSION['tmp']['imagecount']++;
+		$GLOBALS['tmp']['imagecount']++;
 		$file           = $data['file'];
         // Parse metadata
 		$data['iptc']	= json_decode( $data['iptc'], TRUE);
@@ -75,7 +75,7 @@ else
         process_search( $iptc, $data['rowid'], $file );
         //process_search( $exif, $no, $file );
 
-		echo progressbar($_SESSION['tmp']['imagecount'], $total, $_SESSION['config']['process']['progressbar_size'], $file );
+		echo progressbar($GLOBALS['tmp']['imagecount'], $total, $GLOBALS['config']['process']['progressbar_size'], $file );
 	}
 }   //<<< Process all
 
@@ -99,7 +99,7 @@ function process_search( $iptc, $no, $file )
 
     // Remove old entries!
     $sql	= sprintf( 
-                    $_SESSION['database']['sql']['delete_search']
+                    $GLOBALS['database']['sql']['delete_search']
                 ,	$file
             );
     $r  = $db->exec( $sql );
@@ -107,12 +107,12 @@ function process_search( $iptc, $no, $file )
     // Insert new
     foreach( $iptc as $key => $value )
     {
-        foreach( $_SESSION['database']["search"]["iptc"] as $iKey => $iValue )
+        foreach( $GLOBALS['database']["search"]["iptc"] as $iKey => $iValue )
         {
             if ( str_starts_with( $key, $iKey ) )
             {
                 $sql	= sprintf( 
-                    $_SESSION['database']['sql']['insert_search']
+                    $GLOBALS['database']['sql']['insert_search']
                 ,	$file
                 ,	$no
                 ,	"$iValue$value"
@@ -120,7 +120,7 @@ function process_search( $iptc, $no, $file )
                 );
                 //fputs( $loadfile, "$sql\n" );
                 $r  = $db->exec( $sql );
-                $_SESSION['tmp']['keycount']++;
+                $GLOBALS['tmp']['keycount']++;
             }
         }
     }
@@ -142,13 +142,13 @@ function shutdown( )
 {
 	fputs( STDERR, "\n\n");
 
-	status( "Keywords", $_SESSION['tmp']['keycount'] ?? 0 );
-	status( "Images processed", $_SESSION['tmp']['imagecount'] ?? 0);
+	status( "Keywords", $GLOBALS['tmp']['keycount'] ?? 0 );
+	status( "Images processed", $GLOBALS['tmp']['imagecount'] ?? 0);
 
     // Session duration
 	$Runtime    = microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	status( "Runtime ", microtime2human( $Runtime ) );
-	status( "Log", $_SESSION['logfile']  ?? 'none');
+	status( "Log", $GLOBALS['logfile']  ?? 'none');
 }	// shutdown()
 
 //----------------------------------------------------------------------

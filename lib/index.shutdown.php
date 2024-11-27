@@ -13,8 +13,8 @@
 function shutdown()
 {
     // Footer
-    printf( "<br clear=both><hr><small>{$_SESSION['config']['system']['copyright']} 
-    - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['system']['app_name']}</a></small> %s"
+    printf( "<br clear=both><hr><small>{$GLOBALS['config']['system']['copyright']} 
+    - <a href='{$GLOBALS['config']['display']['home_url']}'>{$GLOBALS['config']['system']['app_name']}</a></small> %s"
     ,   date('Y')
     ,   getVersion()
     );
@@ -27,12 +27,12 @@ function shutdown()
 /*
     echo "<details><summary>Outtro</summary>";
     echo "<table border=1>\n";
-	verbose( $_SESSION['tmp']['no_of_images'] , ___('no_of_images'));
+	verbose( $GLOBALS['tmp']['no_of_images'] , ___('no_of_images'));
 
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	//status( "Runtime ", $Runtime );
 	verbose( microtime2human( $Runtime ), "Runtime " );
-	//status( "Log", $_SESSION['config']['logfile']  ?? 'none');
+	//status( "Log", $GLOBALS['config']['logfile']  ?? 'none');
 
     echo "</table>";
     echo "</details>";

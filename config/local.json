@@ -19,8 +19,8 @@
 		"da": "'Og nu til noget helt andet'"
 	},
 	"no_of_images": {
-		"en": "No of images",
-		"da": "Antal billeder"
+		"en": "No of images in this directory",
+		"da": "Antal billeder i dette katalog"
 	},
 	"slideshow": {
 		"en": "Slideshow",

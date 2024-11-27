@@ -14,8 +14,8 @@
 
 include_once('lib/_header.php');
 
-status( "Image resize type", $_SESSION['config']['images']['image_resize_type'] );
-debug( $_SESSION['config'], 'Config after $_REQUEST' );
+status( "Image resize type", $GLOBALS['config']['images']['image_resize_type'] );
+debug( $GLOBALS['config'], 'Config after $_REQUEST' );
 
 // Init global variables
 $files		= [];
@@ -56,8 +56,8 @@ switch ( $_REQUEST['action'] ?? 'noaction')
 function clear_tables()
 {
     global $db;
-    $r  = $db->exec( $_SESSION['database']['sql']['delete_all_search'] );
-    $r  = $db->exec( $_SESSION['database']['sql']['delete_all_images'] );
+    $r  = $db->exec( $GLOBALS['database']['sql']['delete_all_search'] );
+    $r  = $db->exec( $GLOBALS['database']['sql']['delete_all_images'] );
 }   //clear_tables()
 
 // Resume or process all?
@@ -65,10 +65,10 @@ function rebuild_resume()
 {	// Resume
     global $db;
 	verbose( 'Resume processing' );
-	$_SESSION['timers']['resume']	= microtime(TRUE);
+	$GLOBALS['timers']['resume']	= microtime(TRUE);
 
 	// Select resume files
-	$sql	= $_SESSION['database']['sql']['select_files_resume'];
+	$sql	= $GLOBALS['database']['sql']['select_files_resume'];
 	debug( $sql, 'SQL:' );
 	$files 	= querySql( $db, $sql );
 
@@ -89,7 +89,7 @@ function rebuild_resume()
 	}
 
 	status('Resume', count( $files ));
-	logging( progress_log( count( $files ), count( $files ), $_SESSION['timers']['resume'], 1 ) );
+	logging( progress_log( count( $files ), count( $files ), $GLOBALS['timers']['resume'], 1 ) );
 }   // rebuild_resume()
 
 
@@ -99,21 +99,21 @@ function rebuild_full()
 	verbose( 'Clear tables' );
     clear_tables();
     
-	$_SESSION['timers']['rebuild_full']	= microtime(TRUE);
+	$GLOBALS['timers']['rebuild_full']	= microtime(TRUE);
 
-	$_SESSION['timers']['get_images_recursive']	= microtime(TRUE);
+	$GLOBALS['timers']['get_images_recursive']	= microtime(TRUE);
 	verbose( '// Find all image files recursive' );
 	// Find all image files recursive
-	getImagesRecursive( $_SESSION['config']['data']['data_root'], $_SESSION['config']['data']['image_ext'], $files, ['jpg'] );
-	logging( progress_log( count( $files ), 1, $_SESSION['timers']['get_images_recursive'], 1 ) );
+	getImagesRecursive( $GLOBALS['config']['data']['data_root'], $GLOBALS['config']['data']['image_ext'], $files, ['jpg'] );
+	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['get_images_recursive'], 1 ) );
 	debug( $files );
 
 	status( "Processing files", count( $files ));
-	$_SESSION['timers']['put_files_to_database']	= microtime(TRUE);
+	$GLOBALS['timers']['put_files_to_database']	= microtime(TRUE);
 	
 	// Put all files to database: images
 	putFilesToDatabase( $files );
-	logging( progress_log( count( $files ), 1, $_SESSION['timers']['put_files_to_database'], 1 ) );
+	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['put_files_to_database'], 1 ) );
 }   // rebuild_full()
 
 function rebuild_update()
@@ -122,16 +122,16 @@ function rebuild_update()
 	verbose( 'Update' );
     verbose( '// Write meta data, thumb and view for each file' );
 
-    $_SESSION['timers']['add_meta']     = microtime(TRUE);
+    $GLOBALS['timers']['add_meta']     = microtime(TRUE);
     
-    //var_export($_SESSION['database']['sql']['select_all_files']);
-    //echo($_SESSION['database']['sql']['select_all_files']);
+    //var_export($GLOBALS['database']['sql']['select_all_files']);
+    //echo($GLOBALS['database']['sql']['select_all_files']);
 
-    $files  = array_flatten( querySql( $db, $_SESSION['database']['sql']['select_all_files'] ) );
+    $files  = array_flatten( querySql( $db, $GLOBALS['database']['sql']['select_all_files'] ) );
     //var_export($files);
     //exit;
     
-    $_SESSION['tmp']['images_total']    = count($files);
+    $GLOBALS['tmp']['images_total']    = count($files);
     $count      = 0;
 
     foreach ( $files as $file )
@@ -177,17 +177,17 @@ function rebuild_update()
         if ( empty( $thumb) )
         {
             $note			.= "Thumb build";
-            $thumb_width	= $_SESSION['config']['display']['thumb_max_width'];
-            $thumb_height	= $_SESSION['config']['display']['thumb_max_height'];
+            $thumb_width	= $GLOBALS['config']['display']['thumb_max_width'];
+            $thumb_height	= $GLOBALS['config']['display']['thumb_max_height'];
             $dst			= "FALSE";
             $thumb			= image_resize( 
                     $file
                 ,	$dst
-                ,	$_SESSION['config']['images']['thumb_max_width']
-                ,	$_SESSION['config']['images']['thumb_max_height']
+                ,	$GLOBALS['config']['images']['thumb_max_width']
+                ,	$GLOBALS['config']['images']['thumb_max_height']
                 ,	$exif['IFD0']['Orientation'] ?? 0
-                ,	$_SESSION['config']['images']['image_resize_type']
-                ,	$_SESSION['config']['images']['crop']
+                ,	$GLOBALS['config']['images']['image_resize_type']
+                ,	$GLOBALS['config']['images']['crop']
                 );
         }
         else
@@ -216,10 +216,10 @@ function rebuild_update()
         $view 		= image_resize( 
                         $file
                     ,	$dst
-                    ,	$_SESSION['config']['images']['display_max_width']
-                    ,	$_SESSION['config']['images']['display_max_height']
+                    ,	$GLOBALS['config']['images']['display_max_width']
+                    ,	$GLOBALS['config']['images']['display_max_height']
                     ,	$exif['IFD0']['Orientation'] ?? 0
-                    ,	$_SESSION['config']['images']['image_resize_type']
+                    ,	$GLOBALS['config']['images']['image_resize_type']
                     ,	$crop=0
                     );
         if ( empty($view) )
@@ -235,7 +235,7 @@ function rebuild_update()
 
         // Update thumb and view
         $sql	= sprintf( 
-            $_SESSION['database']['sql']['replace_into_images']
+            $GLOBALS['database']['sql']['replace_into_images']
         ,	$dirname
         ,	$basename
         ,	$thumb
@@ -243,7 +243,7 @@ function rebuild_update()
         ,	$dirname
         );
         $sql	= sprintf( 
-            $_SESSION['database']['sql']['replace_into_images']
+            $GLOBALS['database']['sql']['replace_into_images']
         ,	$thumb
         ,	$view
         ,	$dirname
@@ -253,14 +253,14 @@ function rebuild_update()
         $r  = $db->exec( $sql );
 
         // Update meta
-        $sql	= sprintf($_SESSION['database']['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
+        $sql	= sprintf($GLOBALS['database']['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
         debug( $sql  );
         //verbose( $sql  );
         $r  = $db->exec( $sql );
 
         logging( sprintf( "%s/%s [%-35.35s] [%s] %sx%s %s %s %s"
             ,	$count
-            ,	$_SESSION['tmp']['images_total']
+            ,	$GLOBALS['tmp']['images_total']
             ,	$exif['FILE']['FileName']
             ,	date( 'c', $exif['FILE']['FileDateTime'] )
             ,	$exif['COMPUTED']['Width']
@@ -273,12 +273,12 @@ function rebuild_update()
         );
         $r  = $db->exec( "COMMIT;" );
 
-        logging( progress_log( $_SESSION['tmp']['images_total'], $count, $_SESSION['timers']['add_meta'], 1 ) );
-        echo progressbar($count, $_SESSION['tmp']['images_total'], $_SESSION['config']['process']['progressbar_size'], $file, $_SESSION['config']['process']['progressbar_lenght'] );
+        logging( progress_log( $GLOBALS['tmp']['images_total'], $count, $GLOBALS['timers']['add_meta'], 1 ) );
+        echo progressbar($count, $GLOBALS['tmp']['images_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
     }
-    logging( progress_log( $_SESSION['tmp']['images_total'], $count, $_SESSION['timers']['add_meta'], 1 ) );
+    logging( progress_log( $GLOBALS['tmp']['images_total'], $count, $GLOBALS['timers']['add_meta'], 1 ) );
 
-	logging( progress_log( count( $files ), 1, $_SESSION['timers']['rebuild_full'], 1 ) );
+	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['rebuild_full'], 1 ) );
 }   // rebuild_full()
 
 
@@ -286,18 +286,18 @@ function post_proccessing()
 {
     verbose( "Post-processing", "\n- ");
     // Count all post action - names
-    $_SESSION['tmp']['post_total']  = count( $_SESSION['database']['post'], COUNT_RECURSIVE ) - count( $_SESSION['database']['post'] );
+    $GLOBALS['tmp']['post_total']  = count( $GLOBALS['database']['post'], COUNT_RECURSIVE ) - count( $GLOBALS['database']['post'] );
     $count	= 0;
 
-    $_SESSION['timers']['post']	= microtime(TRUE);
-    foreach( $_SESSION['database']['post'] as $group => $actions )
+    $GLOBALS['timers']['post']	= microtime(TRUE);
+    foreach( $GLOBALS['database']['post'] as $group => $actions )
     {
-        $_SESSION['timers']["post_{$group}"]	= microtime(TRUE);
+        $GLOBALS['timers']["post_{$group}"]	= microtime(TRUE);
         $action_no	= 0;
         foreach( $actions as $sql )
         {
             $action_no++;
-            $_SESSION['timers']["post_{$group}_{$action_no}"]	= microtime(TRUE);
+            $GLOBALS['timers']["post_{$group}_{$action_no}"]	= microtime(TRUE);
             if ( str_starts_with( $sql, '--') )
             {
                 debug( $sql, 'skip:' );
@@ -310,12 +310,12 @@ function post_proccessing()
             }
             $count++;
             //logging( "$count/$post_total: $group " . microtime2human( microtime( TRUE ) - $microtime_start ));
-            logging( progress_log( $_SESSION['tmp']['post_total'], $count, $_SESSION['timers']["post_{$group}_{$action_no}"], 1 ) );
-        echo progressbar($count, $_SESSION['tmp']['post_total'], $_SESSION['config']['process']['progressbar_size'], "{$group}: {$sql}", $_SESSION['config']['process']['progressbar_lenght'] );
+            logging( progress_log( $GLOBALS['tmp']['post_total'], $count, $GLOBALS['timers']["post_{$group}_{$action_no}"], 1 ) );
+        echo progressbar($count, $GLOBALS['tmp']['post_total'], $GLOBALS['config']['process']['progressbar_size'], "{$group}: {$sql}", $GLOBALS['config']['process']['progressbar_lenght'] );
         }
-        logging( progress_log( $_SESSION['tmp']['post_total']   , $count, $_SESSION['timers']["post_{$group}"], 1 ) );
+        logging( progress_log( $GLOBALS['tmp']['post_total']   , $count, $GLOBALS['timers']["post_{$group}"], 1 ) );
     }
-    logging( progress_log( $_SESSION['tmp']['post_total'], $count, $_SESSION['timers']["post"], 1 ) );
+    logging( progress_log( $GLOBALS['tmp']['post_total'], $count, $GLOBALS['timers']["post"], 1 ) );
 }   // post_proccessing() 
 
 //----------------------------------------------------------------------
@@ -338,11 +338,11 @@ function putFilesToDatabase( $files )
 	foreach ( $files as $path )
 	{
 		['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-		//$sql	= sprintf( $_SESSION['database']['sql']['insert_files'], 'images', $dirname, $dirname, $basename, $basename );
-		$sql	= sprintf( $_SESSION['database']['sql']['insert_files'], 'images', $dirname, 
+		//$sql	= sprintf( $GLOBALS['database']['sql']['insert_files'], 'images', $dirname, $dirname, $basename, $basename );
+		$sql	= sprintf( $GLOBALS['database']['sql']['insert_files'], 'images', $dirname, 
             str_replace( 
-                [$_SESSION['config']['data']['data_root']] //, trim($_SESSION['config']['data']['data_root'], '/')
-            ,   $_SESSION['config']['data']['virtual_root']
+                [$GLOBALS['config']['data']['data_root']] //, trim($GLOBALS['config']['data']['data_root'], '/')
+            ,   $GLOBALS['config']['data']['virtual_root']
             ,   $dirname
             )
         ,   $basename
@@ -377,12 +377,12 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 
 	
 	$count	= 0;
-	$_SESSION['tmp']['files_total']	= 0;
+	$GLOBALS['tmp']['files_total']	= 0;
 	//$it2	= new RecursiveIteratorIterator($it);
 	//$it3 = new RegexIterator($it2, '/^.+\.jpg$/i', RecursiveRegexIterator::GET_MATCH);
 
 	foreach(new RecursiveIteratorIterator($it) as $file)
-		$_SESSION['tmp']['files_total']++;
+		$GLOBALS['tmp']['files_total']++;
 	
 	//foreach( $it3 as $file)
 	foreach(new RecursiveIteratorIterator($it) as $file)
@@ -397,7 +397,7 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 		else
 			$files[]	= str_replace( "\\", '/', "$file");
 		
-		echo progressbar( ++$count, $_SESSION['tmp']['files_total'], $_SESSION['config']['process']['progressbar_size'], $file, $_SESSION['config']['process']['progressbar_lenght'] );
+		echo progressbar( ++$count, $GLOBALS['tmp']['files_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
 	}
     echo PHP_EOL;
 	return( ! empty($files) );
@@ -433,13 +433,13 @@ function normalise_name( &$cfg, $name )
 function shutdown( )
 {
 	fputs( STDERR, "\n");
-	status( "Tables created",   $_SESSION['tmp']['tables_total'] ?? 0);
-	status( "Images processed", $_SESSION['tmp']['images_total'] ?? 0);
-	status( "Post processes",   $_SESSION['tmp']['post_total'] ?? 0);
+	status( "Tables created",   $GLOBALS['tmp']['tables_total'] ?? 0);
+	status( "Images processed", $GLOBALS['tmp']['images_total'] ?? 0);
+	status( "Post processes",   $GLOBALS['tmp']['post_total'] ?? 0);
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	//status( "Runtime ", $Runtime );
 	status( "Runtime ", microtime2human( $Runtime ) );
-	status( "Log", $_SESSION['config']['logfile']  ?? 'none');
+	status( "Log", $GLOBALS['config']['logfile']  ?? 'none');
 }	// shutdown()
 
 ?>

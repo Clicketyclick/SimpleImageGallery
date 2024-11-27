@@ -13,8 +13,8 @@
 function shutdown()
 {
     // Footer
-    printf( "<br clear=both><hr><small>{$_SESSION['config']['system']['copyright']} 
-    - <a href='{$_SESSION['config']['display']['home_url']}'>{$_SESSION['config']['system']['app_name']}</a></small> %s"
+    printf( "<br clear=both><hr><small>{$GLOBALS['config']['system']['copyright']} 
+    - <a href='{$GLOBALS['config']['display']['home_url']}'>{$GLOBALS['config']['system']['app_name']}</a></small> %s"
     ,   date('Y')
     ,   getGitVersion()
     );
@@ -26,32 +26,35 @@ function shutdown()
     echo "<details open><summary title='Outtro'>&#x1F52C;</summary>";
     echo "<table border=1>\n";
     
-    if ( 'da' == $_SESSION['browser']['language'] ?? 'en' )
-        verbose( number_format($_SESSION['tmp']['no_of_images'], 0, ',', '.') , ___('no_of_images'));
+    if ( 'da' == $GLOBALS['browser']['language'] ?? 'en' )
+        verbose( number_format($GLOBALS['tmp']['no_of_images'], 0, ',', '.') , ___('no_of_images'));
     else
-        verbose( number_format($_SESSION['tmp']['no_of_images']) , ___('no_of_images'));
+        verbose( number_format($GLOBALS['tmp']['no_of_images']) , ___('no_of_images'));
 
 
 	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
 	//status( "Runtime ", $Runtime );
 	verbose( microtime2human( $Runtime ), "Runtime " );
-	//status( "Log", $_SESSION['config']['logfile']  ?? 'none');
-	verbose( $_SESSION['config']['logfile']  ?? 'none', 'Log');
+	//status( "Log", $GLOBALS['config']['logfile']  ?? 'none');
+	verbose( $GLOBALS['config']['logfile']  ?? 'none', 'Log');
 
 	verbose( getRandomImage()  , 'Random');
 
     echo "</table>";
     echo "<table>";
 
-foreach( $_SESSION['timers'] as $timer => $timerdata )
+foreach( $GLOBALS['timers'] as $timer => $timerdata )
 {
-    $valid_start    = $timerdata['start'] ?? FALSE;
+    $timerdata['start'] -= $_SERVER["REQUEST_TIME_FLOAT"];
+    $timerdata['end']   -= $_SERVER["REQUEST_TIME_FLOAT"];
+/*    $valid_start    = $timerdata['start'] ?? FALSE;
     $valid_end      = $timerdata['end'] ?? FALSE;
     $dif1            = ( $timerdata['end'] ?? 0 ) - ($timerdata['start'] ?? 0 );
+*/
     $dif            = $timerdata['end'] - $timerdata['start'] ;
     //printf( "<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><tr>"
     //printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><tr>"
-    printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%f</td><td>%s</td><tr>"
+    printf( "<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%s</td><tr>"
     ,   $timer ?? '--'
     ,   isset( $timerdata['start'] ) ? $timerdata['start'] : '!!' 
     ,   isset( $timerdata['end'] ) ? $timerdata['end'] : '!!'
@@ -63,7 +66,6 @@ foreach( $_SESSION['timers'] as $timer => $timerdata )
 }
 
     echo "</table>";
-
 
     echo "</details>";
 }   // shutdown()

@@ -34,14 +34,14 @@
  */
 function getMapLink( $lat, $lon, $zoom, $map_source )
 {
-	$lat_margin_lower	= $_SESSION['config']['maps']['map_window_margin'];
+	$lat_margin_lower	= $GLOBALS['config']['maps']['map_window_margin'];
 	
-	if ( $_SESSION['config']['maps']['map_types'][$map_source]['tag'] and $_SESSION['config']['maps']['map_types'][$map_source]['link_stub'])
+	if ( $GLOBALS['config']['maps']['map_types'][$map_source]['tag'] and $GLOBALS['config']['maps']['map_types'][$map_source]['link_stub'])
 	{
 		if (isset( $lat ) && isset( $lon ) )
 		{
-			$mstub	= $_SESSION['config']['maps']['map_types'][$map_source]['link_stub'];
-			$mtag	= ___('see_on_map').' '. $_SESSION['config']['maps']['map_types'][$map_source]['tag'];
+			$mstub	= $GLOBALS['config']['maps']['map_types'][$map_source]['link_stub'];
+			$mtag	= ___('see_on_map').' '. $GLOBALS['config']['maps']['map_types'][$map_source]['tag'];
 			$tmpStr = sprintf("<a target='_blank' href='{$mstub}' title='".___('link_to_external_map')."'>{$mtag}</a>");
 			$tmpStr = str_replace( 
 				[
@@ -79,15 +79,15 @@ function getMapLink( $lat, $lon, $zoom, $map_source )
  */
 function getMapEmbed( $lat, $lon, $zoom, $map_source )
 {
-	$lat_margin	= $_SESSION['config']['maps']['map_window_margin'];
-	//if ($_SESSION['config']['exif']['exif_map_tag'] and $_SESSION['config']['exif']['exif_map_link_stub'])
-	if ( $_SESSION['config']['maps']['map_types'][$map_source]['tag'] and $_SESSION['config']['maps']['map_types'][$map_source]['link_stub'])
+	$lat_margin	= $GLOBALS['config']['maps']['map_window_margin'];
+	//if ($GLOBALS['config']['exif']['exif_map_tag'] and $GLOBALS['config']['exif']['exif_map_link_stub'])
+	if ( $GLOBALS['config']['maps']['map_types'][$map_source]['tag'] and $GLOBALS['config']['maps']['map_types'][$map_source]['link_stub'])
 	{
 		if (isset( $lat ) && isset( $lon ) )
 		{
-			$mstub	= $_SESSION['config']['maps']['map_types'][$map_source]['embed_stub'];
+			$mstub	= $GLOBALS['config']['maps']['map_types'][$map_source]['embed_stub'];
 			//var_export($mstub);
-			$mtag	= $_SESSION['config']['maps']['map_types'][$map_source]['tag'];
+			$mtag	= $GLOBALS['config']['maps']['map_types'][$map_source]['tag'];
 
 			$tmpStr = sprintf("<iframe class=\"map_iframe\" src=\"{$mstub}\"></iframe>" );
 
