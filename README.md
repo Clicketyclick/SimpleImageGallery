@@ -1,6 +1,6 @@
 # Simple Image Gallery 	
 
-<img src='doc/sig_001.jpg' style='float: right;'>
+<img src='doc/sig_001.jpg' style='float: right;' width=300px height=auto>
 List and display images by folder showing metadata like EXIF and IPTC from images.
 
 All functionallity is build in PHP, JavaScript and SQL on top of a SQLite database.
