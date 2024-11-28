@@ -10,9 +10,11 @@
  *   @version    @include version.txt
  */
 
-
-//$GLOBALS['timers']['_INIT']['start']    = $_SERVER["REQUEST_TIME_FLOAT"];
-
+$GLOBALS['timer'] = TRUE;
+include_once( 'lib/handleJson.php');
+include_once( 'lib/handleSqlite.php');
+include_once( 'lib/debug.php');
+include_once( 'lib/map.php');
 
 // Include script specific shutdown function. BEFORE _header.php !
 include_once( 'lib/'.basename(__FILE__,".php").'.shutdown.php');
@@ -21,9 +23,8 @@ include_once( 'lib/'.basename(__FILE__,".php").'.shutdown.php');
 include_once('lib/_header.php');
 //timer_set('_header');
 
-//unlink( $_SESSION['timers'] );
 
-timer_set('header');
+timer_set('header', 'Reading header info');
 echo '
 <!DOCTYPE html>
 <html lang="en">
@@ -40,10 +41,6 @@ echo '
 debug( $GLOBALS['browser']['language'], "session language: ");
 
 $releaseroot	= __DIR__ . '/';
-include_once( 'lib/handleJson.php');
-include_once( 'lib/handleSqlite.php');
-include_once( 'lib/debug.php');
-include_once( 'lib/map.php');
 
 $verbose=1;
 //$debug=1;
@@ -54,7 +51,7 @@ if ( empty( $_REQUEST['path']) )
 
 timer_set('header');
 
-timer_set('open_db');
+timer_set('open_db', 'Opening database');
 $db	= openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
 timer_set('open_db');
 
@@ -64,8 +61,7 @@ var_export( $GLOBALS['timers'] );
 exit;
 */
 
-timer_set('build_dir_tree');
-//"SELECT DISTINCT path FROM images WHERE path LIKE '%s%%'"
+timer_set('build_dir_tree', 'Built tree from path');
 $sql	= sprintf( $GLOBALS['database']['sql']['select_path'], $_REQUEST['path']  );
 $dirs	= querySql( $db, $sql );
 
@@ -145,17 +141,12 @@ foreach( $subdirs as $subdir )
 {
     logging( "Start: $subdir");
     //$GLOBALS['timers'][$subdir]['start']	= microtime(TRUE);
-    timer_set( $subdir );
+    timer_set( $subdir, 'Getting subdirs' );
     
 	$dir	= $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
     debug( $dir);
+
 	// get newest image 	"newest_picture_in_path"
-    /*
-    $sql	= sprintf( $GLOBALS['database']['sql']['thumb_from_dirs'], $dir );
-    var_export($sql);
-	$thumb	= querySql( $db, $sql );
-    */
-    //if ( 'array' == gettype($thumb) )
     if ( empty($thumbs[$subdir]) )
     {
         logging( 'newest_picture_in_path' );
@@ -166,7 +157,6 @@ foreach( $subdirs as $subdir )
     else
     {
         logging( 'dirs' );
-        //$newestthumb['thumb']	= $thumb;
         $newestthumb['thumb']	= $thumbs[$subdir];
         $newestthumb['file']	= '$dir';
     }
@@ -177,7 +167,6 @@ foreach( $subdirs as $subdir )
     echo show_thumb( $newestthumb, TRUE );
     
     timer_set( $subdir );
-    //logging( progress_log( ++$count, $count_subdirs, $GLOBALS['timers'][$subdir]['start'] ?? microtime( TRUE ), 1 ) );
 }
 echo "</pre><br clear=both><hr>";
 
@@ -205,19 +194,17 @@ if( empty($_REQUEST['show']) )
 else
 {	// Show image
 	$prev	= $next	= FALSE;
-    timer_set('select_path_file');
 
+    timer_set('select_path_file', 'Show image');
 	$sql	= sprintf($GLOBALS['database']['sql']['select_path_file'], $_REQUEST['path'] );
 	debug( $sql );
 
 	$files	= querySql( $db, $sql );
     timer_set('select_path_file');
 
-	debug("Files:<pre>");
-	debug($files);
-	debug("</pre>" );
-    timer_set('select_path_file_normalise');
+	debug("Files:<pre>".var_export( $files, TRUE) . "</pre>");
 
+    timer_set('select_path_file_normalise');
     $first  = $files[0]['file'];
     $last   = $files[count($files)-1]['file'];
 	foreach ( $files as $no => $filedata )
@@ -242,20 +229,16 @@ else
 	}
     timer_set('select_path_file_normalise');
 
-    timer_set('select_display');
-
+    timer_set('select_display', ' Select image to display');
 	$sql	= sprintf($GLOBALS['database']['sql']['select_display'], $_REQUEST['path'], $_REQUEST['show'] );
 	debug( $sql );
 
 	$file	= querySql( $db, $sql );
     timer_set('select_display');
 
-	debug("Files:<pre>");
-	debug($file[0]);
-	debug("</pre>" );
+    debug("Files:<pre>".var_export( $file[0], TRUE) . "</pre>");
 
-    timer_set('buttons');
-
+    timer_set('buttons', 'Navigation buttons');
 	// Previous
     $prev_active_button = $prev ? "" : " disabled";
     $next_active_button = $next ? "" : " disabled";
@@ -304,51 +287,13 @@ else
 
     timer_set('buttons');
     
-    timer_set('show_image');
+    timer_set('show_image', 'Build display image');
 	echo show_image( $file[0] );
     timer_set('show_image');
-
-	//var_export( strlen( $file[0]['display'] ) );
 }
-
-//$GLOBALS['timers']['_INIT']['end']      = microtime(TRUE);
-//timer_set('_INIT');
 
 ob_flush();
 flush();
-//----------------------------------------------------------------------
-
-function timer_set( $key )
-{
-    if ( ! $GLOBALS['timer'] )
-        return;
-
-    if ( ! isset($GLOBALS['timers'][$key]['start']) )
-    {
-        $GLOBALS['timers'][$key]['start'] = microtime( TRUE) ;
-        //debug( $GLOBALS['timers'][$key]['start'] . "   {$_SERVER["REQUEST_TIME_FLOAT"]} ", "$key start");
-    }
-    else
-    {
-        $GLOBALS['timers'][$key]['end'] = microtime( TRUE) ;
-        //debug( $GLOBALS['timers'][$key]['end'], "$key end" );
-    }
-        
-}
-/*
-function timer_start( $key )
-{
-    if ( empty($GLOBALS['timers'][$key]['start']) )
-        $GLOBALS['timers'][$key]['start'] = microtime( TRUE) ;
-    else
-        $GLOBALS['timers'][$key]['end'] = microtime( TRUE) ;
-}
-
-function timer_end( $key )
-{
-    $GLOBALS['timers'][$key]['end'] = microtime( TRUE) ;
-}
-*/
 //----------------------------------------------------------------------
 
 /**
@@ -529,49 +474,39 @@ function show_image( $filedata )
 	debug( $filedata['file']);
 	debug( $filedata['path'] );
     
-	timer_set( 'show_image_get_meta');
+	timer_set( 'show_image_get_meta', 'Get metadata');
     
 	$sql	= sprintf( $GLOBALS['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
 	$meta	= querySql( $db, $sql );
 	debug( $sql );
 	timer_set( 'show_image_get_meta');
 
-	timer_set( 'show_image_decode_meta');
+	timer_set( 'show_image_decode_meta', '- decode metadata');
 	$exif	= json_decode( $meta[0]['exif'] ?? "", TRUE );
 	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 	timer_set( 'show_image_decode_meta');
 
-	timer_set( 'show_image_show_image');
-
-/**/
+	timer_set( 'show_image_show_image', 'Show image');
 	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
-    //$output	.= sprintf( "<br><small></small>[img class='display' src='data:jpg;base64, %s' title='%s'>"
 	,	$filedata['display']
 	,	$filedata['path'] . '/' . $filedata['file'] 
 	);
    	timer_set( 'show_image_show_image');
 
-/** /
-echo '
-<div style="
-        width: 10px;
-        height: 10px;
-        background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==) no-repeat;">
-    A dot.
-</div>
-';
-*/
-
-	timer_set( 'show_image_header');
-
 	// Header
+	timer_set( 'show_image_header', 'Image header');
 	if($iptc)
 	{
         // Flag
         $flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
         $output	.= "<img "
-        .	"src='config/.flags/{$flag}.svg' "
-        .	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'config/.flags/ZZ.svg') this.src = 'config/.flags/ZZ.svg'; \" "
+         .   "src='{$GLOBALS['config']['display']['flag']['path']}{$flag}.{$GLOBALS['config']['display']['flag']['ext']}' "
+        //.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'icons/.flags/ZZ.svg') this.src = 'icons/.flags/ZZ.svg'; \" "
+        .	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != '"
+        .   "{$GLOBALS['config']['display']['flag']['path']}{$GLOBALS['config']['display']['flag']['default']}.{$GLOBALS['config']['display']['flag']['ext']}"
+        .   "') this.src = '"
+        .   "{$GLOBALS['config']['display']['flag']['path']}{$flag}.{$GLOBALS['config']['display']['flag']['ext']}"
+        .   "'; \" "
         .	"class='flag' "
         .">";
 
@@ -596,7 +531,6 @@ echo '
         .   ___('iptc_location_tag')
         .   "</span>: <span class='iptc_location'>"
         .   ( $iptc['ContentLocationName'][0] ?? str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) )
-        //.   ( $iptc['ContentLocationName'][0] ?? implode( ', ', $ContentLocationName ) )
         .   '</span>'
         ;
 
@@ -633,8 +567,8 @@ echo '
 
     echo "<br clear=both>";
     
-	timer_set( 'show_image_iptc');
 	// IPTC
+	timer_set( 'show_image_iptc', 'IPTC');
 	$output	.= "<br clear=both><br><details><summary title='"
     .   ___('iptc')
     .   "'><img src='{$GLOBALS['config']['display']['iptc']['icon']}'>IPTC</summary><table border=1>";
@@ -655,8 +589,8 @@ echo '
 	timer_set( 'show_image_iptc');
 
 
-	timer_set( 'show_image_exif');
 	// EXIF
+	timer_set( 'show_image_exif', 'EXIF');
 	$output	.= "<br clear=both><details><summary title='"
     .   ___('exif_title')
     .   "'><img src='{$GLOBALS['config']['display']['exif']['icon']}'>EXIF</summary><table border=1>";
@@ -692,7 +626,7 @@ echo '
 	$output	.= "</pre></details>";
 	timer_set( 'show_image_exif');
 
-	timer_set( 'show_image_maps');
+	timer_set( 'show_image_maps', 'Maps');
 
     // Maps
 	if ( ! empty($exif['GPS']["GPSLongitude"]) )
