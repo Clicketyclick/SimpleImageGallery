@@ -25,21 +25,17 @@
 		"select_files_count": "SELECT count(*) as no_of_images FROM images;",
 		"select_files_resume_count": "SELECT count(*) FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
 		"select_files_resume": "SELECT path||'/'||file as files FROM images WHERE thumb IS NULL OR display IS NULL OR exif IS NULL OR iptc IS NULL;",
-		"select_path": "SELECT DISTINCT path FROM images WHERE path LIKE '%s%%';",
-		"_select_path": "SELECT DISTINCT path FROM images WHERE path = '%s';",
 		"select_path": "SELECT DISTINCT path FROM images WHERE path glob '%s*';",
 		"select_source_meta": "SELECT rowid, source||'/'||file as file, exif, iptc FROM images;",
 		"select_path_file": "SELECT path, file FROM images WHERE path LIKE '%s';",
 		"select_all_files": "SELECT source||'/'||file as files FROM images;",
 		"select_thumb": "SELECT name, path, file, thumb, exif, iptc FROM IMAGES WHERE path like '%s' ORDER BY path DESC, file DESC",
-		"_select_display": "SELECT path, file, display FROM IMAGES WHERE path like '%s' AND file like '%s'",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path = '%s' AND file = '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
 
 		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
 		"oldest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path ASC, file ASC LIMIT 1;",
 
-		"_thumb_from_dirs": "SELECT thumb FROM dirs WHERE path = '%s';",
 		"thumb_from_dirs": "SELECT path, thumb FROM dirs WHERE path IN ( '%s' ) ;",
 		"_dummy": ""
 	},

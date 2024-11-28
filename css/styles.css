@@ -216,3 +216,31 @@ button:hover:disabled {
 	white-space: nowrap;
 	display: contents;
 }
+
+kbd {
+  border: 2px solid;
+  /*-webkit-filter: invert(10%);*/
+    filter: invert(5%);
+  box-shadow: 2px 2px;
+  font-size: .85em;
+  line-height: .85em;
+  display: inline-block;
+  font-weight: 600;
+  letter-spacing: .05em;
+  /*padding: 3px 5px;*/
+  white-space: nowrap;
+}
+
+.timer_table, .timer_table td, .timer_table th {
+	border-collapse: collapse;
+	border: 1px solid white;
+}
+
+table, td, th {
+	border-collapse: collapse;
+	border: 1px solid;
+}
+
+details {
+	/*border: 1px solid red;*/
+}

@@ -9,6 +9,11 @@
 		"progressbar_lenght": 50
 	},
 	"display": {
+		"flag": {
+			"path": "icons/.flags/",
+			"default": "ZZ",
+			"ext": "svg"
+		},
 		"exif": {
 			"icon": "./icons/exif_32.jpg",
 			"logo": "./icons/exif_200x260.jpg"
@@ -47,16 +52,11 @@
 		"image_resize_type": "scale",
 		"thumb_max_width": 300,
 		"thumb_max_height": 300,
-		"Simple_display_max_width": 1200,
-		"Simple_display_max_height": 1200,
-		"UHD_display_max_width": 3840,
-		"UHD_display_max_height": 2160,
-		"4K_display_max_width": 4096,
-		"4K_display_max_height": 2160,
-		"CAM_display_max_width": 3872,
-		"CAM_display_max_height": 2592,
-		"display_max_width": 3872,
-		"display_max_height": 2592,
+		"Simple_display_max_width":	1200,	"Simple_display_max_height":	1200,
+		"UHD_display_max_width":	3840,	"UHD_display_max_height":		2160,
+		"4K_display_max_width":		4096,	"4K_display_max_height":		2160,
+		"CAM_display_max_width":	3872,	"CAM_display_max_height":		2592,
+		"display_max_width": 		3872,	"display_max_height":			2592,
 		"crop": 0
 	},
 	"maps": {
