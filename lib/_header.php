@@ -23,9 +23,9 @@ $GLOBALS['timer']      ??= 0;
 
 if ( ! isset($GLOBALS['timers']) )
     $GLOBALS['timers'] = [];
-timer_set('_header');
+timer_set('_header', 'Full header file');
 
-timer_set('def_io');
+timer_set('def_io', 'STD..');
 if(!defined('STDIN'))  define('STDIN',  fopen('php://stdin',  'rb'));
 if(!defined('STDOUT')) define('STDOUT', fopen('php://stdout', 'wb'));
 if(!defined('STDERR')) define('STDERR', fopen('php://stderr', 'wb'));
@@ -37,15 +37,14 @@ timer_set('def_io');
 //$files		= [];
 $db			= FALSE;
 
-timer_set('load_libs');
+timer_set('load_libs', 'Loading libraries');
 
 // Include libraries
 foreach ( [ 'debug', 'getGitInfo', 'handleStrings', 'handleJson', 'imageResize', 'handleSqlite', 'iptc', 'jsondb', 'progress_bar'] as $lib )
     include_once("lib/{$lib}.php");
 timer_set('load_libs');
 
-timer_set('set_configs');
-
+timer_set('set_configs', 'Loading configuration');
 // Set configuration files
 $GLOBALS['cfgfiles']    = ['config'=>'config', 'local'=>'local', 'database'=>'database', 'metatags'=>'meta'];
 //$GLOBALS['cfgfiles']    = ['config'=>'config'];
@@ -53,13 +52,13 @@ $GLOBALS['cfgfiles']    = ['config'=>'config', 'local'=>'local', 'database'=>'da
 timer_set('set_configs');
 
 
-timer_set('parse_cli');
+timer_set('parse_cli', 'Parse CLI');
 // Parse cli arguments and insert into $_REQUEST
 parse_cli2request();
 debug( $_REQUEST, 'Request' );
 timer_set('parse_cli');
 
-timer_set('read_config');
+timer_set('read_config', 'Read configuration' );
 // Read configuration
 foreach( $GLOBALS['cfgfiles'] as $config_key => $config_value )
 {
@@ -68,24 +67,23 @@ foreach( $GLOBALS['cfgfiles'] as $config_key => $config_value )
 }
 timer_set('read_config');
 
-timer_set('get_language');
+timer_set('get_language', 'Detect browser language');
 getBrowserLanguage( );
 timer_set('get_language');
 
 
-timer_set('print_header');
-
 // Print header
-//fputs( STDERR, getDoxygenHeader( __FILE__ ) );
+timer_set('print_header', 'Print header');
 fputs( STDERR, getDoxygenHeader( debug_backtrace()[0]['file'] ) );
 timer_set('print_header');
 
-timer_set('shutdown');
+timer_set('shutdown', 'Set shutdown');
 register_shutdown_function('shutdown');
 timer_set('shutdown');
 
-timer_set('parse_cli');
-// Parse CLI / $_REQUEST
+
+// Parse $_REQUEST
+timer_set('parse_request', 'Parse $_REQUEST');
 /*
     -config:images:image_resize_type=scale
 -config:images:image_resize_type=resized
@@ -93,6 +91,7 @@ timer_set('parse_cli');
 -config:resume=1
 -debug=1
 */
+/**/
 foreach ( $_REQUEST as $cmd => $cmdvalue )
 {
 	if ( strpos( $cmd, ':' ) )
@@ -105,21 +104,23 @@ foreach ( $_REQUEST as $cmd => $cmdvalue )
     if ( is_numeric($cmdvalue) )
         $GLOBALS[$cmd] *= 1;
 }
+/**/
 debug( $GLOBALS, 'SESSION:');
-timer_set('parse_cli');
+timer_set('parse_request');
 
-timer_set('init_db');
+
+timer_set('init_db', 'Open - or create database');
 // Open - or create database
 initDatabase( $db, $GLOBALS['config']['database']['file_name'], $GLOBALS['database'] );
 timer_set('init_db');
 
-timer_set('get_no_images');
+timer_set('get_no_images', 'Get no of images');
 // Get no of images
 $sql	= $GLOBALS['database']['sql']['select_files_count'];
 $GLOBALS['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
 timer_set('get_no_images');
 
-timer_set('save_query_from_str');
+timer_set('save_query_from_str', 'Save Query from URL');
 // Save Query from URL
 parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $GLOBALS['url']['args'] );
 unset($GLOBALS['url']['args']['show']);    // Remove show to avoid dublication
@@ -129,11 +130,10 @@ debug($GLOBALS['url']['args'], 'URL args');
 
 // Build new query for linking
 debug( http_build_query($GLOBALS['url']['args']), 'http_build_query' );
-$debug=0;
+//$debug=0;
 timer_set('save_query_from_str');
 
 timer_set('_header');
-
 
 /**
  *            initDatabase
