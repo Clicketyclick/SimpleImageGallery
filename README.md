@@ -28,7 +28,7 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 ## Demo
 
-Take a look at the latest [demo](https://gallerydemp.clicketyclick.dk)
+Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
 
 ## Setup
