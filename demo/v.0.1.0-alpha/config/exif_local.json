@@ -1,0 +1,4721 @@
+{
+	"0x0001": {
+		"tag_id": "0x0001",
+		"tag_name": "InteropIndex",
+		"writable": "string!",
+		"group": "InteropIFD",
+		"notes": "",
+		"values": {
+			"'R03'": "R03 - DCF option file (Adobe RGB)",
+			"'R98'": "R98 - DCF basic file (sRGB)",
+			"'THM'": "THM - DCF thumbnail file"
+		}
+	},
+	"0x0002": {
+		"tag_id": "0x0002",
+		"tag_name": "InteropVersion",
+		"writable": "undef!:",
+		"group": "InteropIFD",
+		"notes": " "
+	},
+	"0x000b": {
+		"tag_id": "0x000b",
+		"tag_name": "ProcessingSoftware",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "(used by ACD Systems Digital Imaging)"
+	},
+	"0x00fe": {
+		"tag_id": "0x00fe",
+		"tag_name": "SubfileType",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "(called NewSubfileType by the TIFF specification)",
+		"values": {
+			"0x0": "Full-resolution image",
+			"0x1": "Reduced-resolution image",
+			"0x2": "Single page of multi-page image",
+			"0x3": "Single page of multi-page reduced-resolution image",
+			"0x4": "Transparency mask",
+			"0x5": "Transparency mask of reduced-resolution image",
+			"0x6": "Transparency mask of multi-page image",
+			"0x7": "Transparency mask of reduced-resolution multi-page image",
+			"0x8": "Depth map",
+			"0x9": "Depth map of reduced-resolution image",
+			"0x10": "Enhanced image data",
+			"0x10001": "Alternate reduced-resolution image",
+			"0x10004": "Semantic Mask",
+			"0xffffffff": "invalid",
+			"Bit 0": "Reduced resolution",
+			"Bit 1": "Single page",
+			"Bit 2": "Transparency mask",
+			"Bit 3": "TIFF/IT final page",
+			"Bit 4": "TIFF-FX mixed raster content"
+		}
+	},
+	"0x00ff": {
+		"tag_id": "0x00ff",
+		"tag_name": "OldSubfileType",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "(called SubfileType by the TIFF specification)",
+		"values": {
+			"1": "Full-resolution image",
+			"2": "Reduced-resolution image",
+			"3": "Single page of multi-page image"
+		}
+	},
+	"0x0100": {
+		"tag_id": "0x0100",
+		"tag_name": "ImageWidth",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0101": {
+		"tag_id": "0x0101",
+		"tag_name": "ImageHeight",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "(called ImageLength by the EXIF spec.)"
+	},
+	"0x0102": {
+		"tag_id": "0x0102",
+		"tag_name": "BitsPerSample",
+		"writable": "int16u[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0103": {
+		"tag_id": "0x0103",
+		"tag_name": "Compression",
+		"writable": "int16u!:",
+		"group": "IFD0",
+		"notes": "--> EXIF Compression Values"
+	},
+	"0x0106": {
+		"tag_id": "0x0106",
+		"tag_name": "PhotometricInterpretation",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "WhiteIsZero",
+			"1": "BlackIsZero",
+			"2": "RGB",
+			"3": "RGB Palette",
+			"4": "Transparency Mask",
+			"5": "CMYK",
+			"6": "YCbCr",
+			"8": "CIELab",
+			"9": "ICCLab",
+			"10": "ITULab",
+			"32803": "Color Filter Array",
+			"32844": "Pixar LogL",
+			"32845": "Pixar LogLuv",
+			"32892": "Sequential Color Filter",
+			"34892": "Linear Raw",
+			"51177": "Depth Map",
+			"52527": "Semantic Mask"
+		}
+	},
+	"0x0107": {
+		"tag_id": "0x0107",
+		"tag_name": "Thresholding",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "No dithering or halftoning",
+			"2": "Ordered dither or halftone",
+			"3": "Randomized dither"
+		}
+	},
+	"0x0108": {
+		"tag_id": "0x0108",
+		"tag_name": "CellWidth",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0109": {
+		"tag_id": "0x0109",
+		"tag_name": "CellLength",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x010a": {
+		"tag_id": "0x010a",
+		"tag_name": "FillOrder",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "Normal",
+			"2": "Reversed"
+		}
+	},
+	"0x010d": {
+		"tag_id": "0x010d",
+		"tag_name": "DocumentName",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x010e": {
+		"tag_id": "0x010e",
+		"tag_name": "ImageDescription",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x010f": {
+		"tag_id": "0x010f",
+		"tag_name": "Make",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0110": {
+		"tag_id": "0x0110",
+		"tag_name": "Model",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0111": {
+		"tag_id": "0x0111",
+		"tag_name": "StripOffsets",
+		"writable": "no",
+		"group": "-",
+		"notes": "(called StripOffsets in most locations, but it is PreviewImageStart in IFD0 of CR2 images and various IFD's of DNG images except for SubIFD2 where it is JpgFromRawStart). OtherImageStart\tno\t-\nPreviewJXLStart\tno\t-\nStripOffsets\tno\t-\nPreviewImageStart\tint32u*\tIFD0\nPreviewImageStart\tint32u*\tAll\nJpgFromRawStart\tint32u*\tSubIFD2\n"
+	},
+	"0x0112": {
+		"tag_id": "0x0112",
+		"tag_name": "Orientation",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "Horizontal (normal)",
+			"2": "Mirror horizontal",
+			"3": "Rotate 180",
+			"4": "Mirror vertical",
+			"5": "Mirror horizontal and rotate 270 CW",
+			"6": "Rotate 90 CW",
+			"7": "Mirror horizontal and rotate 90 CW",
+			"8": "Rotate 270 CW"
+		}
+	},
+	"0x0115": {
+		"tag_id": "0x0115",
+		"tag_name": "SamplesPerPixel",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0116": {
+		"tag_id": "0x0116",
+		"tag_name": "RowsPerStrip",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": ""
+	},
+	"0x0117": {
+		"tag_id": "0x0117",
+		"tag_name": "StripByteCounts",
+		"writable": "no",
+		"group": "-",
+		"notes": "(called StripByteCounts in most locations, but it is PreviewImageLength in IFD0 of CR2 images and various IFD's of DNG images except for SubIFD2 where it is JpgFromRawLength). OtherImageLength\tno\t-\nPreviewJXLLength\tno\t-\nStripByteCounts\tno\t-\nPreviewImageLength\tint32u*\tIFD0\nPreviewImageLength\tint32u*\tAll\nJpgFromRawLength\tint32u*\tSubIFD2\n"
+	},
+	"0x0118": {
+		"tag_id": "0x0118",
+		"tag_name": "MinSampleValue",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0119": {
+		"tag_id": "0x0119",
+		"tag_name": "MaxSampleValue",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x011a": {
+		"tag_id": "0x011a",
+		"tag_name": "XResolution",
+		"writable": "rational64u:",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x011b": {
+		"tag_id": "0x011b",
+		"tag_name": "YResolution",
+		"writable": "rational64u:",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x011c": {
+		"tag_id": "0x011c",
+		"tag_name": "PlanarConfiguration",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "Chunky",
+			"2": "Planar"
+		}
+	},
+	"0x011d": {
+		"tag_id": "0x011d",
+		"tag_name": "PageName",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x011e": {
+		"tag_id": "0x011e",
+		"tag_name": "XPosition",
+		"writable": "rational64u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x011f": {
+		"tag_id": "0x011f",
+		"tag_name": "YPosition",
+		"writable": "rational64u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0120": {
+		"tag_id": "0x0120",
+		"tag_name": "FreeOffsets",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0121": {
+		"tag_id": "0x0121",
+		"tag_name": "FreeByteCounts",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0122": {
+		"tag_id": "0x0122",
+		"tag_name": "GrayResponseUnit",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "0.1",
+			"2": "0.001",
+			"3": "0.0001",
+			"4": "1e-05",
+			"5": "1e-06"
+		}
+	},
+	"0x0123": {
+		"tag_id": "0x0123",
+		"tag_name": "GrayResponseCurve",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0124": {
+		"tag_id": "0x0124",
+		"tag_name": "T4Options",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"Bit 0": "2-Dimensional encoding",
+			"Bit 1": "Uncompressed",
+			"Bit 2": "Fill bits added"
+		}
+	},
+	"0x0125": {
+		"tag_id": "0x0125",
+		"tag_name": "T6Options",
+		"writable": "no",
+		"group": "-",
+		"notes": "Bit 1 = Uncompressed"
+	},
+	"0x0128": {
+		"tag_id": "0x0128",
+		"tag_name": "ResolutionUnit",
+		"writable": "int16u:",
+		"group": "IFD0",
+		"notes": "(the value 1 is not standard EXIF)",
+		"values": {
+			"1": "None",
+			"2": "inches",
+			"3": "cm"
+		}
+	},
+	"0x0129": {
+		"tag_id": "0x0129",
+		"tag_name": "PageNumber",
+		"writable": "int16u[2]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x012c": {
+		"tag_id": "0x012c",
+		"tag_name": "ColorResponseUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x012d": {
+		"tag_id": "0x012d",
+		"tag_name": "TransferFunction",
+		"writable": "int16u[768]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0131": {
+		"tag_id": "0x0131",
+		"tag_name": "Software",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0132": {
+		"tag_id": "0x0132",
+		"tag_name": "ModifyDate",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "(called DateTime by the EXIF spec.)"
+	},
+	"0x013b": {
+		"tag_id": "0x013b",
+		"tag_name": "Artist",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "(becomes a list-type tag when the MWG module is loaded)"
+	},
+	"0x013c": {
+		"tag_id": "0x013c",
+		"tag_name": "HostComputer",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x013d": {
+		"tag_id": "0x013d",
+		"tag_name": "Predictor",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "None",
+			"2": "Horizontal differencing",
+			"3": "Floating point",
+			"34892": "Horizontal difference X2",
+			"34893": "Horizontal difference X4",
+			"34894": "Floating point X2",
+			"34895": "Floating point X4"
+		}
+	},
+	"0x013e": {
+		"tag_id": "0x013e",
+		"tag_name": "WhitePoint",
+		"writable": "rational64u[2]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x013f": {
+		"tag_id": "0x013f",
+		"tag_name": "PrimaryChromaticities",
+		"writable": "rational64u[6]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0140": {
+		"tag_id": "0x0140",
+		"tag_name": "ColorMap",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0141": {
+		"tag_id": "0x0141",
+		"tag_name": "HalftoneHints",
+		"writable": "int16u[2]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0142": {
+		"tag_id": "0x0142",
+		"tag_name": "TileWidth",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0143": {
+		"tag_id": "0x0143",
+		"tag_name": "TileLength",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0144": {
+		"tag_id": "0x0144",
+		"tag_name": "TileOffsets",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0145": {
+		"tag_id": "0x0145",
+		"tag_name": "TileByteCounts",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0146": {
+		"tag_id": "0x0146",
+		"tag_name": "BadFaxLines",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0147": {
+		"tag_id": "0x0147",
+		"tag_name": "CleanFaxData",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Clean",
+			"1": "Regenerated",
+			"2": "Unclean"
+		}
+	},
+	"0x0148": {
+		"tag_id": "0x0148",
+		"tag_name": "ConsecutiveBadFaxLines",
+		"writable": "no",
+		"group": "-",
+		"notes": ""
+	},
+	"0x014a": {
+		"tag_id": "0x014a",
+		"tag_name": "SubIFD A100DataOffset",
+		"writable": "no",
+		"group": "-",
+		"notes": "EXIF Tags, (the data offset in original Sony DSLR-A100 ARW images)"
+	},
+	"0x014c": {
+		"tag_id": "0x014c",
+		"tag_name": "InkSet",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "CMYK",
+			"2": "Not CMYK"
+		}
+	},
+	"0x014d": {
+		"tag_id": "0x014d",
+		"tag_name": "InkNames",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x014e": {
+		"tag_id": "0x014e",
+		"tag_name": "NumberofInks",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0150": {
+		"tag_id": "0x0150",
+		"tag_name": "DotRange",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0151": {
+		"tag_id": "0x0151",
+		"tag_name": "TargetPrinter",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0152": {
+		"tag_id": "0x0152",
+		"tag_name": "ExtraSamples",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Unspecified",
+			"1": "Associated Alpha",
+			"2": "Unassociated Alpha"
+		}
+	},
+	"0x0153": {
+		"tag_id": "0x0153",
+		"tag_name": "SampleFormat",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": "(SamplesPerPixel values) Values 0-3]",
+		"values": {
+			"1": "Unsigned",
+			"2": "Signed",
+			"3": "Float",
+			"4": "Undefined",
+			"5": "Complex int",
+			"6": "Complex float"
+		}
+	},
+	"0x0154": {
+		"tag_id": "0x0154",
+		"tag_name": "SMinSampleValue",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0155": {
+		"tag_id": "0x0155",
+		"tag_name": "SMaxSampleValue",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0156": {
+		"tag_id": "0x0156",
+		"tag_name": "TransferRange",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0157": {
+		"tag_id": "0x0157",
+		"tag_name": "ClipPath",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0158": {
+		"tag_id": "0x0158",
+		"tag_name": "XClipPathUnits",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0159": {
+		"tag_id": "0x0159",
+		"tag_name": "YClipPathUnits",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x015a": {
+		"tag_id": "0x015a",
+		"tag_name": "Indexed",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Not indexed",
+			"1": "Indexed"
+		}
+	},
+	"0x015b": {
+		"tag_id": "0x015b",
+		"tag_name": "JPEGTables",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x015f": {
+		"tag_id": "0x015f",
+		"tag_name": "OPIProxy",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Higher resolution image does not exist",
+			"1": "Higher resolution image exists"
+		}
+	},
+	"0x0190": {
+		"tag_id": "0x0190",
+		"tag_name": "GlobalParametersIFD",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> EXIF Tags"
+	},
+	"0x0191": {
+		"tag_id": "0x0191",
+		"tag_name": "ProfileType",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Unspecified",
+			"1": "Group 3 FAX"
+		}
+	},
+	"0x0192": {
+		"tag_id": "0x0192",
+		"tag_name": "FaxProfile",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Minimal B&W lossless, S",
+			"2": "Extended B&W lossless, F",
+			"3": "Lossless JBIG B&W, J",
+			"4": "Lossy color and grayscale, C",
+			"5": "Lossless color and grayscale, L",
+			"6": "Mixed raster content, M",
+			"7": "Profile T",
+			"255": "Multi Profiles"
+		}
+	},
+	"0x0193": {
+		"tag_id": "0x0193",
+		"tag_name": "CodingMethods",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"Bit 0": "Unspecified compression",
+			"Bit 1": "Modified Huffman",
+			"Bit 2": "Modified Read",
+			"Bit 3": "Modified MR",
+			"Bit 4": "JBIG",
+			"Bit 5": "Baseline JPEG",
+			"Bit 6": "JBIG color"
+		}
+	},
+	"0x0194": {
+		"tag_id": "0x0194",
+		"tag_name": "VersionYear",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0195": {
+		"tag_id": "0x0195",
+		"tag_name": "ModeNumber",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x01b1": {
+		"tag_id": "0x01b1",
+		"tag_name": "Decode",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x01b2": {
+		"tag_id": "0x01b2",
+		"tag_name": "DefaultImageColor",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x01b3": {
+		"tag_id": "0x01b3",
+		"tag_name": "T82Options",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x01b5": {
+		"tag_id": "0x01b5",
+		"tag_name": "JPEGTables",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0200": {
+		"tag_id": "0x0200",
+		"tag_name": "JPEGProc",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"1": "Baseline",
+			"14": "Lossless"
+		}
+	},
+	"0x0201": {
+		"tag_id": "0x0201",
+		"tag_name": "ThumbnailOffset",
+		"writable": "int32u*",
+		"group": "IFD1",
+		"notes": "ThumbnailOffset\tint32u*\tIFD0\nThumbnailOffset\tint32u*\tSubIFD\nPreviewImageStart\tint32u*\tMakerNotes\nPreviewImageStart\tint32u*\tIFD0\nJpgFromRawStart\tint32u*\tSubIFD\nJpgFromRawStart\tint32u*\tIFD2\nOtherImageStart\tint32u*\tSubIFD1\nOtherImageStart\tint32u*\tSubIFD2\nOtherImageStart\tno\t-\n"
+	},
+	"0x0202": {
+		"tag_id": "0x0202",
+		"tag_name": "ThumbnailLength",
+		"writable": "int32u*",
+		"group": "IFD1",
+		"notes": "(called JPEGInterchangeFormatLength in the specification, this is ThumbnailLength in IFD1 of JPEG and some TIFF-based images, IFD0 of MRW images and AVI and MOV videos, and the SubIFD in IFD1 of SRW images; PreviewImageLength in MakerNotes and IFD0 of ARW and SR2 images; JpgFromRawLength in SubIFD of NEF images, and IFD2 of PEF images; and OtherImageLength in everything else)\nThumbnailLength\tint32u*\tIFD0\nThumbnailLength\tint32u*\tSubIFD\nPreviewImageLength\tint32u*\tMakerNotes\nPreviewImageLength\tint32u*\tIFD0\nJpgFromRawLength\tint32u*\tSubIFD\nJpgFromRawLength\tint32u*\tIFD2\nOtherImageLength\tint32u*\tSubIFD1\nOtherImageLength\tint32u*\tSubIFD2\nOtherImageLength\tno\t-\n"
+	},
+	"0x0203": {
+		"tag_id": "0x0203",
+		"tag_name": "JPEGRestartInterval",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0205": {
+		"tag_id": "0x0205",
+		"tag_name": "JPEGLosslessPredictors",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0206": {
+		"tag_id": "0x0206",
+		"tag_name": "JPEGPointTransforms",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0207": {
+		"tag_id": "0x0207",
+		"tag_name": "JPEGQTables",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0208": {
+		"tag_id": "0x0208",
+		"tag_name": "JPEGDCTables",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0209": {
+		"tag_id": "0x0209",
+		"tag_name": "JPEGACTables",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x0211": {
+		"tag_id": "0x0211",
+		"tag_name": "YCbCrCoefficients",
+		"writable": "rational64u[3]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x0212": {
+		"tag_id": "0x0212",
+		"tag_name": "YCbCrSubSampling",
+		"writable": "int16u[2]!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"'1 1'": "YCbCr4:4:4 (1 1)",
+			"'1 2'": "YCbCr4:4:0 (1 2)",
+			"'1 4'": "YCbCr4:4:1 (1 4)",
+			"'2 1'": "YCbCr4:2:2 (2 1)",
+			"'2 2'": "YCbCr4:2:0 (2 2)",
+			"'2 4'": "YCbCr4:2:1 (2 4)",
+			"'4 1'": "YCbCr4:1:1 (4 1)",
+			"'4 2'": "YCbCr4:1:0 (4 2)"
+		}
+	},
+	"0x0213": {
+		"tag_id": "0x0213",
+		"tag_name": "YCbCrPositioning",
+		"writable": "int16u!:",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"1": "Centered",
+			"2": "Co-sited"
+		}
+	},
+	"0x0214": {
+		"tag_id": "0x0214",
+		"tag_name": "ReferenceBlackWhite",
+		"writable": "rational64u[6]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x022f": {
+		"tag_id": "0x022f",
+		"tag_name": "StripRowCounts",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x02bc": {
+		"tag_id": "0x02bc",
+		"tag_name": "ApplicationNotes",
+		"writable": "int8u!",
+		"group": "IFD0",
+		"notes": "--> XMP Tags"
+	},
+	"0x0303": {
+		"tag_id": "0x0303",
+		"tag_name": "RenderingIntent",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Perceptual",
+			"1": "Relative Colorimetric",
+			"2": "Saturation",
+			"3": "Absolute colorimetric"
+		}
+	},
+	"0x03e7": {
+		"tag_id": "0x03e7",
+		"tag_name": "USPTOMiscellaneous",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x1000": {
+		"tag_id": "0x1000",
+		"tag_name": "RelatedImageFileFormat",
+		"writable": "string!",
+		"group": "InteropIFD",
+		"notes": " "
+	},
+	"0x1001": {
+		"tag_id": "0x1001",
+		"tag_name": "RelatedImageWidth",
+		"writable": "int16u!",
+		"group": "InteropIFD",
+		"notes": " "
+	},
+	"0x1002": {
+		"tag_id": "0x1002",
+		"tag_name": "RelatedImageHeight",
+		"writable": "int16u!",
+		"group": "InteropIFD",
+		"notes": "(called RelatedImageLength by the DCF spec.)"
+	},
+	"0x4746": {
+		"tag_id": "0x4746",
+		"tag_name": "Rating",
+		"writable": "int16u/",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x4747": {
+		"tag_id": "0x4747",
+		"tag_name": "XP_DIP_XML",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x4748": {
+		"tag_id": "0x4748",
+		"tag_name": "StitchInfo",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Microsoft Stitch Tags"
+	},
+	"0x4749": {
+		"tag_id": "0x4749",
+		"tag_name": "RatingPercent",
+		"writable": "int16u/",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x5001": {
+		"tag_id": "0x5001",
+		"tag_name": "ResolutionXUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": "(ID's from 0x5001 to 0x5113 are obscure tags defined by Microsoft)"
+	},
+	"0x5002": {
+		"tag_id": "0x5002",
+		"tag_name": "ResolutionYUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5003": {
+		"tag_id": "0x5003",
+		"tag_name": "ResolutionXLengthUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5004": {
+		"tag_id": "0x5004",
+		"tag_name": "ResolutionYLengthUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5005": {
+		"tag_id": "0x5005",
+		"tag_name": "PrintFlags",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5006": {
+		"tag_id": "0x5006",
+		"tag_name": "PrintFlagsVersion",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5007": {
+		"tag_id": "0x5007",
+		"tag_name": "PrintFlagsCrop",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5008": {
+		"tag_id": "0x5008",
+		"tag_name": "PrintFlagsBleedWidth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5009": {
+		"tag_id": "0x5009",
+		"tag_name": "PrintFlagsBleedWidthScale",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500a": {
+		"tag_id": "0x500a",
+		"tag_name": "HalftoneLPI",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500b": {
+		"tag_id": "0x500b",
+		"tag_name": "HalftoneLPIUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500c": {
+		"tag_id": "0x500c",
+		"tag_name": "HalftoneDegree",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500d": {
+		"tag_id": "0x500d",
+		"tag_name": "HalftoneShape",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500e": {
+		"tag_id": "0x500e",
+		"tag_name": "HalftoneMisc",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x500f": {
+		"tag_id": "0x500f",
+		"tag_name": "HalftoneScreen",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5010": {
+		"tag_id": "0x5010",
+		"tag_name": "JPEGQuality",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5011": {
+		"tag_id": "0x5011",
+		"tag_name": "GridSize",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5012": {
+		"tag_id": "0x5012",
+		"tag_name": "ThumbnailFormat",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5013": {
+		"tag_id": "0x5013",
+		"tag_name": "ThumbnailWidth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5014": {
+		"tag_id": "0x5014",
+		"tag_name": "ThumbnailHeight",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5015": {
+		"tag_id": "0x5015",
+		"tag_name": "ThumbnailColorDepth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5016": {
+		"tag_id": "0x5016",
+		"tag_name": "ThumbnailPlanes",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5017": {
+		"tag_id": "0x5017",
+		"tag_name": "ThumbnailRawBytes",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5018": {
+		"tag_id": "0x5018",
+		"tag_name": "ThumbnailLength",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5019": {
+		"tag_id": "0x5019",
+		"tag_name": "ThumbnailCompressedSize",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x501a": {
+		"tag_id": "0x501a",
+		"tag_name": "ColorTransferFunction",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x501b": {
+		"tag_id": "0x501b",
+		"tag_name": "ThumbnailData",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5020": {
+		"tag_id": "0x5020",
+		"tag_name": "ThumbnailImageWidth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5021": {
+		"tag_id": "0x5021",
+		"tag_name": "ThumbnailImageHeight",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5022": {
+		"tag_id": "0x5022",
+		"tag_name": "ThumbnailBitsPerSample",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5023": {
+		"tag_id": "0x5023",
+		"tag_name": "ThumbnailCompression",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5024": {
+		"tag_id": "0x5024",
+		"tag_name": "ThumbnailPhotometricInterp",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5025": {
+		"tag_id": "0x5025",
+		"tag_name": "ThumbnailDescription",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5026": {
+		"tag_id": "0x5026",
+		"tag_name": "ThumbnailEquipMake",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5027": {
+		"tag_id": "0x5027",
+		"tag_name": "ThumbnailEquipModel",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5028": {
+		"tag_id": "0x5028",
+		"tag_name": "ThumbnailStripOffsets",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5029": {
+		"tag_id": "0x5029",
+		"tag_name": "ThumbnailOrientation",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502a": {
+		"tag_id": "0x502a",
+		"tag_name": "ThumbnailSamplesPerPixel",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502b": {
+		"tag_id": "0x502b",
+		"tag_name": "ThumbnailRowsPerStrip",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502c": {
+		"tag_id": "0x502c",
+		"tag_name": "ThumbnailStripByteCounts",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502d": {
+		"tag_id": "0x502d",
+		"tag_name": "ThumbnailResolutionX",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502e": {
+		"tag_id": "0x502e",
+		"tag_name": "ThumbnailResolutionY",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x502f": {
+		"tag_id": "0x502f",
+		"tag_name": "ThumbnailPlanarConfig",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5030": {
+		"tag_id": "0x5030",
+		"tag_name": "ThumbnailResolutionUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5031": {
+		"tag_id": "0x5031",
+		"tag_name": "ThumbnailTransferFunction",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5032": {
+		"tag_id": "0x5032",
+		"tag_name": "ThumbnailSoftware",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5033": {
+		"tag_id": "0x5033",
+		"tag_name": "ThumbnailDateTime",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5034": {
+		"tag_id": "0x5034",
+		"tag_name": "ThumbnailArtist",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5035": {
+		"tag_id": "0x5035",
+		"tag_name": "ThumbnailWhitePoint",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5036": {
+		"tag_id": "0x5036",
+		"tag_name": "ThumbnailPrimaryChromaticities",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5037": {
+		"tag_id": "0x5037",
+		"tag_name": "ThumbnailYCbCrCoefficients",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5038": {
+		"tag_id": "0x5038",
+		"tag_name": "ThumbnailYCbCrSubsampling",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5039": {
+		"tag_id": "0x5039",
+		"tag_name": "ThumbnailYCbCrPositioning",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x503a": {
+		"tag_id": "0x503a",
+		"tag_name": "ThumbnailRefBlackWhite",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x503b": {
+		"tag_id": "0x503b",
+		"tag_name": "ThumbnailCopyright",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5090": {
+		"tag_id": "0x5090",
+		"tag_name": "LuminanceTable",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5091": {
+		"tag_id": "0x5091",
+		"tag_name": "ChrominanceTable",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5100": {
+		"tag_id": "0x5100",
+		"tag_name": "FrameDelay",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5101": {
+		"tag_id": "0x5101",
+		"tag_name": "LoopCount",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5102": {
+		"tag_id": "0x5102",
+		"tag_name": "GlobalPalette",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5103": {
+		"tag_id": "0x5103",
+		"tag_name": "IndexBackground",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5104": {
+		"tag_id": "0x5104",
+		"tag_name": "IndexTransparent",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5110": {
+		"tag_id": "0x5110",
+		"tag_name": "PixelUnits",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5111": {
+		"tag_id": "0x5111",
+		"tag_name": "PixelsPerUnitX",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5112": {
+		"tag_id": "0x5112",
+		"tag_name": "PixelsPerUnitY",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x5113": {
+		"tag_id": "0x5113",
+		"tag_name": "PaletteHistogram",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x7000": {
+		"tag_id": "0x7000",
+		"tag_name": "SonyRawFileType",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Sony Uncompressed 14-bit RAW",
+			"1": "Sony Uncompressed 12-bit RAW",
+			"2": "Sony Compressed RAW",
+			"3": "Sony Lossless Compressed RAW",
+			"4": "Sony Lossless Compressed RAW 2"
+		}
+	},
+	"0x7010": {
+		"tag_id": "0x7010",
+		"tag_name": "SonyToneCurve",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x7031": {
+		"tag_id": "0x7031",
+		"tag_name": "VignettingCorrection",
+		"writable": "int16s!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)",
+		"values": {
+			"256": "Off",
+			"257": "Auto",
+			"272": "Auto (ILCE-1)",
+			"511": "No correction params available"
+		}
+	},
+	"0x7032": {
+		"tag_id": "0x7032",
+		"tag_name": "VignettingCorrParams",
+		"writable": "int16s[17]!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)"
+	},
+	"0x7034": {
+		"tag_id": "0x7034",
+		"tag_name": "ChromaticAberrationCorrection",
+		"writable": "int16s!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)",
+		"values": {
+			"0": "Off",
+			"1": "Auto",
+			"255": "No correction params available"
+		}
+	},
+	"0x7035": {
+		"tag_id": "0x7035",
+		"tag_name": "ChromaticAberrationCorrParams",
+		"writable": "int16s[33]!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)"
+	},
+	"0x7036": {
+		"tag_id": "0x7036",
+		"tag_name": "DistortionCorrection",
+		"writable": "int16s!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)",
+		"values": {
+			"0": "Off",
+			"1": "Auto",
+			"17": "Auto fixed by lens",
+			"255": "No correction params available"
+		}
+	},
+	"0x7037": {
+		"tag_id": "0x7037",
+		"tag_name": "DistortionCorrParams",
+		"writable": "int16s[17]!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)"
+	},
+	"0x7038": {
+		"tag_id": "0x7038",
+		"tag_name": "SonyRawImageSize",
+		"writable": "int32u[2]!",
+		"group": "SubIFD",
+		"notes": "(size of actual image in Sony ARW files)"
+	},
+	"0x7310": {
+		"tag_id": "0x7310",
+		"tag_name": "BlackLevel",
+		"writable": "int16u[4]!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)"
+	},
+	"0x7313": {
+		"tag_id": "0x7313",
+		"tag_name": "WB_RGGBLevels",
+		"writable": "int16s[4]!",
+		"group": "SubIFD",
+		"notes": "(found in Sony ARW images)"
+	},
+	"0x74c7": {
+		"tag_id": "0x74c7",
+		"tag_name": "SonyCropTopLeft",
+		"writable": "int32u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0x74c8": {
+		"tag_id": "0x74c8",
+		"tag_name": "SonyCropSize",
+		"writable": "int32u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0x800d": {
+		"tag_id": "0x800d",
+		"tag_name": "ImageID",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80a3": {
+		"tag_id": "0x80a3",
+		"tag_name": "WangTag1",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80a4": {
+		"tag_id": "0x80a4",
+		"tag_name": "WangAnnotation",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80a5": {
+		"tag_id": "0x80a5",
+		"tag_name": "WangTag3",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80a6": {
+		"tag_id": "0x80a6",
+		"tag_name": "WangTag4",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80b9": {
+		"tag_id": "0x80b9",
+		"tag_name": "ImageReferencePoints",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80ba": {
+		"tag_id": "0x80ba",
+		"tag_name": "RegionXformTackPoint",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80bb": {
+		"tag_id": "0x80bb",
+		"tag_name": "WarpQuadrilateral",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80bc": {
+		"tag_id": "0x80bc",
+		"tag_name": "AffineTransformMat",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80e3": {
+		"tag_id": "0x80e3",
+		"tag_name": "Matteing",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80e4": {
+		"tag_id": "0x80e4",
+		"tag_name": "DataType",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80e5": {
+		"tag_id": "0x80e5",
+		"tag_name": "ImageDepth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x80e6": {
+		"tag_id": "0x80e6",
+		"tag_name": "TileDepth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8214": {
+		"tag_id": "0x8214",
+		"tag_name": "ImageFullWidth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8215": {
+		"tag_id": "0x8215",
+		"tag_name": "ImageFullHeight",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8216": {
+		"tag_id": "0x8216",
+		"tag_name": "TextureFormat",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8217": {
+		"tag_id": "0x8217",
+		"tag_name": "WrapModes",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8218": {
+		"tag_id": "0x8218",
+		"tag_name": "FovCot",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8219": {
+		"tag_id": "0x8219",
+		"tag_name": "MatrixWorldToScreen",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x821a": {
+		"tag_id": "0x821a",
+		"tag_name": "MatrixWorldToCamera",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x827d": {
+		"tag_id": "0x827d",
+		"tag_name": "Model2",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x828d": {
+		"tag_id": "0x828d",
+		"tag_name": "CFARepeatPatternDim",
+		"writable": "int16u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0x828e": {
+		"tag_id": "0x828e",
+		"tag_name": "CFAPattern2",
+		"writable": "int8u[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0x828f": {
+		"tag_id": "0x828f",
+		"tag_name": "BatteryLevel",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8290": {
+		"tag_id": "0x8290",
+		"tag_name": "KodakIFD",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Kodak IFD Tags (used in various types of Kodak images)"
+	},
+	"0x8298": {
+		"tag_id": "0x8298",
+		"tag_name": "Copyright",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "(may contain copyright notices for photographer and editor, separated by a newline. As per the EXIF specification, the newline is replaced by a null byte when writing to file, but this may be avoided by disabling the print conversion)"
+	},
+	"0x829a": {
+		"tag_id": "0x829a",
+		"tag_name": "ExposureTime",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x829d": {
+		"tag_id": "0x829d",
+		"tag_name": "FNumber",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x82a5": {
+		"tag_id": "0x82a5",
+		"tag_name": "MDFileTag",
+		"writable": "no",
+		"group": "-",
+		"notes": "(tags 0x82a5-0x82ac are used in Molecular Dynamics GEL files)"
+	},
+	"0x82a6": {
+		"tag_id": "0x82a6",
+		"tag_name": "MDScalePixel",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82a7": {
+		"tag_id": "0x82a7",
+		"tag_name": "MDColorTable",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82a8": {
+		"tag_id": "0x82a8",
+		"tag_name": "MDLabName",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82a9": {
+		"tag_id": "0x82a9",
+		"tag_name": "MDSampleInfo",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82aa": {
+		"tag_id": "0x82aa",
+		"tag_name": "MDPrepDate",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82ab": {
+		"tag_id": "0x82ab",
+		"tag_name": "MDPrepTime",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x82ac": {
+		"tag_id": "0x82ac",
+		"tag_name": "MDFileUnits",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x830e": {
+		"tag_id": "0x830e",
+		"tag_name": "PixelScale",
+		"writable": "double[3]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x8335": {
+		"tag_id": "0x8335",
+		"tag_name": "AdventScale",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8336": {
+		"tag_id": "0x8336",
+		"tag_name": "AdventRevision",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x835c": {
+		"tag_id": "0x835c",
+		"tag_name": "UIC1Tag",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x835d": {
+		"tag_id": "0x835d",
+		"tag_name": "UIC2Tag",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x835e": {
+		"tag_id": "0x835e",
+		"tag_name": "UIC3Tag",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x835f": {
+		"tag_id": "0x835f",
+		"tag_name": "UIC4Tag",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x83bb": {
+		"tag_id": "0x83bb",
+		"tag_name": "IPTC-NAA",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "--> IPTC Tags"
+	},
+	"0x847e": {
+		"tag_id": "0x847e",
+		"tag_name": "IntergraphPacketData",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x847f": {
+		"tag_id": "0x847f",
+		"tag_name": "IntergraphFlagRegisters",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8480": {
+		"tag_id": "0x8480",
+		"tag_name": "IntergraphMatrix",
+		"writable": "double[n]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x8481": {
+		"tag_id": "0x8481",
+		"tag_name": "INGRReserved",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8482": {
+		"tag_id": "0x8482",
+		"tag_name": "ModelTiePoint",
+		"writable": "double[n]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x84e0": {
+		"tag_id": "0x84e0",
+		"tag_name": "Site",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e1": {
+		"tag_id": "0x84e1",
+		"tag_name": "ColorSequence",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e2": {
+		"tag_id": "0x84e2",
+		"tag_name": "IT8Header",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e3": {
+		"tag_id": "0x84e3",
+		"tag_name": "RasterPadding",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Byte",
+			"1": "Word",
+			"2": "Long Word",
+			"9": "Sector",
+			"10": "Long Sector"
+		}
+	},
+	"0x84e4": {
+		"tag_id": "0x84e4",
+		"tag_name": "BitsPerRunLength",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e5": {
+		"tag_id": "0x84e5",
+		"tag_name": "BitsPerExtendedRunLength",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e6": {
+		"tag_id": "0x84e6",
+		"tag_name": "ColorTable",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84e7": {
+		"tag_id": "0x84e7",
+		"tag_name": "ImageColorIndicator",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Unspecified Image Color",
+			"1": "Specified Image Color"
+		}
+	},
+	"0x84e8": {
+		"tag_id": "0x84e8",
+		"tag_name": "BackgroundColorIndicator",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Unspecified Background Color",
+			"1": "Specified Background Color"
+		}
+	},
+	"0x84e9": {
+		"tag_id": "0x84e9",
+		"tag_name": "ImageColorValue",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84ea": {
+		"tag_id": "0x84ea",
+		"tag_name": "BackgroundColorValue",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84eb": {
+		"tag_id": "0x84eb",
+		"tag_name": "PixelIntensityRange",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84ec": {
+		"tag_id": "0x84ec",
+		"tag_name": "TransparencyIndicator",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84ed": {
+		"tag_id": "0x84ed",
+		"tag_name": "ColorCharacterization",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84ee": {
+		"tag_id": "0x84ee",
+		"tag_name": "HCUsage",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "CT",
+			"1": "Line Art",
+			"2": "Trap"
+		}
+	},
+	"0x84ef": {
+		"tag_id": "0x84ef",
+		"tag_name": "TrapIndicator",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x84f0": {
+		"tag_id": "0x84f0",
+		"tag_name": "CMYKEquivalent",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8546": {
+		"tag_id": "0x8546",
+		"tag_name": "SEMInfo",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "(found in some scanning electron microscope images)"
+	},
+	"0x8568": {
+		"tag_id": "0x8568",
+		"tag_name": "AFCP_IPTC",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> IPTC Tags"
+	},
+	"0x85b8": {
+		"tag_id": "0x85b8",
+		"tag_name": "PixelMagicJBIGOptions",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x85d7": {
+		"tag_id": "0x85d7",
+		"tag_name": "JPLCartoIFD",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x85d8": {
+		"tag_id": "0x85d8",
+		"tag_name": "ModelTransform",
+		"writable": "double[16]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x8602": {
+		"tag_id": "0x8602",
+		"tag_name": "WB_GRGBLevels",
+		"writable": "no",
+		"group": "-",
+		"notes": "(found in IFD0 of Leaf MOS images)"
+	},
+	"0x8606": {
+		"tag_id": "0x8606",
+		"tag_name": "LeafData",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Leaf Tags"
+	},
+	"0x8649": {
+		"tag_id": "0x8649",
+		"tag_name": "PhotoshopSettings",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "--> Photoshop Tags"
+	},
+	"0x8769": {
+		"tag_id": "0x8769",
+		"tag_name": "ExifOffset",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "--> EXIF Tags"
+	},
+	"0x8773": {
+		"tag_id": "0x8773",
+		"tag_name": "ICC_Profile",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "--> ICC_Profile Tags"
+	},
+	"0x877f": {
+		"tag_id": "0x877f",
+		"tag_name": "TIFF_FXExtensions",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"Bit 0": "Resolution/Image Width",
+			"Bit 1": "N Layer Profile M",
+			"Bit 2": "Shared Data",
+			"Bit 3": "B&W JBIG2",
+			"Bit 4": "JBIG2 Profile M"
+		}
+	},
+	"0x8780": {
+		"tag_id": "0x8780",
+		"tag_name": "MultiProfiles",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"Bit 0": "Profile S",
+			"Bit 1": "Profile F",
+			"Bit 2": "Profile J",
+			"Bit 3": "Profile C",
+			"Bit 4": "Profile L",
+			"Bit 5": "Profile M",
+			"Bit 6": "Profile T",
+			"Bit 7": "Resolution/Image Width",
+			"Bit 8": "N Layer Profile M",
+			"Bit 9": "Shared Data",
+			"Bit 10": "JBIG2 Profile M"
+		}
+	},
+	"0x8781": {
+		"tag_id": "0x8781",
+		"tag_name": "SharedData",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8782": {
+		"tag_id": "0x8782",
+		"tag_name": "T88Options",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x87ac": {
+		"tag_id": "0x87ac",
+		"tag_name": "ImageLayer",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x87af": {
+		"tag_id": "0x87af",
+		"tag_name": "GeoTiffDirectory",
+		"writable": "int16u[0.5]",
+		"group": "IFD0",
+		"notes": "(these 'GeoTiff' tags may read and written as a block, but they aren't extracted unless specifically requested. Byte order changes are handled automatically when copying between TIFF images with different byte order)"
+	},
+	"0x87b0": {
+		"tag_id": "0x87b0",
+		"tag_name": "GeoTiffDoubleParams",
+		"writable": "double[0.125]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x87b1": {
+		"tag_id": "0x87b1",
+		"tag_name": "GeoTiffAsciiParams",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x87be": {
+		"tag_id": "0x87be",
+		"tag_name": "JBIGOptions",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8822": {
+		"tag_id": "0x8822",
+		"tag_name": "ExposureProgram",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(the value of 9 is not standard EXIF, but is used by the Canon EOS 7D)",
+		"values": {
+			"0": "Not Defined",
+			"1": "Manual",
+			"2": "Program AE",
+			"3": "Aperture-priority AE",
+			"4": "Shutter speed priority AE",
+			"5": "Creative (Slow speed)",
+			"6": "Action (High speed)",
+			"7": "Portrait",
+			"8": "Landscape",
+			"9": "Bulb"
+		}
+	},
+	"0x8824": {
+		"tag_id": "0x8824",
+		"tag_name": "SpectralSensitivity",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8825": {
+		"tag_id": "0x8825",
+		"tag_name": "GPSInfo",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "--> GPS Tags"
+	},
+	"0x8827": {
+		"tag_id": "0x8827",
+		"tag_name": "ISO",
+		"writable": "int16u[n]",
+		"group": "ExifIFD",
+		"notes": "(called ISOSpeedRatings by EXIF 2.2, then PhotographicSensitivity by the EXIF 2.3 spec.)"
+	},
+	"0x8828": {
+		"tag_id": "0x8828",
+		"tag_name": "Opto-ElectricConvFactor",
+		"writable": "no",
+		"group": "-",
+		"notes": "(called OECF by the EXIF spec.)"
+	},
+	"0x8829": {
+		"tag_id": "0x8829",
+		"tag_name": "Interlace",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x882a": {
+		"tag_id": "0x882a",
+		"tag_name": "TimeZoneOffset",
+		"writable": "int16s[n]",
+		"group": "ExifIFD",
+		"notes": "(1 or 2 values: 1. The time zone offset of DateTimeOriginal from GMT in hours, 2. If present, the time zone offset of ModifyDate)"
+	},
+	"0x882b": {
+		"tag_id": "0x882b",
+		"tag_name": "SelfTimerMode",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8830": {
+		"tag_id": "0x8830",
+		"tag_name": "SensitivityType",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(applies to EXIF:ISO tag)",
+		"values": {
+			"0": "Unknown",
+			"1": "Standard Output Sensitivity",
+			"2": "Recommended Exposure Index",
+			"3": "ISO Speed",
+			"4": "Standard Output Sensitivity and Recommended Exposure Index",
+			"5": "Standard Output Sensitivity and ISO Speed",
+			"6": "Recommended Exposure Index and ISO Speed",
+			"7": "Standard Output Sensitivity, Recommended Exposure Index and ISO Speed"
+		}
+	},
+	"0x8831": {
+		"tag_id": "0x8831",
+		"tag_name": "StandardOutputSensitivity",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8832": {
+		"tag_id": "0x8832",
+		"tag_name": "RecommendedExposureIndex",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8833": {
+		"tag_id": "0x8833",
+		"tag_name": "ISOSpeed",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8834": {
+		"tag_id": "0x8834",
+		"tag_name": "ISOSpeedLatitudeyyy",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x8835": {
+		"tag_id": "0x8835",
+		"tag_name": "ISOSpeedLatitudezzz",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x885c": {
+		"tag_id": "0x885c",
+		"tag_name": "FaxRecvParams",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x885d": {
+		"tag_id": "0x885d",
+		"tag_name": "FaxSubAddress",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x885e": {
+		"tag_id": "0x885e",
+		"tag_name": "FaxRecvTime",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x8871": {
+		"tag_id": "0x8871",
+		"tag_name": "FedexEDR",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x888a": {
+		"tag_id": "0x888a",
+		"tag_name": "LeafSubIFD",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Leaf SubIFD Tags"
+	},
+	"0x9000": {
+		"tag_id": "0x9000",
+		"tag_name": "ExifVersion",
+		"writable": "undef:",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9003": {
+		"tag_id": "0x9003",
+		"tag_name": "DateTimeOriginal",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(date/time when original image was taken)"
+	},
+	"0x9004": {
+		"tag_id": "0x9004",
+		"tag_name": "CreateDate",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(called DateTimeDigitized by the EXIF spec.)"
+	},
+	"0x9009": {
+		"tag_id": "0x9009",
+		"tag_name": "GooglePlusUploadCode",
+		"writable": "undef[n]",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9010": {
+		"tag_id": "0x9010",
+		"tag_name": "OffsetTime",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(time zone for ModifyDate)"
+	},
+	"0x9011": {
+		"tag_id": "0x9011",
+		"tag_name": "OffsetTimeOriginal",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(time zone for DateTimeOriginal)"
+	},
+	"0x9012": {
+		"tag_id": "0x9012",
+		"tag_name": "OffsetTimeDigitized",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(time zone for CreateDate)"
+	},
+	"0x9101": {
+		"tag_id": "0x9101",
+		"tag_name": "ComponentsConfiguration",
+		"writable": "undef[4]!:",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "-",
+			"1": "Y",
+			"2": "Cb",
+			"3": "Cr",
+			"4": "R",
+			"5": "G",
+			"6": "B"
+		}
+	},
+	"0x9102": {
+		"tag_id": "0x9102",
+		"tag_name": "CompressedBitsPerPixel",
+		"writable": "rational64u!",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9201": {
+		"tag_id": "0x9201",
+		"tag_name": "ShutterSpeedValue",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": "(displayed in seconds, but stored as an APEX value)"
+	},
+	"0x9202": {
+		"tag_id": "0x9202",
+		"tag_name": "ApertureValue",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": "(displayed as an F number, but stored as an APEX value)"
+	},
+	"0x9203": {
+		"tag_id": "0x9203",
+		"tag_name": "BrightnessValue",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9204": {
+		"tag_id": "0x9204",
+		"tag_name": "ExposureCompensation",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": "(called ExposureBiasValue by the EXIF spec.)"
+	},
+	"0x9205": {
+		"tag_id": "0x9205",
+		"tag_name": "MaxApertureValue",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": "(displayed as an F number, but stored as an APEX value)"
+	},
+	"0x9206": {
+		"tag_id": "0x9206",
+		"tag_name": "SubjectDistance",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9207": {
+		"tag_id": "0x9207",
+		"tag_name": "MeteringMode",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Average",
+			"2": "Center-weighted average",
+			"3": "Spot",
+			"4": "Multi-spot",
+			"5": "Multi-segment",
+			"6": "Partial",
+			"255": "Other"
+		}
+	},
+	"0x9208": {
+		"tag_id": "0x9208",
+		"tag_name": "LightSource",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "--> EXIF LightSource Values"
+	},
+	"0x9209": {
+		"tag_id": "0x9209",
+		"tag_name": "Flash",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "--> EXIF Flash Values"
+	},
+	"0x920a": {
+		"tag_id": "0x920a",
+		"tag_name": "FocalLength",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x920b": {
+		"tag_id": "0x920b",
+		"tag_name": "FlashEnergy",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x920c": {
+		"tag_id": "0x920c",
+		"tag_name": "SpatialFrequencyResponse",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x920d": {
+		"tag_id": "0x920d",
+		"tag_name": "Noise",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x920e": {
+		"tag_id": "0x920e",
+		"tag_name": "FocalPlaneXResolution",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x920f": {
+		"tag_id": "0x920f",
+		"tag_name": "FocalPlaneYResolution",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x9210": {
+		"tag_id": "0x9210",
+		"tag_name": "FocalPlaneResolutionUnit",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"1": "None",
+			"2": "inches",
+			"3": "cm",
+			"4": "mm",
+			"5": "um"
+		}
+	},
+	"0x9211": {
+		"tag_id": "0x9211",
+		"tag_name": "ImageNumber",
+		"writable": "int32u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9212": {
+		"tag_id": "0x9212",
+		"tag_name": "SecurityClassification",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"'C'": "Confidential",
+			"'R'": "Restricted",
+			"'S'": "Secret",
+			"'T'": "Top Secret",
+			"'U'": "Unclassified"
+		}
+	},
+	"0x9213": {
+		"tag_id": "0x9213",
+		"tag_name": "ImageHistory",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9214": {
+		"tag_id": "0x9214",
+		"tag_name": "SubjectArea",
+		"writable": "int16u[n]",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9215": {
+		"tag_id": "0x9215",
+		"tag_name": "ExposureIndex",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x9216": {
+		"tag_id": "0x9216",
+		"tag_name": "TIFF-EPStandardID",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x9217": {
+		"tag_id": "0x9217",
+		"tag_name": "SensingMethod",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"1": "Monochrome area",
+			"2": "One-chip color area",
+			"3": "Two-chip color area",
+			"4": "Three-chip color area",
+			"5": "Color sequential area",
+			"6": "Monochrome linear",
+			"7": "Trilinear",
+			"8": "Color sequential linear"
+		}
+	},
+	"0x923a": {
+		"tag_id": "0x923a",
+		"tag_name": "CIP3DataFile",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x923b": {
+		"tag_id": "0x923b",
+		"tag_name": "CIP3Sheet",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x923c": {
+		"tag_id": "0x923c",
+		"tag_name": "CIP3Side",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x923f": {
+		"tag_id": "0x923f",
+		"tag_name": "StoNits",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x927c": {
+		"tag_id": "0x927c",
+		"tag_name": "MakerNote",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": "MakerNoteApple\tundef\tExifIFD\t--> Apple Tags\nMakerNoteNikon\tundef\tExifIFD\t--> Nikon Tags\nMakerNoteCanon\tundef\tExifIFD\t--> Canon Tags\nMakerNoteCasio\tundef\tExifIFD\t--> Casio Tags\nMakerNoteCasio2\tundef\tExifIFD\t--> Casio Type2 Tags\nMakerNoteDJIInfo\tundef\tExifIFD\t--> DJI Info Tags\nMakerNoteDJI\tundef\tExifIFD\t--> DJI Tags\nMakerNoteFLIR\tundef\tExifIFD\t--> FLIR Tags\nMakerNoteFujiFilm\tundef\tExifIFD\t--> FujiFilm Tags\nMakerNoteGE\tundef\tExifIFD\t--> GE Tags\nMakerNoteGE2\tundef\tExifIFD\t--> FujiFilm Tags\nMakerNoteHasselblad\tundef\tExifIFD\t--> Unknown Tags\nMakerNoteHP\tundef\tExifIFD\t--> HP Tags\nMakerNoteHP2\tundef\tExifIFD\t--> HP Type2 Tags\nMakerNoteHP4\tundef\tExifIFD\t--> HP Type4 Tags\nMakerNoteHP6\tundef\tExifIFD\t--> HP Type6 Tags\nMakerNoteISL\tundef\tExifIFD\t--> Unknown Tags\nMakerNoteJVC\tundef\tExifIFD\t--> JVC Tags\nMakerNoteJVCText\tundef\tExifIFD\t--> JVC Text Tags\nMakerNoteKodak1a\tundef\tExifIFD\t--> Kodak Tags\nMakerNoteKodak1b\tundef\tExifIFD\t--> Kodak Tags\nMakerNoteKodak2\tundef\tExifIFD\t--> Kodak Type2 Tags\nMakerNoteKodak3\tundef\tExifIFD\t--> Kodak Type3 Tags\nMakerNoteKodak4\tundef\tExifIFD\t--> Kodak Type4 Tags\nMakerNoteKodak5\tundef\tExifIFD\t--> Kodak Type5 Tags\nMakerNoteKodak6a\tundef\tExifIFD\t--> Kodak Type6 Tags\nMakerNoteKodak6b\tundef\tExifIFD\t--> Kodak Type6 Tags\nMakerNoteKodak7\tundef\tExifIFD\t--> Kodak Type7 Tags\nMakerNoteKodak8a\tundef\tExifIFD\t--> Kodak Type8 Tags\nMakerNoteKodak8b\tundef\tExifIFD\t--> Kodak Type8 Tags\nMakerNoteKodak8c\tundef\tExifIFD\t--> Kodak Type8 Tags\nMakerNoteKodak9\tundef\tExifIFD\t--> Kodak Type9 Tags\nMakerNoteKodak10\tundef\tExifIFD\t--> Kodak Type10 Tags\nMakerNoteKodak11\tundef\tExifIFD\t--> Kodak Type11 Tags\nMakerNoteKodak12\tundef\tExifIFD\t--> Kodak Type11 Tags\nMakerNoteKodakUnknown\tundef\tExifIFD\t--> Kodak Unknown Tags\nMakerNoteKyocera\tundef\tExifIFD\t--> Unknown Tags\nMakerNoteMinolta\tundef\tExifIFD\t--> Minolta Tags\nMakerNoteMinolta2\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteMinolta3\tundef\tExifIFD\t(not EXIF-based)\nMakerNoteMotorola\tundef\tExifIFD\t--> Motorola Tags\nMakerNoteNikon2\tundef\tExifIFD\t--> Nikon Type2 Tags\nMakerNoteNikon3\tundef\tExifIFD\t--> Nikon Tags\nMakerNoteNintendo\tundef\tExifIFD\t--> Nintendo Tags\nMakerNoteOlympus\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteOlympus2\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteOlympus3\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteLeica\tundef\tExifIFD\t--> Panasonic Tags\nMakerNoteLeica2\tundef\tExifIFD\t--> Panasonic Leica2 Tags\nMakerNoteLeica3\tundef\tExifIFD\t--> Panasonic Leica3 Tags\nMakerNoteLeica4\tundef\tExifIFD\t--> Panasonic Leica4 Tags\nMakerNoteLeica5\tundef\tExifIFD\t--> Panasonic Leica5 Tags\nMakerNoteLeica6\tundef\tExifIFD\t--> Panasonic Leica6 Tags\nMakerNoteLeica7\tundef\tExifIFD\t--> Panasonic Leica6 Tags\nMakerNoteLeica8\tundef\tExifIFD\t--> Panasonic Leica5 Tags\nMakerNoteLeica9\tundef\tExifIFD\t--> Panasonic Leica9 Tags\nMakerNoteLeica10\tundef\tExifIFD\t--> Panasonic Tags\nMakerNotePanasonic\tundef\tExifIFD\t--> Panasonic Tags\nMakerNotePanasonic2\tundef\tExifIFD\t--> Panasonic Type2 Tags\nMakerNotePanasonic3\tundef\tExifIFD\t--> Panasonic Tags\nMakerNotePentax\tundef\tExifIFD\t--> Pentax Tags\nMakerNotePentax2\tundef\tExifIFD\t--> Pentax Type2 Tags\nMakerNotePentax3\tundef\tExifIFD\t--> Casio Type2 Tags\nMakerNotePentax4\tundef\tExifIFD\t--> Pentax Type4 Tags\nMakerNotePentax5\tundef\tExifIFD\t--> Pentax Tags\nMakerNotePentax6\tundef\tExifIFD\t--> Pentax S1 Tags\nMakerNotePhaseOne\tundef\tExifIFD\t--> PhaseOne Tags\nMakerNoteReconyx\tundef\tExifIFD\t--> Reconyx Tags\nMakerNoteReconyx2\tundef\tExifIFD\t--> Reconyx Type2 Tags\nMakerNoteReconyx3\tundef\tExifIFD\t--> Reconyx Type3 Tags\nMakerNoteRicohPentax\tundef\tExifIFD\t--> Pentax Tags\nMakerNoteRicoh\tundef\tExifIFD\t--> Ricoh Tags\nMakerNoteRicoh2\tundef\tExifIFD\t--> Ricoh Type2 Tags\nMakerNoteRicohText\tundef\tExifIFD\t--> Ricoh Text Tags\nMakerNoteSamsung1a\tundef\tExifIFD\t(Samsung 'STMN' maker notes without PreviewImage)\nMakerNoteSamsung1b\tundef\tExifIFD\t--> Samsung Tags\nMakerNoteSamsung2\tundef\tExifIFD\t--> Samsung Type2 Tags\nMakerNoteSanyo\tundef\tExifIFD\t--> Sanyo Tags\nMakerNoteSanyoC4\tundef\tExifIFD\t--> Sanyo Tags\nMakerNoteSanyoPatch\tundef\tExifIFD\t--> Sanyo Tags\nMakerNoteSigma\tundef\tExifIFD\t--> Sigma Tags\nMakerNoteSony\tundef\tExifIFD\t--> Sony Tags\nMakerNoteSony2\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteSony3\tundef\tExifIFD\t--> Olympus Tags\nMakerNoteSony4\tundef\tExifIFD\t--> Sony PIC Tags\nMakerNoteSony5\tundef\tExifIFD\t--> Sony Tags\nMakerNoteSonyEricsson\tundef\tExifIFD\t--> Sony Ericsson Tags\nMakerNoteSonySRF\tundef\tExifIFD\t--> Sony SRF Tags\nMakerNoteUnknownText\tundef\tExifIFD\t(unknown text-based maker notes)\nMakerNoteUnknownBinary\tundef\tExifIFD\t(unknown binary maker notes)\nMakerNoteUnknown\tundef\tExifIFD\t--> Unknown Tags\n"
+	},
+	"0x9286": {
+		"tag_id": "0x9286",
+		"tag_name": "UserComment",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9290": {
+		"tag_id": "0x9290",
+		"tag_name": "SubSecTime",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(fractional seconds for ModifyDate)"
+	},
+	"0x9291": {
+		"tag_id": "0x9291",
+		"tag_name": "SubSecTimeOriginal",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(fractional seconds for DateTimeOriginal)"
+	},
+	"0x9292": {
+		"tag_id": "0x9292",
+		"tag_name": "SubSecTimeDigitized",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(fractional seconds for CreateDate)"
+	},
+	"0x932f": {
+		"tag_id": "0x932f",
+		"tag_name": "MSDocumentText",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x9330": {
+		"tag_id": "0x9330",
+		"tag_name": "MSPropertySetStorage",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x9331": {
+		"tag_id": "0x9331",
+		"tag_name": "MSDocumentTextPosition",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0x935c": {
+		"tag_id": "0x935c",
+		"tag_name": "ImageSourceData",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": "--> Photoshop DocumentData Tags"
+	},
+	"0x9400": {
+		"tag_id": "0x9400",
+		"tag_name": "AmbientTemperature",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": "(ambient temperature in degrees C, called Temperature by the EXIF spec.)"
+	},
+	"0x9401": {
+		"tag_id": "0x9401",
+		"tag_name": "Humidity",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": "(ambient relative humidity in percent)"
+	},
+	"0x9402": {
+		"tag_id": "0x9402",
+		"tag_name": "Pressure",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": "(air pressure in hPa or mbar)"
+	},
+	"0x9403": {
+		"tag_id": "0x9403",
+		"tag_name": "WaterDepth",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": "(depth under water in metres, negative for above water)"
+	},
+	"0x9404": {
+		"tag_id": "0x9404",
+		"tag_name": "Acceleration",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": "(directionless camera acceleration in units of mGal, or 10-5 m/s2)"
+	},
+	"0x9405": {
+		"tag_id": "0x9405",
+		"tag_name": "CameraElevationAngle",
+		"writable": "rational64s",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9999": {
+		"tag_id": "0x9999",
+		"tag_name": "XiaomiSettings",
+		"writable": "string!",
+		"group": "ExifIFD",
+		"notes": "--> JSON Tags"
+	},
+	"0x9a00": {
+		"tag_id": "0x9a00",
+		"tag_name": "XiaomiModel",
+		"writable": "string!",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0x9c9b": {
+		"tag_id": "0x9c9b",
+		"tag_name": "XPTitle",
+		"writable": "int8u",
+		"group": "IFD0",
+		"notes": "(tags 0x9c9b-0x9c9f are used by Windows Explorer; special characters in these values are converted to UTF-8 by default, or Windows Latin1 with the -L option. XPTitle is ignored by Windows Explorer if ImageDescription exists)"
+	},
+	"0x9c9c": {
+		"tag_id": "0x9c9c",
+		"tag_name": "XPComment",
+		"writable": "int8u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x9c9d": {
+		"tag_id": "0x9c9d",
+		"tag_name": "XPAuthor",
+		"writable": "int8u",
+		"group": "IFD0",
+		"notes": "(ignored by Windows Explorer if Artist exists)"
+	},
+	"0x9c9e": {
+		"tag_id": "0x9c9e",
+		"tag_name": "XPKeywords",
+		"writable": "int8u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0x9c9f": {
+		"tag_id": "0x9c9f",
+		"tag_name": "XPSubject",
+		"writable": "int8u",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xa000": {
+		"tag_id": "0xa000",
+		"tag_name": "FlashpixVersion",
+		"writable": "undef:",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa001": {
+		"tag_id": "0xa001",
+		"tag_name": "ColorSpace",
+		"writable": "int16u:",
+		"group": "ExifIFD",
+		"notes": "(the value of 0x2 is not standard EXIF. Instead, an Adobe RGB image is indicated by 'Uncalibrated' with an InteropIndex of 'R03'. The values 0xfffd and 0xfffe are also non-standard, and are used by some Sony cameras)",
+		"values": {
+			"0x1": "sRGB",
+			"0x2": "Adobe RGB",
+			"0xfffd": "Wide Gamut RGB",
+			"0xfffe": "ICC Profile",
+			"0xffff": "Uncalibrated"
+		}
+	},
+	"0xa002": {
+		"tag_id": "0xa002",
+		"tag_name": "ExifImageWidth",
+		"writable": "int16u:",
+		"group": "ExifIFD",
+		"notes": "(called PixelXDimension by the EXIF spec.)"
+	},
+	"0xa003": {
+		"tag_id": "0xa003",
+		"tag_name": "ExifImageHeight",
+		"writable": "int16u:",
+		"group": "ExifIFD",
+		"notes": "(called PixelYDimension by the EXIF spec.)"
+	},
+	"0xa004": {
+		"tag_id": "0xa004",
+		"tag_name": "RelatedSoundFile",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa005": {
+		"tag_id": "0xa005",
+		"tag_name": "InteropOffset",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> EXIF Tags"
+	},
+	"0xa010": {
+		"tag_id": "0xa010",
+		"tag_name": "SamsungRawPointersOffset",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa011": {
+		"tag_id": "0xa011",
+		"tag_name": "SamsungRawPointersLength",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa101": {
+		"tag_id": "0xa101",
+		"tag_name": "SamsungRawByteOrder",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa102": {
+		"tag_id": "0xa102",
+		"tag_name": "SamsungRawUnknown?",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa20b": {
+		"tag_id": "0xa20b",
+		"tag_name": "FlashEnergy",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa20c": {
+		"tag_id": "0xa20c",
+		"tag_name": "SpatialFrequencyResponse",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa20d": {
+		"tag_id": "0xa20d",
+		"tag_name": "Noise",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa20e": {
+		"tag_id": "0xa20e",
+		"tag_name": "FocalPlaneXResolution",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa20f": {
+		"tag_id": "0xa20f",
+		"tag_name": "FocalPlaneYResolution",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa210": {
+		"tag_id": "0xa210",
+		"tag_name": "FocalPlaneResolutionUnit",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(values 1, 4 and 5 are not standard EXIF)",
+		"values": {
+			"1": "None",
+			"2": "inches",
+			"3": "cm",
+			"4": "mm",
+			"5": "um"
+		}
+	},
+	"0xa211": {
+		"tag_id": "0xa211",
+		"tag_name": "ImageNumber",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa212": {
+		"tag_id": "0xa212",
+		"tag_name": "SecurityClassification",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa213": {
+		"tag_id": "0xa213",
+		"tag_name": "ImageHistory",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa214": {
+		"tag_id": "0xa214",
+		"tag_name": "SubjectLocation",
+		"writable": "int16u[2]",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa215": {
+		"tag_id": "0xa215",
+		"tag_name": "ExposureIndex",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa216": {
+		"tag_id": "0xa216",
+		"tag_name": "TIFF-EPStandardID",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa217": {
+		"tag_id": "0xa217",
+		"tag_name": "SensingMethod",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"1": "Not defined",
+			"2": "One-chip color area",
+			"3": "Two-chip color area",
+			"4": "Three-chip color area",
+			"5": "Color sequential area",
+			"7": "Trilinear",
+			"8": "Color sequential linear"
+		}
+	},
+	"0xa300": {
+		"tag_id": "0xa300",
+		"tag_name": "FileSource",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"1": "Film Scanner",
+			"2": "Reflection Print Scanner",
+			"3": "Digital Camera",
+			"\\x03\\x00\\x00\\x00": "Sigma Digital Camera"
+		}
+	},
+	"0xa301": {
+		"tag_id": "0xa301",
+		"tag_name": "SceneType",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"1": "Directly photographed"
+		}
+	},
+	"0xa302": {
+		"tag_id": "0xa302",
+		"tag_name": "CFAPattern",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa401": {
+		"tag_id": "0xa401",
+		"tag_name": "CustomRendered",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(only 0 and 1 are standard EXIF, but other values are used by Apple iOS devices)",
+		"values": {
+			"0": "Normal",
+			"1": "Custom",
+			"2": "HDR (no original saved)",
+			"3": "HDR (original saved)",
+			"4": "Original (for HDR)",
+			"6": "Panorama",
+			"7": "Portrait HDR",
+			"8": "Portrait"
+		}
+	},
+	"0xa402": {
+		"tag_id": "0xa402",
+		"tag_name": "ExposureMode",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Auto",
+			"1": "Manual",
+			"2": "Auto bracket"
+		}
+	},
+	"0xa403": {
+		"tag_id": "0xa403",
+		"tag_name": "WhiteBalance",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Auto",
+			"1": "Manual"
+		}
+	},
+	"0xa404": {
+		"tag_id": "0xa404",
+		"tag_name": "DigitalZoomRatio",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa405": {
+		"tag_id": "0xa405",
+		"tag_name": "FocalLengthIn35mmFormat",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(called FocalLengthIn35mmFilm by the EXIF spec.)"
+	},
+	"0xa406": {
+		"tag_id": "0xa406",
+		"tag_name": "SceneCaptureType",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "(the value of 4 is non-standard, and used by some Samsung models)",
+		"values": {
+			"0": "Standard",
+			"1": "Landscape",
+			"2": "Portrait",
+			"3": "Night",
+			"4": "Other"
+		}
+	},
+	"0xa407": {
+		"tag_id": "0xa407",
+		"tag_name": "GainControl",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "None",
+			"1": "Low gain up",
+			"2": "High gain up",
+			"3": "Low gain down",
+			"4": "High gain down"
+		}
+	},
+	"0xa408": {
+		"tag_id": "0xa408",
+		"tag_name": "Contrast",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Normal",
+			"1": "Low",
+			"2": "High"
+		}
+	},
+	"0xa409": {
+		"tag_id": "0xa409",
+		"tag_name": "Saturation",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Normal",
+			"1": "Low",
+			"2": "High"
+		}
+	},
+	"0xa40a": {
+		"tag_id": "0xa40a",
+		"tag_name": "Sharpness",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Normal",
+			"1": "Soft",
+			"2": "Hard"
+		}
+	},
+	"0xa40b": {
+		"tag_id": "0xa40b",
+		"tag_name": "DeviceSettingDescription",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xa40c": {
+		"tag_id": "0xa40c",
+		"tag_name": "SubjectDistanceRange",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Macro",
+			"2": "Close",
+			"3": "Distant"
+		}
+	},
+	"0xa420": {
+		"tag_id": "0xa420",
+		"tag_name": "ImageUniqueID",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa430": {
+		"tag_id": "0xa430",
+		"tag_name": "OwnerName",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(called CameraOwnerName by the EXIF spec.)"
+	},
+	"0xa431": {
+		"tag_id": "0xa431",
+		"tag_name": "SerialNumber",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": "(called BodySerialNumber by the EXIF spec.)"
+	},
+	"0xa432": {
+		"tag_id": "0xa432",
+		"tag_name": "LensInfo",
+		"writable": "rational64u[4]",
+		"group": "ExifIFD",
+		"notes": "(4 rational values giving focal and aperture ranges, called LensSpecification by the EXIF spec.)"
+	},
+	"0xa433": {
+		"tag_id": "0xa433",
+		"tag_name": "LensMake",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa434": {
+		"tag_id": "0xa434",
+		"tag_name": "LensModel",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa435": {
+		"tag_id": "0xa435",
+		"tag_name": "LensSerialNumber",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa436": {
+		"tag_id": "0xa436",
+		"tag_name": "ImageTitle",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa437": {
+		"tag_id": "0xa437",
+		"tag_name": "Photographer",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa438": {
+		"tag_id": "0xa438",
+		"tag_name": "ImageEditor",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa439": {
+		"tag_id": "0xa439",
+		"tag_name": "CameraFirmware",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa43a": {
+		"tag_id": "0xa43a",
+		"tag_name": "RAWDevelopingSoftware",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa43b": {
+		"tag_id": "0xa43b",
+		"tag_name": "ImageEditingSoftware",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa43c": {
+		"tag_id": "0xa43c",
+		"tag_name": "MetadataEditingSoftware",
+		"writable": "string",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xa460": {
+		"tag_id": "0xa460",
+		"tag_name": "CompositeImage",
+		"writable": "int16u",
+		"group": "ExifIFD",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Not a Composite Image",
+			"2": "General Composite Image",
+			"3": "Composite Image Captured While Shooting"
+		}
+	},
+	"0xa461": {
+		"tag_id": "0xa461",
+		"tag_name": "CompositeImageCount",
+		"writable": "int16u[2]",
+		"group": "ExifIFD",
+		"notes": "(2 values: 1. Number of source images, 2. Number of images used. Called SourceImageNumberOfCompositeImage by the EXIF spec.)"
+	},
+	"0xa462": {
+		"tag_id": "0xa462",
+		"tag_name": "CompositeImageExposureTimes",
+		"writable": "undef",
+		"group": "ExifIFD",
+		"notes": "(11 or more values: 1. Total exposure time period, 2. Total exposure of all source images, 3. Total exposure of all used images, 4. Max exposure time of source images, 5. Max exposure time of used images, 6. Min exposure time of source images, 7. Min exposure of used images, 8. Number of sequences, 9. Number of source images in sequence. 10-N. Exposure times of each source image. Called SourceExposureTimesOfCompositeImage by the EXIF spec.)"
+	},
+	"0xa480": {
+		"tag_id": "0xa480",
+		"tag_name": "GDALMetadata",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xa481": {
+		"tag_id": "0xa481",
+		"tag_name": "GDALNoData",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xa500": {
+		"tag_id": "0xa500",
+		"tag_name": "Gamma",
+		"writable": "rational64u",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xafc0": {
+		"tag_id": "0xafc0",
+		"tag_name": "ExpandSoftware",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xafc1": {
+		"tag_id": "0xafc1",
+		"tag_name": "ExpandLens",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xafc2": {
+		"tag_id": "0xafc2",
+		"tag_name": "ExpandFilm",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xafc3": {
+		"tag_id": "0xafc3",
+		"tag_name": "ExpandFilterLens",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xafc4": {
+		"tag_id": "0xafc4",
+		"tag_name": "ExpandScanner",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xafc5": {
+		"tag_id": "0xafc5",
+		"tag_name": "ExpandFlashLamp",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xb4c3": {
+		"tag_id": "0xb4c3",
+		"tag_name": "HasselbladRawImage",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbc01": {
+		"tag_id": "0xbc01",
+		"tag_name": "PixelFormat",
+		"writable": "no",
+		"group": "-",
+		"notes": "(tags 0xbc** are used in Windows HD Photo (HDP and WDP) images. The actual PixelFormat values are 16-byte GUID's but the leading 15 bytes, '6fddc324-4e03-4bfe-b1853-d77768dc9', have been removed below to avoid unnecessary clutter)",
+		"values": {
+			"0x5": "Black & White",
+			"0x8": "8-bit Gray",
+			"0x9": "16-bit BGR555",
+			"0xa": "16-bit BGR565",
+			"0xb": "16-bit Gray",
+			"0xc": "24-bit BGR",
+			"0xd": "24-bit RGB",
+			"0xe": "32-bit BGR",
+			"0xf": "32-bit BGRA",
+			"0x10": "32-bit PBGRA",
+			"0x11": "32-bit Gray Float",
+			"0x12": "48-bit RGB Fixed Point",
+			"0x13": "32-bit BGR101010",
+			"0x15": "48-bit RGB",
+			"0x16": "64-bit RGBA",
+			"0x17": "64-bit PRGBA",
+			"0x18": "96-bit RGB Fixed Point",
+			"0x19": "128-bit RGBA Float",
+			"0x1a": "128-bit PRGBA Float",
+			"0x1b": "128-bit RGB Float",
+			"0x1c": "32-bit CMYK",
+			"0x1d": "64-bit RGBA Fixed Point",
+			"0x1e": "128-bit RGBA Fixed Point",
+			"0x1f": "64-bit CMYK",
+			"0x20": "24-bit 3 Channels",
+			"0x21": "32-bit 4 Channels",
+			"0x22": "40-bit 5 Channels",
+			"0x23": "48-bit 6 Channels",
+			"0x24": "56-bit 7 Channels",
+			"0x25": "64-bit 8 Channels",
+			"0x26": "48-bit 3 Channels",
+			"0x27": "64-bit 4 Channels",
+			"0x28": "80-bit 5 Channels",
+			"0x29": "96-bit 6 Channels",
+			"0x2a": "112-bit 7 Channels",
+			"0x2b": "128-bit 8 Channels",
+			"0x2c": "40-bit CMYK Alpha",
+			"0x2d": "80-bit CMYK Alpha",
+			"0x2e": "32-bit 3 Channels Alpha",
+			"0x2f": "40-bit 4 Channels Alpha",
+			"0x30": "48-bit 5 Channels Alpha",
+			"0x31": "56-bit 6 Channels Alpha",
+			"0x32": "64-bit 7 Channels Alpha",
+			"0x33": "72-bit 8 Channels Alpha",
+			"0x34": "64-bit 3 Channels Alpha",
+			"0x35": "80-bit 4 Channels Alpha",
+			"0x36": "96-bit 5 Channels Alpha",
+			"0x37": "112-bit 6 Channels Alpha",
+			"0x38": "128-bit 7 Channels Alpha",
+			"0x39": "144-bit 8 Channels Alpha",
+			"0x3a": "64-bit RGBA Half",
+			"0x3b": "48-bit RGB Half",
+			"0x3d": "32-bit RGBE",
+			"0x3e": "16-bit Gray Half",
+			"0x3f": "32-bit Gray Fixed Point"
+		}
+	},
+	"0xbc02": {
+		"tag_id": "0xbc02",
+		"tag_name": "Transformation",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Horizontal (normal)",
+			"1": "Mirror vertical",
+			"2": "Mirror horizontal",
+			"3": "Rotate 180",
+			"4": "Rotate 90 CW",
+			"5": "Mirror horizontal and rotate 90 CW",
+			"6": "Mirror horizontal and rotate 270 CW",
+			"7": "Rotate 270 CW"
+		}
+	},
+	"0xbc03": {
+		"tag_id": "0xbc03",
+		"tag_name": "Uncompressed",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "No",
+			"1": "Yes"
+		}
+	},
+	"0xbc04": {
+		"tag_id": "0xbc04",
+		"tag_name": "ImageType",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"Bit 0": "Preview",
+			"Bit 1": "Page"
+		}
+	},
+	"0xbc80": {
+		"tag_id": "0xbc80",
+		"tag_name": "ImageWidth",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbc81": {
+		"tag_id": "0xbc81",
+		"tag_name": "ImageHeight",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbc82": {
+		"tag_id": "0xbc82",
+		"tag_name": "WidthResolution",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbc83": {
+		"tag_id": "0xbc83",
+		"tag_name": "HeightResolution",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbcc0": {
+		"tag_id": "0xbcc0",
+		"tag_name": "ImageOffset",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbcc1": {
+		"tag_id": "0xbcc1",
+		"tag_name": "ImageByteCount",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbcc2": {
+		"tag_id": "0xbcc2",
+		"tag_name": "AlphaOffset",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbcc3": {
+		"tag_id": "0xbcc3",
+		"tag_name": "AlphaByteCount",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xbcc4": {
+		"tag_id": "0xbcc4",
+		"tag_name": "ImageDataDiscard",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Full Resolution",
+			"1": "Flexbits Discarded",
+			"2": "HighPass Frequency Data Discarded",
+			"3": "Highpass and LowPass Frequency Data Discarded"
+		}
+	},
+	"0xbcc5": {
+		"tag_id": "0xbcc5",
+		"tag_name": "AlphaDataDiscard",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Full Resolution",
+			"1": "Flexbits Discarded",
+			"2": "HighPass Frequency Data Discarded",
+			"3": "Highpass and LowPass Frequency Data Discarded"
+		}
+	},
+	"0xc427": {
+		"tag_id": "0xc427",
+		"tag_name": "OceScanjobDesc",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc428": {
+		"tag_id": "0xc428",
+		"tag_name": "OceApplicationSelector",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc429": {
+		"tag_id": "0xc429",
+		"tag_name": "OceIDNumber",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc42a": {
+		"tag_id": "0xc42a",
+		"tag_name": "OceImageLogic",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc44f": {
+		"tag_id": "0xc44f",
+		"tag_name": "Annotations",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc4a5": {
+		"tag_id": "0xc4a5",
+		"tag_name": "PrintIM",
+		"writable": "undef",
+		"group": "IFD0",
+		"notes": "--> PrintIM Tags"
+	},
+	"0xc519": {
+		"tag_id": "0xc519",
+		"tag_name": "HasselbladXML",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> PLIST Tags"
+	},
+	"0xc51b": {
+		"tag_id": "0xc51b",
+		"tag_name": "HasselbladExif",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> EXIF Tags"
+	},
+	"0xc573": {
+		"tag_id": "0xc573",
+		"tag_name": "OriginalFileName",
+		"writable": "no",
+		"group": "-",
+		"notes": "(used by some obscure software)"
+	},
+	"0xc580": {
+		"tag_id": "0xc580",
+		"tag_name": "USPTOOriginalContentType",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"0": "Text or Drawing",
+			"1": "Grayscale",
+			"2": "Color"
+		}
+	},
+	"0xc5e0": {
+		"tag_id": "0xc5e0",
+		"tag_name": "CR2CFAPattern",
+		"writable": "no",
+		"group": "-",
+		"notes": "",
+		"values": {
+			"1 => '0 1 1 2'": "[Red,Green][Green,Blue]",
+			"4 => '1 0 2 1'": "[Green,Red][Blue,Green]",
+			"3 => '1 2 0 1'": "[Green,Blue][Red,Green]",
+			"2 => '2 1 1 0'": "[Blue,Green][Green,Red]"
+		}
+	},
+	"0xc612": {
+		"tag_id": "0xc612",
+		"tag_name": "DNGVersion",
+		"writable": "int8u[4]!",
+		"group": "IFD0",
+		"notes": "(tags 0xc612-0xcd48 are defined by the DNG specification unless otherwise noted. See https://helpx.adobe.com/photoshop/digital-negative.html for the specification)"
+	},
+	"0xc613": {
+		"tag_id": "0xc613",
+		"tag_name": "DNGBackwardVersion",
+		"writable": "int8u[4]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc614": {
+		"tag_id": "0xc614",
+		"tag_name": "UniqueCameraModel",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc615": {
+		"tag_id": "0xc615",
+		"tag_name": "LocalizedCameraModel",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc616": {
+		"tag_id": "0xc616",
+		"tag_name": "CFAPlaneColor",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc617": {
+		"tag_id": "0xc617",
+		"tag_name": "CFALayout",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": "",
+		"values": {
+			"1": "Rectangular",
+			"2": "Even columns offset down 1/2 row",
+			"3": "Even columns offset up 1/2 row",
+			"4": "Even rows offset right 1/2 column",
+			"5": "Even rows offset left 1/2 column",
+			"6": "Even rows offset up by 1/2 row, even columns offset left by 1/2 column",
+			"7": "Even rows offset up by 1/2 row, even columns offset right by 1/2 column",
+			"8": "Even rows offset down by 1/2 row, even columns offset left by 1/2 column",
+			"9": "Even rows offset down by 1/2 row, even columns offset right by 1/2 column"
+		}
+	},
+	"0xc618": {
+		"tag_id": "0xc618",
+		"tag_name": "LinearizationTable",
+		"writable": "int16u[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc619": {
+		"tag_id": "0xc619",
+		"tag_name": "BlackLevelRepeatDim",
+		"writable": "int16u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61a": {
+		"tag_id": "0xc61a",
+		"tag_name": "BlackLevel",
+		"writable": "rational64u[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61b": {
+		"tag_id": "0xc61b",
+		"tag_name": "BlackLevelDeltaH",
+		"writable": "rational64s[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61c": {
+		"tag_id": "0xc61c",
+		"tag_name": "BlackLevelDeltaV",
+		"writable": "rational64s[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61d": {
+		"tag_id": "0xc61d",
+		"tag_name": "WhiteLevel",
+		"writable": "int32u[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61e": {
+		"tag_id": "0xc61e",
+		"tag_name": "DefaultScale",
+		"writable": "rational64u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc61f": {
+		"tag_id": "0xc61f",
+		"tag_name": "DefaultCropOrigin",
+		"writable": "int32u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc620": {
+		"tag_id": "0xc620",
+		"tag_name": "DefaultCropSize",
+		"writable": "int32u[2]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc621": {
+		"tag_id": "0xc621",
+		"tag_name": "ColorMatrix1",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc622": {
+		"tag_id": "0xc622",
+		"tag_name": "ColorMatrix2",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc623": {
+		"tag_id": "0xc623",
+		"tag_name": "CameraCalibration1",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc624": {
+		"tag_id": "0xc624",
+		"tag_name": "CameraCalibration2",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc625": {
+		"tag_id": "0xc625",
+		"tag_name": "ReductionMatrix1",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc626": {
+		"tag_id": "0xc626",
+		"tag_name": "ReductionMatrix2",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc627": {
+		"tag_id": "0xc627",
+		"tag_name": "AnalogBalance",
+		"writable": "rational64u[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc628": {
+		"tag_id": "0xc628",
+		"tag_name": "AsShotNeutral",
+		"writable": "rational64u[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc629": {
+		"tag_id": "0xc629",
+		"tag_name": "AsShotWhiteXY",
+		"writable": "rational64u[2]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc62a": {
+		"tag_id": "0xc62a",
+		"tag_name": "BaselineExposure",
+		"writable": "rational64s!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc62b": {
+		"tag_id": "0xc62b",
+		"tag_name": "BaselineNoise",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc62c": {
+		"tag_id": "0xc62c",
+		"tag_name": "BaselineSharpness",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc62d": {
+		"tag_id": "0xc62d",
+		"tag_name": "BayerGreenSplit",
+		"writable": "int32u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc62e": {
+		"tag_id": "0xc62e",
+		"tag_name": "LinearResponseLimit",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc62f": {
+		"tag_id": "0xc62f",
+		"tag_name": "CameraSerialNumber",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc630": {
+		"tag_id": "0xc630",
+		"tag_name": "DNGLensInfo",
+		"writable": "rational64u[4]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc631": {
+		"tag_id": "0xc631",
+		"tag_name": "ChromaBlurRadius",
+		"writable": "rational64u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc632": {
+		"tag_id": "0xc632",
+		"tag_name": "AntiAliasStrength",
+		"writable": "rational64u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc633": {
+		"tag_id": "0xc633",
+		"tag_name": "ShadowScale",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc634": {
+		"tag_id": "0xc634",
+		"tag_name": "MakerNote",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "SR2Private\t-\tIFD0\t--> Sony SR2Private Tags\nDNGAdobeData\tundef!\tIFD0\t--> DNG AdobeData Tags\nMakerNotePentax\t-\tIFD0\t--> Pentax Tags\nMakerNotePentax5\t-\tIFD0\t--> Pentax Tags\nMakerNoteRicohPentax\t-\tIFD0\t--> Pentax Tags\nMakerNoteDJIInfo\t-\tIFD0\t--> DJI Info Tags\nDNGPrivateData\tint8u!\tIFD0\t\n "
+	},
+	"0xc635": {
+		"tag_id": "0xc635",
+		"tag_name": "MakerNoteSafety",
+		"writable": "int16u",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Unsafe",
+			"1": "Safe"
+		}
+	},
+	"0xc640": {
+		"tag_id": "0xc640",
+		"tag_name": "RawImageSegmentation",
+		"writable": "no",
+		"group": "-",
+		"notes": "(used in segmented Canon CR2 images. 3 numbers: 1. Number of segments minus one; 2. Pixel width of segments except last; 3. Pixel width of last segment)"
+	},
+	"0xc65a": {
+		"tag_id": "0xc65a",
+		"tag_name": "CalibrationIlluminant1",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "--> EXIF LightSource Values"
+	},
+	"0xc65b": {
+		"tag_id": "0xc65b",
+		"tag_name": "CalibrationIlluminant2",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "--> EXIF LightSource Values"
+	},
+	"0xc65c": {
+		"tag_id": "0xc65c",
+		"tag_name": "BestQualityScale",
+		"writable": "rational64u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc65d": {
+		"tag_id": "0xc65d",
+		"tag_name": "RawDataUniqueID",
+		"writable": "int8u[16]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc660": {
+		"tag_id": "0xc660",
+		"tag_name": "AliasLayerMetadata",
+		"writable": "no",
+		"group": "-",
+		"notes": "(used by Alias Sketchbook Pro)"
+	},
+	"0xc68b": {
+		"tag_id": "0xc68b",
+		"tag_name": "OriginalRawFileName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc68c": {
+		"tag_id": "0xc68c",
+		"tag_name": "OriginalRawFileData",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": "--> DNG OriginalRaw Tags"
+	},
+	"0xc68d": {
+		"tag_id": "0xc68d",
+		"tag_name": "ActiveArea",
+		"writable": "int32u[4]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc68e": {
+		"tag_id": "0xc68e",
+		"tag_name": "MaskedAreas",
+		"writable": "int32u[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc68f": {
+		"tag_id": "0xc68f",
+		"tag_name": "AsShotICCProfile",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": "--> ICC_Profile Tags"
+	},
+	"0xc690": {
+		"tag_id": "0xc690",
+		"tag_name": "AsShotPreProfileMatrix",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc691": {
+		"tag_id": "0xc691",
+		"tag_name": "CurrentICCProfile",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": "--> ICC_Profile Tags"
+	},
+	"0xc692": {
+		"tag_id": "0xc692",
+		"tag_name": "CurrentPreProfileMatrix",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6bf": {
+		"tag_id": "0xc6bf",
+		"tag_name": "ColorimetricReference",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Scene-referred",
+			"1": "Output-referred (ICC Profile Dynamic Range)",
+			"2": "Output-referred (High Dyanmic Range)"
+		}
+	},
+	"0xc6c5": {
+		"tag_id": "0xc6c5",
+		"tag_name": "SRawType",
+		"writable": "no",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6d2": {
+		"tag_id": "0xc6d2",
+		"tag_name": "PanasonicTitle",
+		"writable": "undef",
+		"group": "IFD0",
+		"notes": "(proprietary Panasonic tag used for baby/pet name, etc)"
+	},
+	"0xc6d3": {
+		"tag_id": "0xc6d3",
+		"tag_name": "PanasonicTitle2",
+		"writable": "undef",
+		"group": "IFD0",
+		"notes": "(proprietary Panasonic tag used for baby/pet name with age)"
+	},
+	"0xc6f3": {
+		"tag_id": "0xc6f3",
+		"tag_name": "CameraCalibrationSig",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6f4": {
+		"tag_id": "0xc6f4",
+		"tag_name": "ProfileCalibrationSig",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6f5": {
+		"tag_id": "0xc6f5",
+		"tag_name": "ProfileIFD",
+		"writable": "-",
+		"group": "IFD0",
+		"notes": "--> EXIF Tags"
+	},
+	"0xc6f6": {
+		"tag_id": "0xc6f6",
+		"tag_name": "AsShotProfileName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6f7": {
+		"tag_id": "0xc6f7",
+		"tag_name": "NoiseReductionApplied",
+		"writable": "rational64u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc6f8": {
+		"tag_id": "0xc6f8",
+		"tag_name": "ProfileName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6f9": {
+		"tag_id": "0xc6f9",
+		"tag_name": "ProfileHueSatMapDims",
+		"writable": "int32u[3]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6fa": {
+		"tag_id": "0xc6fa",
+		"tag_name": "ProfileHueSatMapData1",
+		"writable": "float[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6fb": {
+		"tag_id": "0xc6fb",
+		"tag_name": "ProfileHueSatMapData2",
+		"writable": "float[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6fc": {
+		"tag_id": "0xc6fc",
+		"tag_name": "ProfileToneCurve",
+		"writable": "float[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc6fd": {
+		"tag_id": "0xc6fd",
+		"tag_name": "ProfileEmbedPolicy",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Allow Copying",
+			"1": "Embed if Used",
+			"2": "Never Embed",
+			"3": "No Restrictions"
+		}
+	},
+	"0xc6fe": {
+		"tag_id": "0xc6fe",
+		"tag_name": "ProfileCopyright",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc714": {
+		"tag_id": "0xc714",
+		"tag_name": "ForwardMatrix1",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc715": {
+		"tag_id": "0xc715",
+		"tag_name": "ForwardMatrix2",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc716": {
+		"tag_id": "0xc716",
+		"tag_name": "PreviewApplicationName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc717": {
+		"tag_id": "0xc717",
+		"tag_name": "PreviewApplicationVersion",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc718": {
+		"tag_id": "0xc718",
+		"tag_name": "PreviewSettingsName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc719": {
+		"tag_id": "0xc719",
+		"tag_name": "PreviewSettingsDigest",
+		"writable": "int8u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc71a": {
+		"tag_id": "0xc71a",
+		"tag_name": "PreviewColorSpace",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Gray Gamma 2.2",
+			"2": "sRGB",
+			"3": "Adobe RGB",
+			"4": "ProPhoto RGB"
+		}
+	},
+	"0xc71b": {
+		"tag_id": "0xc71b",
+		"tag_name": "PreviewDateTime",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc71c": {
+		"tag_id": "0xc71c",
+		"tag_name": "RawImageDigest",
+		"writable": "int8u[16]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc71d": {
+		"tag_id": "0xc71d",
+		"tag_name": "OriginalRawFileDigest",
+		"writable": "int8u[16]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc71e": {
+		"tag_id": "0xc71e",
+		"tag_name": "SubTileBlockSize",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc71f": {
+		"tag_id": "0xc71f",
+		"tag_name": "RowInterleaveFactor",
+		"writable": "no",
+		"group": "-",
+		"notes": " "
+	},
+	"0xc725": {
+		"tag_id": "0xc725",
+		"tag_name": "ProfileLookTableDims",
+		"writable": "int32u[3]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc726": {
+		"tag_id": "0xc726",
+		"tag_name": "ProfileLookTableData",
+		"writable": "float[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc740": {
+		"tag_id": "0xc740",
+		"tag_name": "OpcodeList1",
+		"writable": "undef~!",
+		"group": "SubIFD",
+		"notes": "",
+		"values": {
+			"1": "WarpRectilinear",
+			"2": "WarpFisheye",
+			"3": "FixVignetteRadial",
+			"4": "FixBadPixelsConstant",
+			"5": "FixBadPixelsList",
+			"6": "TrimBounds",
+			"7": "MapTable",
+			"8": "MapPolynomial",
+			"9": "GainMap",
+			"10": "DeltaPerRow",
+			"11": "DeltaPerColumn",
+			"12": "ScalePerRow",
+			"13": "ScalePerColumn",
+			"14": "WarpRectilinear2"
+		}
+	},
+	"0xc741": {
+		"tag_id": "0xc741",
+		"tag_name": "OpcodeList2",
+		"writable": "undef~!",
+		"group": "SubIFD",
+		"notes": "",
+		"values": {
+			"1": "WarpRectilinear",
+			"2": "WarpFisheye",
+			"3": "FixVignetteRadial",
+			"4": "FixBadPixelsConstant",
+			"5": "FixBadPixelsList",
+			"6": "TrimBounds",
+			"7": "MapTable",
+			"8": "MapPolynomial",
+			"9": "GainMap",
+			"10": "DeltaPerRow",
+			"11": "DeltaPerColumn",
+			"12": "ScalePerRow",
+			"13": "ScalePerColumn",
+			"14": "WarpRectilinear2"
+		}
+	},
+	"0xc74e": {
+		"tag_id": "0xc74e",
+		"tag_name": "OpcodeList3",
+		"writable": "undef~!",
+		"group": "SubIFD",
+		"notes": "",
+		"values": {
+			"1": "WarpRectilinear",
+			"2": "WarpFisheye",
+			"3": "FixVignetteRadial",
+			"4": "FixBadPixelsConstant",
+			"5": "FixBadPixelsList",
+			"6": "TrimBounds",
+			"7": "MapTable",
+			"8": "MapPolynomial",
+			"9": "GainMap",
+			"10": "DeltaPerRow",
+			"11": "DeltaPerColumn",
+			"12": "ScalePerRow",
+			"13": "ScalePerColumn",
+			"14": "WarpRectilinear2"
+		}
+	},
+	"0xc761": {
+		"tag_id": "0xc761",
+		"tag_name": "NoiseProfile",
+		"writable": "double[n]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc763": {
+		"tag_id": "0xc763",
+		"tag_name": "TimeCodes",
+		"writable": "int8u[n]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc764": {
+		"tag_id": "0xc764",
+		"tag_name": "FrameRate",
+		"writable": "rational64s",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc772": {
+		"tag_id": "0xc772",
+		"tag_name": "TStop",
+		"writable": "rational64u[n]",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc789": {
+		"tag_id": "0xc789",
+		"tag_name": "ReelName",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc791": {
+		"tag_id": "0xc791",
+		"tag_name": "OriginalDefaultFinalSize",
+		"writable": "int32u[2]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc792": {
+		"tag_id": "0xc792",
+		"tag_name": "OriginalBestQualitySize",
+		"writable": "int32u[2]!",
+		"group": "IFD0",
+		"notes": "(called OriginalBestQualityFinalSize by the DNG spec)"
+	},
+	"0xc793": {
+		"tag_id": "0xc793",
+		"tag_name": "OriginalDefaultCropSize",
+		"writable": "rational64u[2]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7a1": {
+		"tag_id": "0xc7a1",
+		"tag_name": "CameraLabel",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7a3": {
+		"tag_id": "0xc7a3",
+		"tag_name": "ProfileHueSatMapEncoding",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Linear",
+			"1": "sRGB"
+		}
+	},
+	"0xc7a4": {
+		"tag_id": "0xc7a4",
+		"tag_name": "ProfileLookTableEncoding",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Linear",
+			"1": "sRGB"
+		}
+	},
+	"0xc7a5": {
+		"tag_id": "0xc7a5",
+		"tag_name": "BaselineExposureOffset",
+		"writable": "rational64s!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7a6": {
+		"tag_id": "0xc7a6",
+		"tag_name": "DefaultBlackRender",
+		"writable": "int32u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Auto",
+			"1": "None"
+		}
+	},
+	"0xc7a7": {
+		"tag_id": "0xc7a7",
+		"tag_name": "NewRawImageDigest",
+		"writable": "int8u[16]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7a8": {
+		"tag_id": "0xc7a8",
+		"tag_name": "RawToPreviewGain",
+		"writable": "double!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7aa": {
+		"tag_id": "0xc7aa",
+		"tag_name": "CacheVersion",
+		"writable": "int32u!",
+		"group": "SubIFD2",
+		"notes": " "
+	},
+	"0xc7b5": {
+		"tag_id": "0xc7b5",
+		"tag_name": "DefaultUserCrop",
+		"writable": "rational64u[4]!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xc7d5": {
+		"tag_id": "0xc7d5",
+		"tag_name": "NikonNEFInfo",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Nikon NEFInfo Tags"
+	},
+	"0xc7e9": {
+		"tag_id": "0xc7e9",
+		"tag_name": "DepthFormat",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "(tags 0xc7e9-0xc7ee added by DNG 1.5.0.0)",
+		"values": {
+			"0": "Unknown",
+			"1": "Linear",
+			"2": "Inverse"
+		}
+	},
+	"0xc7ea": {
+		"tag_id": "0xc7ea",
+		"tag_name": "DepthNear",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7eb": {
+		"tag_id": "0xc7eb",
+		"tag_name": "DepthFar",
+		"writable": "rational64u!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xc7ec": {
+		"tag_id": "0xc7ec",
+		"tag_name": "DepthUnits",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Meters"
+		}
+	},
+	"0xc7ed": {
+		"tag_id": "0xc7ed",
+		"tag_name": "DepthMeasureType",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "",
+		"values": {
+			"0": "Unknown",
+			"1": "Optical Axis",
+			"2": "Optical Ray"
+		}
+	},
+	"0xc7ee": {
+		"tag_id": "0xc7ee",
+		"tag_name": "EnhanceParams",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd2d": {
+		"tag_id": "0xcd2d",
+		"tag_name": "ProfileGainTableMap",
+		"writable": "undef!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xcd2e": {
+		"tag_id": "0xcd2e",
+		"tag_name": "SemanticName",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xcd30": {
+		"tag_id": "0xcd30",
+		"tag_name": "SemanticInstanceID",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xcd31": {
+		"tag_id": "0xcd31",
+		"tag_name": "CalibrationIlluminant3",
+		"writable": "int16u!",
+		"group": "IFD0",
+		"notes": "--> EXIF LightSource Values"
+	},
+	"0xcd32": {
+		"tag_id": "0xcd32",
+		"tag_name": "CameraCalibration3",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd33": {
+		"tag_id": "0xcd33",
+		"tag_name": "ColorMatrix3",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd34": {
+		"tag_id": "0xcd34",
+		"tag_name": "ForwardMatrix3",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd35": {
+		"tag_id": "0xcd35",
+		"tag_name": "IlluminantData1",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd36": {
+		"tag_id": "0xcd36",
+		"tag_name": "IlluminantData2",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd37": {
+		"tag_id": "0xcd37",
+		"tag_name": "IlluminantData3",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd38": {
+		"tag_id": "0xcd38",
+		"tag_name": "MaskSubArea",
+		"writable": "no",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xcd39": {
+		"tag_id": "0xcd39",
+		"tag_name": "ProfileHueSatMapData3",
+		"writable": "float[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd3a": {
+		"tag_id": "0xcd3a",
+		"tag_name": "ReductionMatrix3",
+		"writable": "rational64s[n]!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd3f": {
+		"tag_id": "0xcd3f",
+		"tag_name": "RGBTables",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd40": {
+		"tag_id": "0xcd40",
+		"tag_name": "ProfileGainTableMap2",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd41": {
+		"tag_id": "0xcd41",
+		"tag_name": "JUMBF",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Jpeg2000 Tags"
+	},
+	"0xcd43": {
+		"tag_id": "0xcd43",
+		"tag_name": "ColumnInterleaveFactor",
+		"writable": "int32u!",
+		"group": "SubIFD",
+		"notes": " "
+	},
+	"0xcd44": {
+		"tag_id": "0xcd44",
+		"tag_name": "ImageSequenceInfo",
+		"writable": "undef",
+		"group": "IFD0",
+		"notes": "--> DNG ImageSeq Tags"
+	},
+	"0xcd46": {
+		"tag_id": "0xcd46",
+		"tag_name": "ImageStats",
+		"writable": "undef!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd47": {
+		"tag_id": "0xcd47",
+		"tag_name": "ProfileDynamicRange",
+		"writable": "undef",
+		"group": "IFD0",
+		"notes": "--> DNG ProfileDynamicRange Tags"
+	},
+	"0xcd48": {
+		"tag_id": "0xcd48",
+		"tag_name": "ProfileGroupName",
+		"writable": "string!",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd49": {
+		"tag_id": "0xcd49",
+		"tag_name": "JXLDistance",
+		"writable": "float",
+		"group": "IFD0",
+		"notes": " "
+	},
+	"0xcd4a": {
+		"tag_id": "0xcd4a",
+		"tag_name": "JXLEffort",
+		"writable": "int32u",
+		"group": "IFD0",
+		"notes": "(values range from 1=low to 9=high)"
+	},
+	"0xcd4b": {
+		"tag_id": "0xcd4b",
+		"tag_name": "JXLDecodeSpeed",
+		"writable": "int32u",
+		"group": "IFD0",
+		"notes": "(values range from 1=slow to 4=fast)"
+	},
+	"0xcea1": {
+		"tag_id": "0xcea1",
+		"tag_name": "SEAL",
+		"writable": "string",
+		"group": "IFD0",
+		"notes": "--> XMP SEAL Tags"
+	},
+	"0xea1c": {
+		"tag_id": "0xea1c",
+		"tag_name": "Padding",
+		"writable": "undef!",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xea1d": {
+		"tag_id": "0xea1d",
+		"tag_name": "OffsetSchema",
+		"writable": "int32s!",
+		"group": "ExifIFD",
+		"notes": "(Microsoft's ill-conceived maker note offset difference)"
+	},
+	"0xfde8": {
+		"tag_id": "0xfde8",
+		"tag_name": "OwnerName",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": "(tags 0xfde8-0xfdea and 0xfe4c-0xfe58 are generated by Photoshop Camera RAW. Some names are the same as other EXIF tags, but ExifTool will avoid writing these unless they already exist in the file)"
+	},
+	"0xfde9": {
+		"tag_id": "0xfde9",
+		"tag_name": "SerialNumber",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfdea": {
+		"tag_id": "0xfdea",
+		"tag_name": "Lens",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe00": {
+		"tag_id": "0xfe00",
+		"tag_name": "KDC_IFD",
+		"writable": "-",
+		"group": "-",
+		"notes": "--> Kodak KDC_IFD Tags (used in some Kodak KDC images)"
+	},
+	"0xfe4c": {
+		"tag_id": "0xfe4c",
+		"tag_name": "RawFile",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe4d": {
+		"tag_id": "0xfe4d",
+		"tag_name": "Converter",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe4e": {
+		"tag_id": "0xfe4e",
+		"tag_name": "WhiteBalance",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe51": {
+		"tag_id": "0xfe51",
+		"tag_name": "Exposure",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe52": {
+		"tag_id": "0xfe52",
+		"tag_name": "Shadows",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe53": {
+		"tag_id": "0xfe53",
+		"tag_name": "Brightness",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe54": {
+		"tag_id": "0xfe54",
+		"tag_name": "Contrast",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe55": {
+		"tag_id": "0xfe55",
+		"tag_name": "Saturation",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe56": {
+		"tag_id": "0xfe56",
+		"tag_name": "Sharpness",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe57": {
+		"tag_id": "0xfe57",
+		"tag_name": "Smoothness",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	},
+	"0xfe58": {
+		"tag_id": "0xfe58",
+		"tag_name": "MoireFilter",
+		"writable": "string/",
+		"group": "ExifIFD",
+		"notes": " "
+	}
+}

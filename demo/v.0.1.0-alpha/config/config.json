@@ -1,0 +1,92 @@
+{
+	"system": {
+		"app_name": "Simple Image Gallery",
+		"copyright": "&copy;%s Erik Bachmann",
+		"favicon": "./config/ebp.icon.ico"
+	},
+	"process": {
+		"progressbar_size": 30,
+		"progressbar_lenght": 50
+	},
+	"display": {
+		"exif": {
+			"icon": "./icons/exif_32.jpg",
+			"logo": "./icons/exif_200x260.jpg"
+		},
+		"iptc": {
+			"icon": "./icons/iptc-logo-32px.jpg",
+			"logo": "./icons/iptc-logo-400px.jpg"
+		},
+		"slide": {
+			"loop": true,
+			"delay": 10
+		},
+		"figure_template": "<figure class='subfolder'>\n\t<figcaption><span class='figure_icon'>&#x1F5BC;</span><span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='thumb' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
+		
+		"figure_template_dir": "<figure class='subfolder'>\n\t<figcaption><span class='figure_icon'>&#x1F4C1;</span><span class='figcaption_text'>%s</figcaption>\n\t<span class='figcaption_image'>\n\t<a href='?path=%s'>\n\t\t<img class='thumb' src='data:jpg;base64, %s' title='%s'>\n\t</a>\n\t</span>\n</figure>",
+		
+		"thumb_max_width": 300,
+		"thumb_max_height": 300,
+		"home_url": "https://clicketyclick.github.io/",
+		"breadcrumptrail": "&#x1F35E;&hellip;: "
+	},
+	"data": {
+		"virtual_root": "./",
+		"data_root": "./data/",
+		"data_root": "W:/gallery/",
+		"data_root": "./examples/",
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
+	},
+	"images": {
+		"image_resize_type": "resampled",
+		"image_resize_type": "resized",
+		"image_resize_type": "scale",
+		"thumb_max_width": 300,
+		"thumb_max_height": 300,
+		"Simple_display_max_width": 1200,
+		"Simple_display_max_height": 1200,
+		"UHD_display_max_width": 3840,
+		"UHD_display_max_height": 2160,
+		"4K_display_max_width": 4096,
+		"4K_display_max_height": 2160,
+		"CAM_display_max_width": 3872,
+		"CAM_display_max_height": 2592,
+		"display_max_width": 3872,
+		"display_max_height": 2592,
+		"crop": 0
+	},
+	"maps": {
+		"map_source": "google",
+		"_map_source": "osm",
+		"map_window_margin": 0.0005,
+		"map_types": {
+			"google": {
+				"tag": "Google map",
+				"link_stub": "https://maps.google.com/maps?q={$lat},{$lon}",
+				"link_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}",
+				"embed_tag": "Image map",
+				"embed_stub": "https://maps.google.com/maps?q={$lat},{$lon}&output=embed",
+				"embed_stub": "https://maps.google.com/maps?q={$lat},{$lon}&ll={$lat},{$lon}&z={$zoom}&output=embed&hl=en"
+			},
+			"osm": {
+				"tag": "<b>Open Street map</b>",
+				"link_stub": "https://www.openstreetmap.org/#map={$zoom}/{$lat}/{$lon}",
+				"embed_tag": "Image map",
+				"embed_stub": "https://www.openstreetmap.org/export/embed.html?bbox={$lon_margin_lower}%%2C{$lat_margin_lower}%%2C{$lon_margin_higher}%%2C{$lat_margin_higher}&amp;layer=mapnik"
+			}
+		}
+	},
+	"exif": {},
+	"database": {
+		"_file_name": "database/data.w2.db",
+		"_file_name": "database/data.w3.db",
+		"file_name": "database/data.db",
+		"image_ext": [
+			"jpg",
+			"JPEG"
+		]
+	}
+}

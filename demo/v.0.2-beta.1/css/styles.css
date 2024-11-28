@@ -1,0 +1,196 @@
+/**
+ *   @file       styles.css
+ *   @brief      $(Brief description)
+ *   @details    $(More details)
+ *   
+ *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
+ *   @since      2024-11-11T06:14:19 / ErBa
+ *   @version    @include version.txt
+ */
+
+body {
+	background-color: black;
+	color: white;
+}
+a {
+	color: cyan;
+}
+
+.preformatted {
+    font-family: monospace;
+    white-space: pre;
+}
+
+summary.debug {
+	background-color: black;
+	background-color: yellow;
+	color: red;
+	text-indent: 5px;
+}
+details.debug {
+	background-color: black;
+	display: block;
+	color: yellow;
+	text-indent: 25px;
+	/* Preformatted*/
+    font-family: monospace;
+    white-space: pre;
+}
+
+.display {
+	float: right;
+	max-width: 1200px;
+	max-height: 1000px;
+	max-width: 70%;
+	max-height: 90%;
+	position: absolute; 
+	top: 50px;
+	right: 0;
+}
+
+.flag {
+	float: left;
+	width:64px;
+	height:auto;
+	border: 1px solid white;
+	margin: 5px;
+}
+
+.flag_mini {
+	width:32px;
+	height:auto;
+}
+
+.map_iframe {
+	width: 300px;
+	height:300px;
+	/*float: left;
+	position: absolute; 
+	bottom: 0;
+	*/
+}
+.headline {
+	font-weight: bold;
+	color: yellow;
+}
+
+.figcaption_text {
+	font-size: x-small;
+}
+.figcaption_image {
+  /* Center image in figure */
+  display: block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.figure_icon {
+	background-color: black;
+	color: yellow;
+}
+
+.subfolder {
+	background-color: #003030;
+	float: left;
+	border: 1px solid white;
+/*	max-width:	120px;
+	max-height:	120px;
+	width:	100px;
+	width:	120px;
+*/
+	max-width:	220px;
+	max-height:	220px;
+/*
+	width:	150px;
+	height:	160px;
+*/
+	width:	220px;
+	height:	180px;
+
+	padding: 2px;
+	margin: 2px;
+	display: block;
+	vertical-align: middle;
+}
+.subfolder_icon {
+	border: 1px solid white;
+/*
+	max-width:	100%;
+	max-height:	80px;
+	max-height:	120px;
+*/
+}
+.thumb {
+	border: 1px solid white;
+/*
+	max-width:	100%;
+	max-height:	80px;
+	max-height:	120px;
+	*/
+	max-width:	210px;
+	max-height:	210px;
+}
+
+
+button {
+  transition-duration: 0.4s;
+  border-radius: 8px;	/*Rounded corner*/
+}
+
+button:hover {
+  background-color: #04AA6D; /* Green */
+  color: white;
+}
+button:hover:disabled {
+  background-color: gray;
+  color: yellow;
+  opacity: 0.6;
+  cursor: not-allowed;	/* Not allowed sign */
+}
+
+
+.iptc_key, .exif_key {
+	color: yellow;
+}
+.exif_group {
+	color: cyan;
+}
+
+.iptc_value {
+	color: lightgreen;
+}
+.slide_id {
+	font-size: x-small;
+	 
+ }
+.translate {
+		float: right;
+
+}
+
+.type_icon {
+	max-height:	16px;
+	max-width:	16px;
+	max-height:	12px;
+	max-width:	12px;
+}
+
+.db_name {
+	float: right;
+}
+
+
+.iptc_location_tag,
+.iptc_credit_tag,
+.iptc_source_tag,
+.iptc_location_tag {
+	font-weight: bold;
+}
+
+.iptc_location,
+.iptc_credit,
+.iptc_source,
+.iptc_location {
+	color: cyan;
+}

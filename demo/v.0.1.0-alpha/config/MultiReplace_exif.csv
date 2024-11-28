@@ -1,0 +1,2 @@
+Selected,Find,Replace,WholeWord,MatchCase,UseVariables,Regex,Extended,Comments
+1,"(0x0...)	(.*)	(.*)	(.*)	(.*)","{""tag_id"": ""\\1"",	""tag_name"": ""\\2"",	""writable"": ""\\3"",	""group"": ""\\4"",	""notes"": ""\\5""},",0,0,0,0,1,"EXIF tags: https://exiftool.org/TagNames/EXIF.html"
