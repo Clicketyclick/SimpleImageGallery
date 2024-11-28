@@ -285,4 +285,91 @@ function status( $tag, $value )
 	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
 }
 
+
+/**
+ *   @brief      $(Brief description)
+ *   
+ *   @param [in]	$key	$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    $(More details)
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-11-28T10:07:58
+ */
+
+function timer_set( $key )
+{
+    if ( ! $GLOBALS['timer'] )
+        return;
+
+    if ( ! isset($GLOBALS['timers'][$key]['start']) )
+    {
+        $GLOBALS['timers'][$key]['start'] = microtime( TRUE) ;
+        //debug( $GLOBALS['timers'][$key]['start'] . "   {$_SERVER["REQUEST_TIME_FLOAT"]} ", "$key start");
+    }
+    else
+    {
+        $GLOBALS['timers'][$key]['end'] = microtime( TRUE) ;
+        //debug( $GLOBALS['timers'][$key]['end'], "$key end" );
+    }
+}   // timer_set()
+
+
+/**
+ *   @brief      Build output from $GLOBALS['timers']
+ *   
+ *   @return     HTML table as string
+ *   
+ *   @details    
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   
+ *   @since      2024-11-28T10:11:18
+ */
+function timer_show()
+{
+    $out    = '<table>';
+
+    foreach( $GLOBALS['timers'] as $timer => $timerdata )
+    {
+        $timerdata['start'] -= $_SERVER["REQUEST_TIME_FLOAT"];
+        $timerdata['end']   -= $_SERVER["REQUEST_TIME_FLOAT"];
+        $dif                = $timerdata['end'] - $timerdata['start'] ;
+
+        $out    .= sprintf( "<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%s</td><tr>"
+        ,   $timer ?? '--'
+        ,   isset( $timerdata['start'] ) 
+            ?   $timerdata['start'] 
+            :   '!!' 
+        ,   isset( $timerdata['end'] )
+            ?   $timerdata['end'] 
+            :   '!!'
+        ,   1 < intval($dif)
+            ?   $dif . '!!' 
+            :   $dif . '_'
+        ,   isset( $timerdata['note'] ) 
+            ?   $timerdata['note'] 
+            :   '?'
+        );
+    }
+    $out    .= "</table>";
+
+    return( $out );
+}   // timer_show()
+
 ?>

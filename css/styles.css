@@ -194,3 +194,25 @@ button:hover:disabled {
 .iptc_location {
 	color: cyan;
 }
+
+/*
+.welcome:before {
+	break-before: avoid;
+	white-space: nowrap;
+	display: contents
+}
+*/
+.welcome_summary {
+	break-before: avoid;
+	padding-left: 10px;
+	display:inline;
+	white-space: nowrap;
+	display: inline;
+	text-align-last: center;
+}
+.welcome {
+	break-before: avoid;
+	display:inline;
+	white-space: nowrap;
+	display: contents;
+}

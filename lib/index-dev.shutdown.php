@@ -41,32 +41,7 @@ function shutdown()
 	verbose( getRandomImage()  , 'Random');
 
     echo "</table>";
-    echo "<table>";
-
-foreach( $GLOBALS['timers'] as $timer => $timerdata )
-{
-    $timerdata['start'] -= $_SERVER["REQUEST_TIME_FLOAT"];
-    $timerdata['end']   -= $_SERVER["REQUEST_TIME_FLOAT"];
-/*    $valid_start    = $timerdata['start'] ?? FALSE;
-    $valid_end      = $timerdata['end'] ?? FALSE;
-    $dif1            = ( $timerdata['end'] ?? 0 ) - ($timerdata['start'] ?? 0 );
-*/
-    $dif            = $timerdata['end'] - $timerdata['start'] ;
-    //printf( "<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><tr>"
-    //printf( "<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><tr>"
-    printf( "<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%s</td><tr>"
-    ,   $timer ?? '--'
-    ,   isset( $timerdata['start'] ) ? $timerdata['start'] : '!!' 
-    ,   isset( $timerdata['end'] ) ? $timerdata['end'] : '!!'
-    ,   1 < intval($dif) ? $dif . '!!' : $dif . '_'
-    ,   isset( $timerdata['note'] ) ? $timerdata['note'] : '?'
-    //,   var_export( $timerdata, TRUE )
-    
-    );
-}
-
-    echo "</table>";
-
+    echo timer_show();
     echo "</details>";
 }   // shutdown()
 

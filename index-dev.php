@@ -28,6 +28,7 @@ echo '
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>SIG - Simple Image Gallery</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/display.js"></script>
@@ -104,9 +105,11 @@ echo "<a class='translate' href='{$escaped_url}&browser:language="
     )
 .   "' title='". ___('shift_language') ."'>A文</span></a>";
 
-
 // Database name on top
 echo "<span class='db_name'>{$GLOBALS['config']['database']['file_name']}</span>";
+
+echo "&nbsp;<span class='welcome'><details class='welcome'><summary class='welcome_summary'>[".___('welcome')."]</summary>".___('welcome_intro')."</details></span>";
+
 // Clear before folders
 echo "<br clear=both><hr>";
 
@@ -592,7 +595,8 @@ echo '
         $output .= "<br clear=both><span class='iptc_location_tag'>"
         .   ___('iptc_location_tag')
         .   "</span>: <span class='iptc_location'>"
-        .   ( $iptc['ContentLocationName'][0] ?? implode( ', ', $ContentLocationName ) )
+        .   ( $iptc['ContentLocationName'][0] ?? str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) )
+        //.   ( $iptc['ContentLocationName'][0] ?? implode( ', ', $ContentLocationName ) )
         .   '</span>'
         ;
 

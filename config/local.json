@@ -1,4 +1,12 @@
 {
+	"welcome": {
+		"en": "&#x1F64B; Welcome to Simple Image Gallery (SIG)",
+		"da": "&#x1F64B; Velkommen til Simple Image Gallery (SIG)"
+	},
+
+	"welcome_intro": {
+		"en": "&#x1F6C8; A simple gallery viewer.<br>Below are a number of directories which contain images.<br>The images in the diretory are listed when you open it. And the individual image with metadata is displayed when you select it.<br>When viewing images, you can scroll forward <kbd>&rarr;</kbd> and back <kbd>&larr;</kbd> - or close the view <kbd>&uarr;</kbd><br>You can always navigate back with the 'Breadcrumb trail' at the top: Click on [.] for the front page or e.g. [2024] for a directory.",	"da": "&#x1F6C8; En enkel galleriviser.<br>Nedenfor er der en række kataloger, som indeholder billeder.<br>Billederne i kataloget bliver listet, når du åbner det. Og det enkelte billede med metadata bliver vist, når du vælger det.<br>Ved visning af billeder kan du bladre frem <kbd>&rarr;</kbd> og tilbage <kbd>&larr;</kbd> - eller lukke visningen <kbd>&uarr;</kbd><br>Du kan hele tiden navigere tilbage med 'Brødkrummesporet' øverst: Klik på [.] for forsiden eller fx. [2024] for et katalog."
+	},
 	"iptc_location_tag": {
 		"en": "Location",
 		"da": "Sted"
