@@ -18,12 +18,14 @@
  *  logging         Generates log intry in $GLOBALS['logfile'] if $GLOBALS['logging'] flag set
  *  self            Return string w. file.function.stringtoken
  *  progress_per    Generates a user-level message foreach x itterations
+ *  status
+ *  timer_set       timer_set starts or ends timer slot in listing
+ *  timer_show      Build output from $GLOBALS['timers']
  *   
- *  @todo      Update headers
  *  @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *  @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *  @since      2022-12-03T09:02:25 / Erik Bachmann
- *  @version    2024-02-28T06:23:44 / Erik Bachmann
+ *  @version    2024-11-28T12:16:33 / Erik Bachmann
  */
  
 //---------------------------------------------------------------------
@@ -280,25 +282,45 @@ function state( $tag, $value )
 	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
 }
 */
-function status( $tag, $value )
-{
-	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
-}
 
 
 /**
- *   @brief      $(Brief description)
+ *   @brief      Prints formated one-liner with key, value
  *   
- *   @param [in]	$key	$(description)
- *   @return     $(Return description)
- *   
- *   @details    $(More details)
+ *   @param [in]	$tag	Key
+ *   @param [in]	$value	Value
  *   
  *   @code
  *   @endcode
 @verbatim
 @endverbatim
+ *   
+ *   @since      2024-11-28T12:18:22
+ */
 
+function status( $tag, $value )
+{
+	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );
+}   // status()
+
+//----------------------------------------------------------------------
+
+/**
+ *   @brief      timer_set starts or ends timer slot in listing
+ *   
+ *   @param [in]	$key	key for identifying entry
+ *   @param [in]	$note	Note added to entry
+ *   
+ *   @details    Creates entry in timer table: Start, end, note
+ *   
+ *   @code
+ *   timer_set('mykey', 'test');
+ *   :
+ *   timer_set('mykey');
+ *   echo timer_show();
+ *   @endcode
+@verbatim
+@endverbatim
  *   
  *   @todo       
  *   @bug        
@@ -307,8 +329,7 @@ function status( $tag, $value )
  *   @see        https://
  *   @since      2024-11-28T10:07:58
  */
-
-function timer_set( $key )
+function timer_set( $key, $note = FALSE )
 {
     if ( ! $GLOBALS['timer'] )
         return;
@@ -316,34 +337,68 @@ function timer_set( $key )
     if ( ! isset($GLOBALS['timers'][$key]['start']) )
     {
         $GLOBALS['timers'][$key]['start'] = microtime( TRUE) ;
-        //debug( $GLOBALS['timers'][$key]['start'] . "   {$_SERVER["REQUEST_TIME_FLOAT"]} ", "$key start");
+        $backtrace  = debug_backtrace()[1] ?? debug_backtrace()[0] ;
+        $backtrace  = debug_backtrace()[0] ;
+        $GLOBALS['timers'][$key]['trace'] = sprintf( "%s[%s](%s)"
+            ,   basename($backtrace['file'])
+            ,   $backtrace['line']
+            //,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : $backtrace['function']
+            ,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : debug_backtrace()[0]['function']
+            );
+            /** /
+            echo "<pre>".__FUNCTION__;
+            var_export($GLOBALS['timers'][$key]['trace']);
+            //var_export(debug_backtrace());
+            exit;
+            /**/
     }
     else
     {
         $GLOBALS['timers'][$key]['end'] = microtime( TRUE) ;
-        //debug( $GLOBALS['timers'][$key]['end'], "$key end" );
     }
+    if ( $note )
+        $GLOBALS['timers'][$key]['note']  ??= $note;
 }   // timer_set()
 
+//----------------------------------------------------------------------
 
 /**
  *   @brief      Build output from $GLOBALS['timers']
  *   
  *   @return     HTML table as string
  *   
- *   @details    
- *   
+ *   @details    List details from timing:
+ *   - Start    Time from script start
+ *   - End      End time stamp
+ *   - Duration Runtime between start and End
+ *   - Note     Note added to timer_set()
+ *
  *   @code
+ *   timer_set('mykey', 'test');
+ *   :
+ *   timer_set('mykey');
+ *   echo timer_show();
  *   @endcode
 @verbatim
+<table class="timer_table">
+<caption>Timing</caption>
+<tbody>
+<tr><th>Key</th><th>Start</th><th>End</th><th>Duration</th><th>Note</th></tr>
+<tr><td>mykey</td><td>0.001</td><td>0.005</td><td>0.003</td><td>test</td></tr><tr></tr>
+:
+</tbody>
+</table>
 @endverbatim
- *   
+ * 
+ *  |Key     | Start |End   |Duration | Note |
+ *  ---|---|---|---|---
+ *  |_header |0.001 | 0.005 | 0.003   | test |
  *   
  *   @since      2024-11-28T10:11:18
  */
 function timer_show()
 {
-    $out    = '<table>';
+    $out    = "<table class='timer_table'>\n<caption>Timing</caption>\n<tr><th>Key</th><th>Start</th><th>End</th><th>Duration</th><th>Note</th><th>Trace</th></tr>\n";
 
     foreach( $GLOBALS['timers'] as $timer => $timerdata )
     {
@@ -351,8 +406,8 @@ function timer_show()
         $timerdata['end']   -= $_SERVER["REQUEST_TIME_FLOAT"];
         $dif                = $timerdata['end'] - $timerdata['start'] ;
 
-        $out    .= sprintf( "<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%s</td><tr>"
-        ,   $timer ?? '--'
+        $out    .= sprintf( "<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%s</td><td>%s</td><tr>\n"
+        ,   $timer ?? '--' 
         ,   isset( $timerdata['start'] ) 
             ?   $timerdata['start'] 
             :   '!!' 
@@ -365,9 +420,10 @@ function timer_show()
         ,   isset( $timerdata['note'] ) 
             ?   $timerdata['note'] 
             :   '?'
+        ,   $timerdata['trace']
         );
     }
-    $out    .= "</table>";
+    $out    .= "\n</table>";
 
     return( $out );
 }   // timer_show()
