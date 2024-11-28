@@ -8,8 +8,8 @@ All functionallity is build in PHP, JavaScript and SQL on top of a SQLite databa
 This is heavyly inspired by [Single File PHP Gallery](https://sye.dk/sfpg/), but build from scratch.
 _Single File PHP Gallery_ is a nice out-of-the-box gallery app. But has it's issues with handling larger collection of images (YES! I'm impatient).
 
-My own collection holds more than 89,000 images in 1,700 directories (or >~ 630GB).
-And I do NOT want to load that onto a webserver!
+My own collection holds more than 250,000 images. And I do NOT want to load that onto a webserver!
+
 
 
 ## Pros and cons of **Simple Image Gallery**
@@ -31,6 +31,46 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
+ 
+<table  width=100%>
+<tr><td width=100%>
+	<figure style='float: right;'>
+	  <img src='doc/sig_002.jpg' width=300px height=auto>
+	  <figcaption>Directory list.</figcaption>
+	</figure> 
+
+	List of subdirectories and individual images
+</td></tr>
+
+<tr><td>
+	<figure style='float: right;'>
+	  <img src='doc/sig_003.jpg' width=300px height=auto>
+	  <figcaption>Image view.</figcaption>
+	</figure> 
+
+</td></tr>
+<tr><td>
+	<figure style='float: right;'>
+	  <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
+	  <figcaption>IPTC and EXIF metadata.</figcaption>
+	</figure> 
+
+</td></tr>
+<tr><td>
+	<figure style='float: right;'>
+	  <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
+	  <figcaption>EXIF array view.</figcaption>
+	</figure> 
+	
+</td></tr>
+</table>
+
+
+
+
+
+
+
 
 ## Setup
 
@@ -40,13 +80,13 @@ version.txt *   Version identification
 LICENSE         License 
 .
 ├───config *    Configuration files.
-│   └───.flags* National flags (in SVG).
 ├───css*        Style Sheets.
 ├───database*   Database file(s).
 ├───doc         Documentation.
 │   └───HTML    Doxygen doc.
 ├───examples    Examples for test run
 ├───icons*      Icons for display.
+│   └───.flags* National flags (in SVG).
 ├───js*         Javascripts.
 ├───lib*        Function libraries.
 ├───sql         SQLscript for administration.
@@ -65,6 +105,7 @@ LICENSE         License
 Prepare you images in a folder structure (See: `./examples`) like this:
 
 ```
+.
 ├───2023
 │   ├───Giza
 │   ├───Odense
