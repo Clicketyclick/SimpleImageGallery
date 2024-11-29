@@ -30,6 +30,10 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
+![](doc/sig_002.jpg)
+*image_caption*
+
+
 <table  width=100%>
 <tr>
  <td width=100%>
