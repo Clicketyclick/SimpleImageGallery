@@ -545,7 +545,8 @@ function show_meta( $filedata )
         .   "</span>: <span class='iptc_location'>"
         .   ( 
                 $iptc['ContentLocationName'][0] 
-                ??  str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) 
+                // Array_filter removes empty elements from array https://stackoverflow.com/a/5331111 https://stackoverflow.com/a/3654309
+                ?? implode(', ',array_filter( $ContentLocationName ) )
             )
         .   '</span>'
         ;

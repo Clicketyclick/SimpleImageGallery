@@ -131,8 +131,8 @@
 		"da": "Kategori"
 	},
 	"iptc_SupplementalCategories": {
-		"en": "Supplemental Categories/People",
-		"da": "Supplerende kategorier/Personer"
+		"en": "<span title='Supplemental Categories'>People</span>",
+		"da": "<span title='Supplerende kategorier'>Personer</span>"
 	},
 	"iptc_FixtureIdentifier": {
 		"en": "Fixture Identifier",
