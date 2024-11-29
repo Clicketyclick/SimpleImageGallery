@@ -40,27 +40,27 @@ echo '
 
 debug( $GLOBALS['browser']['language'], "session language: ");
 
-$releaseroot	= __DIR__ . '/';
+$releaseroot    = __DIR__ . '/';
 
 $verbose=1;
 //$debug=1;
 
 // Default path = all
 if ( empty( $_REQUEST['path']) )
-	$_REQUEST['path'] = '.';
+    $_REQUEST['path'] = '.';
 
 timer_set('header');
 
 timer_set('open_db', 'Opening database');
-$db	= openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
+$db    = openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
 timer_set('open_db');
 
 
 timer_set('build_dir_tree', 'Built tree from path');
-$sql	= sprintf( $GLOBALS['database']['sql']['select_path'], $_REQUEST['path']  );
-$dirs	= querySql( $db, $sql );
+$sql    = sprintf( $GLOBALS['database']['sql']['select_path'], $_REQUEST['path']  );
+$dirs    = querySql( $db, $sql );
 
-$tree	= buildDirTree( $dirs );
+$tree    = buildDirTree( $dirs );
 debug( $tree, 'tree' );
 timer_set('build_dir_tree');
 
@@ -77,7 +77,6 @@ echo "</span><script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
 // Change language https://stackoverflow.com/a/22040376/7485823
 // https://stackoverflow.com/a/22040376
 //!!! Use: $GLOBALS['url']['args']
-/**/
 if ( ! empty( $GLOBALS['url']['args']['browser:language'] ))
     unset($GLOBALS['url']['args']['browser:language']);
 $escaped_url    = '?'.http_build_query($GLOBALS['url']['args']);
@@ -102,7 +101,7 @@ echo "<br clear=both><hr>";
 
 
 // Get subdirectories to current directory
-$subdirs	= subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
+$subdirs    = subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
 $count_subdirs  = count($subdirs );
 debug($subdirs);
 printf( "%s: %s<br>"
@@ -111,9 +110,9 @@ printf( "%s: %s<br>"
 );
 $count  = 0;
 
-$sql	= sprintf( $GLOBALS['database']['sql']['thumb_from_dirs'], implode( "', '", $subdirs ) );
+$sql    = sprintf( $GLOBALS['database']['sql']['thumb_from_dirs'], implode( "', '", $subdirs ) );
 debug($sql, 'thumb_from_dirs');
-$thumbs	= querySql( $db, $sql );
+$thumbs    = querySql( $db, $sql );
 
 // flatten
 foreach( $thumbs as $no => $thumbdata )
@@ -130,22 +129,22 @@ foreach( $subdirs as $subdir )
 
     timer_set( $subdir, 'Getting subdirs' );
     
-	$dir	= $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
+    $dir    = $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
     debug( $dir);
 
-	// get newest image 	"newest_picture_in_path"
+    // get newest image     "newest_picture_in_path"
     if ( empty($thumbs[$subdir]) )
     {
         logging( 'newest_picture_in_path' );
-        $sql	= sprintf( $GLOBALS['database']['sql']['newest_picture_in_path'], $dir );
-        $newestthumb	= querySql( $db, $sql );
-        $newestthumb	= $newestthumb[0];
+        $sql    = sprintf( $GLOBALS['database']['sql']['newest_picture_in_path'], $dir );
+        $newestthumb    = querySql( $db, $sql );
+        $newestthumb    = $newestthumb[0];
     }
     else
     {
         logging( 'dirs' );
-        $newestthumb['thumb']	= $thumbs[$subdir];
-        $newestthumb['file']	= '$dir';
+        $newestthumb['thumb']    = $thumbs[$subdir];
+        $newestthumb['file']    = '$dir';
     }
     
     $newestthumb['path']    = $dir;
@@ -155,53 +154,54 @@ foreach( $subdirs as $subdir )
     
     timer_set( $subdir );
 }
+
 echo "</pre><br clear=both><hr>";
 
 //----------------------------------------------------------------------
 
 // Thumb list or single image
 if( empty($_REQUEST['show']) )
-{	// Thumb list
-	$sql	= sprintf($GLOBALS['database']['sql']['select_thumb'], $_REQUEST['path'] );
-	debug( $sql );
+{    // Thumb list
+    $sql    = sprintf($GLOBALS['database']['sql']['select_thumb'], $_REQUEST['path'] );
+    debug( $sql );
 
-	$files	= querySql( $db, $sql );
-	debug($files, 'Files:"');
+    $files    = querySql( $db, $sql );
+    debug($files, 'Files:"');
 
     printf( "%s: %s<br>"
     ,   ___('no_of_images')
     ,   count( $files )
     );
 
-	foreach ( $files as $no => $filedata )
-	{
-		echo show_thumb( $filedata, FALSE, TRUE );
-	}
+    foreach ( $files as $no => $filedata )
+    {
+        echo show_thumb( $filedata, FALSE, TRUE );
+    }
 }
 else
-{	// Show image
-	$prev	= $next	= FALSE;
+{    // Show image
+    $prev    = $next    = FALSE;
 
 //echo "<span class='metadata'>";
 echo "<table width='100%'>
 <tr><td class='metadata'>";
 
     timer_set('select_path_file', 'Show image');
-	$sql	= sprintf($GLOBALS['database']['sql']['select_path_file'], $_REQUEST['path'] );
-	debug( $sql );
+    $sql    = sprintf($GLOBALS['database']['sql']['select_path_file'], $_REQUEST['path'] );
+    debug( $sql );
 
-	$files	= querySql( $db, $sql );
+    $files    = querySql( $db, $sql );
     timer_set('select_path_file');
 
-	debug("Files:<pre>".var_export( $files, TRUE) . "</pre>");
+    debug("Files:<pre>".var_export( $files, TRUE) . "</pre>");
 
     timer_set('select_path_file_normalise');
     $first  = $files[0]['file'];
     $last   = $files[count($files)-1]['file'];
-	foreach ( $files as $no => $filedata )
-	{
-		if ( $_REQUEST['show'] == $filedata['file'] )
-		{
+    foreach ( $files as $no => $filedata )
+    {
+        if ( $_REQUEST['show'] == $filedata['file'] )
+        {
             debug( "count: "
             .   count( $files ) 
             .   " no: "
@@ -211,26 +211,26 @@ echo "<table width='100%'>
             .   "</pre>"
             );
             
-			if ( 0 < $no )
-				$prev	= $files[$no-1]['file'];
-			if ( count( $files )-1 > $no )
-				$next	= $files[$no+1]['file'];
+            if ( 0 < $no )
+                $prev    = $files[$no-1]['file'];
+            if ( count( $files )-1 > $no )
+                $next    = $files[$no+1]['file'];
             echo( ($no+1).'/'.count( $files ) );
-		}
-	}
+        }
+    }
     timer_set('select_path_file_normalise');
 
     timer_set('select_display', ' Select image to display');
-	$sql	= sprintf($GLOBALS['database']['sql']['select_display'], $_REQUEST['path'], $_REQUEST['show'] );
-	debug( $sql );
+    $sql    = sprintf($GLOBALS['database']['sql']['select_display'], $_REQUEST['path'], $_REQUEST['show'] );
+    debug( $sql );
 
-	$file	= querySql( $db, $sql );
+    $file    = querySql( $db, $sql );
     timer_set('select_display');
 
     debug("Files:<pre>".var_export( $file[0], TRUE) . "</pre>");
 
     timer_set('buttons', 'Navigation buttons');
-	// Previous
+    // Previous
     $prev_active_button = $prev ? "" : " disabled";
     $next_active_button = $next ? "" : " disabled";
     
@@ -240,7 +240,7 @@ echo "<table width='100%'>
         $next   = $first;
     }
     
-	echo "<button 
+    echo "<button 
         id='prevButton' 
         class='float-left submit-button navi_button' 
         onclick = 'goto_image( \"".http_build_query($GLOBALS['url']['args'])."\", \"$prev\" );' 
@@ -254,13 +254,13 @@ echo "<table width='100%'>
         first=\"$first\";
         last=\"$last\";
     </script>
-	";
+    ";
     
-	// Close
-	echo "<button id='prevButton' class='float-left submit-button navi_button' onclick = 'close_image(\"".http_build_query($GLOBALS['url']['args'])."\");'  title='".___('up_to_index')."'>&#x2BAC;</button>";
+    // Close
+    echo "<button id='prevButton' class='float-left submit-button navi_button' onclick = 'close_image(\"".http_build_query($GLOBALS['url']['args'])."\");'  title='".___('up_to_index')."'>&#x2BAC;</button>";
 
-	// Next
-	echo "<button 
+    // Next
+    echo "<button 
         id='nextButton' 
         class='float-left submit-button navi_button' 
         onclick = 'goto_image( \"".http_build_query($GLOBALS['url']['args'])."\", \"$next\" );' 
@@ -269,15 +269,15 @@ echo "<table width='100%'>
     >&#x2BAB;</button>
     ";
 
-	// slideshow
-	echo "<button id='slideshowButton' 
+    // slideshow
+    echo "<button id='slideshowButton' 
         class='float-left submit-button' 
         onclick = 'slideshow( true , {$GLOBALS['config']['display']['slide']['delay']}, {$GLOBALS['config']['display']['slide']['loop']} );'  
         title='".___('slideshow_title')."'
         ><big>&#x1F4FD; ".___('slideshow')." <span id='slide_id' class='slide_id'></span></big></button>";
 
-	// Random image
-	echo "<button 
+    // Random image
+    echo "<button 
         id='randomButton' 
         class='float-left submit-button' 
         onclick = \"window.location = '".getRandomImage()."'\"  
@@ -288,32 +288,34 @@ echo "<table width='100%'>
 
     // Metadata
     timer_set('show_meta', 'Build meta for display image');
-	echo show_meta( $file[0] );
+    echo show_meta( $file[0] );
     timer_set('show_meta');
     
     // Display
     echo "</td><td class='showimage'>";
 
     timer_set('show_image', 'Build display image');
-	echo show_image( $file[0] );
+    echo show_image( $file[0] );
     timer_set('show_image');
 
     echo "</td></tr></table>";
 
 }
 
+// Just in case!
 ob_flush();
 flush();
+
 //----------------------------------------------------------------------
 
 /**
  *   @brief      Build breadcrumb trail
  *   
- *   @param [in]	$path		Path to break up
- *   @param [in]	$urlstub='?path=%s'	URL stub to crumbs
- *   @param [in]	$start=1	Start dir
- *   @param [in]	$end=-1		End dir
- *   @param [in]	$delimiter='&rightarrow;'	Delimiter between crumbs [Default: "&rightarrow;"]
+ *   @param [in]    $path        Path to break up
+ *   @param [in]    $urlstub='?path=%s'    URL stub to crumbs
+ *   @param [in]    $start=1    Start dir
+ *   @param [in]    $end=-1        End dir
+ *   @param [in]    $delimiter='&rightarrow;'    Delimiter between crumbs [Default: "&rightarrow;"]
  *   @return     Trail as HTML string
  *   
  *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
@@ -322,41 +324,41 @@ flush();
  */
 function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
 {
-	$crumbs	= breadcrumbs( $path );
-	$trail	= [];
+    $crumbs    = breadcrumbs( $path );
+    $trail    = [];
 
-	// Ignore first and last element in list
-	foreach( array_splice($crumbs, $start, $end ) as $crumb => $crumbtag )
-	{
-		$trail[] = sprintf( "<a href='{$urlstub}'>[%s]</a>"
-		,	$crumb
-		,	$crumbtag
-		);
-	}
-	return( implode( $delimiter, $trail ) );
-}	//breadcrumbTrail()
+    // Ignore first and last element in list
+    foreach( array_splice($crumbs, $start, $end ) as $crumb => $crumbtag )
+    {
+        $trail[] = sprintf( "<a href='{$urlstub}'>[%s]</a>"
+        ,    $crumb
+        ,    $crumbtag
+        );
+    }
+    return( implode( $delimiter, $trail ) );
+}    //breadcrumbTrail()
 
 //----------------------------------------------------------------------
 
 /**
  *   @brief      Build a breadcrumb trail from a file path
  *   
- *   @param [in]	$path	$(description)
+ *   @param [in]    $path    $(description)
  *   @return     $(Return description)
  *
  *   @since      2024-11-13T14:10:11
  */
 function breadcrumbs( $path )
 {
-	$trail	= [];
-	$token	= '';
-	foreach( explode( '/', $path ) as $dir )
-	{
-		$token		.= "/$dir";
-		$trail[trim( $token, '/')]	= $dir;
-	}
-	return( $trail  );
-}	// breadcrumbs()
+    $trail    = [];
+    $token    = '';
+    foreach( explode( '/', $path ) as $dir )
+    {
+        $token        .= "/$dir";
+        $trail[trim( $token, '/')]    = $dir;
+    }
+    return( $trail  );
+}    // breadcrumbs()
 
 //----------------------------------------------------------------------
 
@@ -364,7 +366,7 @@ function breadcrumbs( $path )
 /**
  *   @brief     Build directory tree
  *   
- *   @param [in]	&$dirs	Root
+ *   @param [in]    &$dirs    Root
  *   @return     array of directory names
  *   
  *   @details    Recursive scandir
@@ -375,25 +377,25 @@ function breadcrumbs( $path )
  */
 function buildDirTree( &$dirs )
 {
-	$tree		= [];
-	$dirs2		= [];
+    $tree        = [];
+    $dirs2        = [];
 
-	// 0->path=>dir 0->dir
-	foreach( $dirs as $no => $dirinfo )
-		$dirs2[] = $dirinfo['path'];
+    // 0->path=>dir 0->dir
+    foreach( $dirs as $no => $dirinfo )
+        $dirs2[] = $dirinfo['path'];
 
-	foreach ( $dirs2 as $dir )
-	{
-		$dirlist	= explode( '/', $dir );
-		$stub	= '';
-		foreach ($dirlist as $d)
-		{
-			$stub	.= "$d/";
-			if ( ! isset($tree[$stub]) )
-				$tree[] = rtrim( $stub, '/' );
-		}
-	}
-	return( array_unique($tree) );
+    foreach ( $dirs2 as $dir )
+    {
+        $dirlist    = explode( '/', $dir );
+        $stub    = '';
+        foreach ($dirlist as $d)
+        {
+            $stub    .= "$d/";
+            if ( ! isset($tree[$stub]) )
+                $tree[] = rtrim( $stub, '/' );
+        }
+    }
+    return( array_unique($tree) );
 }   // buildDirTree()
 
 //----------------------------------------------------------------------
@@ -402,8 +404,8 @@ function buildDirTree( &$dirs )
 /**
  *   @brief      Get subdirectories to current directory
  *   
- *   @param [in]	$haystack	Haystack of directories
- *   @param [in]	$current	Current directory
+ *   @param [in]    $haystack    Haystack of directories
+ *   @param [in]    $current    Current directory
  *   @return     List of subdirectories to current directory
  *   
  *   @since      2024-11-15T01:29:30
@@ -413,11 +415,11 @@ function subdirsToCurrent( $haystack, $current )
     debug( $haystack, '<pre>$haystack' );
     debug( $current, '$current' );
 
-	$pattern	= '/^' . SQLite3::escapeString( str_replace( '/', '\/', $current ) ) . '\/[^\/]*$/i';
-	$matches  = preg_grep( $pattern, array_values($haystack) );
+    $pattern    = '/^' . SQLite3::escapeString( str_replace( '/', '\/', $current ) ) . '\/[^\/]*$/i';
+    $matches  = preg_grep( $pattern, array_values($haystack) );
     rsort( $matches );
     debug( $matches, '$matches' );
-	return($matches);
+    return($matches);
 }   // subdirsToCurrent()
 
 //----------------------------------------------------------------------
@@ -425,21 +427,23 @@ function subdirsToCurrent( $haystack, $current )
 /**
  *   @brief      Build thumb display
  *   
- *   @param [in]	$filedata	Source file
+ *   @param [in]    $filedata    Source file
  *   @return     HTML figure
  *   
  *   @since      2024-11-15T01:31:11
  */
 function show_thumb( $filedata, $dir = false, $show = false )
 {
-	global $db;
-	$output	= '';
+    global $db;
+    $output    = '';
     
 
-    $output	.= sprintf( 
+    $output    .= sprintf( 
         // Print figure for thumb display
-        $dir ? $GLOBALS['config']['display']['figure_template_dir'] : $GLOBALS['config']['display']['figure_template']
-	,	$dir
+        $dir 
+        ?   $GLOBALS['config']['display']['figure_template_dir'] 
+        :   $GLOBALS['config']['display']['figure_template']
+    ,    $dir
         ?   basename($filedata['path']) 
         :   $filedata['name'] // dir ?  dir name : image name
     .   " "
@@ -451,19 +455,19 @@ function show_thumb( $filedata, $dir = false, $show = false )
         :   '' ) // IPTC icon
 
     ,   $filedata['path'] . ( $show ? '&show=' . $filedata['file'] : '' ) // Link
-	,	$filedata['thumb']  // thump to display
+    ,    $filedata['thumb']  // thump to display
     ,   '/' . $filedata['file']
-	);
+    );
 
-	return( $output );
-}
+    return( $output );
+}   // show_thumb()
+
 //----------------------------------------------------------------------
-
 
 /**
  *   @brief      Build meta for image display
  *   
- *   @param [in]	$filedata	Source file
+ *   @param [in]    $filedata    Source file
  *   @return     HTML figure
  *   
  *   
@@ -471,37 +475,37 @@ function show_thumb( $filedata, $dir = false, $show = false )
  */
 function show_meta( $filedata )
 {
-	global $db;
-	$output	= '';
+    global $db;
+    $output    = '';
 
-	debug( $filedata['file']);
-	debug( $filedata['path'] );
+    debug( $filedata['file']);
+    debug( $filedata['path'] );
     
-	timer_set( 'show_image_get_meta', 'Get metadata');
+    timer_set( 'show_image_get_meta', 'Get metadata');
     
-	$sql	= sprintf( $GLOBALS['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
-	$meta	= querySql( $db, $sql );
-	debug( $sql );
-	timer_set( 'show_image_get_meta');
+    $sql    = sprintf( $GLOBALS['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
+    $meta    = querySql( $db, $sql );
+    debug( $sql );
+    timer_set( 'show_image_get_meta');
 
-	timer_set( 'show_image_decode_meta', '- decode metadata');
-	$exif	= json_decode( $meta[0]['exif'] ?? "", TRUE );
-	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
-	timer_set( 'show_image_decode_meta');
+    timer_set( 'show_image_decode_meta', '- decode metadata');
+    $exif    = json_decode( $meta[0]['exif'] ?? "", TRUE );
+    $iptc    = json_decode( $meta[0]['iptc'] ?? "", TRUE );
+    timer_set( 'show_image_decode_meta');
 
     $output .=  "<br clear=both>";
 
-	// Header
-	timer_set( 'show_image_header', 'Image header');
-	if($iptc)
-	{
+    // Header
+    timer_set( 'show_image_header', 'Image header');
+    if($iptc)
+    {
         // Flag
-        $flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
+        $flag    = $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
 
-        $output	.= sprintf( "<img src='%s%s.%s' "           // img src 
+        $output    .= sprintf( "<img src='%s%s.%s' "           // img src 
         .   "onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != '%s%s%s.%s') " // error
         .   "this.src = '%s%s.%s'; \" "   // replacement
-        .	"class='flag' "
+        .    "class='flag' "
         .">"
         // img src
         ,   $GLOBALS['config']['display']['flag']['path']
@@ -519,20 +523,20 @@ function show_meta( $filedata )
         );
 
         // Headline
-		$headline	= $iptc['Headline'][0] ?? '...';
-		$output .= "<span class='headline'>{$headline}</span><br>";
+        $headline    = $iptc['Headline'][0] ?? '...';
+        $output .= "<span class='headline'>{$headline}</span><br>";
 
         // Caption
-		$caption	= $iptc['Caption-Abstract'][0] ?? '';
-		$output .= $caption;
+        $caption    = $iptc['Caption-Abstract'][0] ?? '';
+        $output .= $caption;
 
         // Location
-        $ContentLocationName	= [
-            $iptc['Sub-location'][0] ?? ''                  //Sub-location	Grydehøjvej 62
-        ,	$iptc['City'][0] ?? ''                          //City	Gundsømagle
-        ,	$iptc['Province-State'][0] ?? ''                //Province-State	DK-4000 Roskilde
-        ,	$iptc['Country-PrimaryLocationName'][0] ?? ''   //Country-PrimaryLocationName	Denmark
-        ,	$iptc['Country-PrimaryLocationCode'][0] ?? ''   //Country-PrimaryLocationCode	DNK
+        $ContentLocationName    = [
+            $iptc['Sub-location'][0] ?? ''                  //Sub-location    Grydehøjvej 62
+        ,    $iptc['City'][0] ?? ''                          //City    Gundsømagle
+        ,    $iptc['Province-State'][0] ?? ''                //Province-State    DK-4000 Roskilde
+        ,    $iptc['Country-PrimaryLocationName'][0] ?? ''   //Country-PrimaryLocationName    Denmark
+        ,    $iptc['Country-PrimaryLocationCode'][0] ?? ''   //Country-PrimaryLocationCode    DNK
         ];
 
         $output .= "<br clear=both><span class='iptc_location_tag'>"
@@ -548,14 +552,14 @@ function show_meta( $filedata )
         // Persons
         if ( ! empty( $iptc['SupplementalCategories'] ) )
         {
-            $supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
+            $supcat    = implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
             $output .= "<br><span class='iptc_location_tag'>". ___('iptc_SupplementalCategories') . "</span>: <span class='iptc_location'>{$supcat}</span>";
         }
 
         // Credit and source
         /*
-        Credit	E. Christoffersen
-        Source	https://www.flickr.com/photos/nationalmuseet/7393192296
+        Credit    E. Christoffersen
+        Source    https://www.flickr.com/photos/nationalmuseet/7393192296
         */
         if ( ! empty( $iptc['Credit'] ) )
             $output .= "<br><span class='iptc_credit_tag'>". ___('iptc_Credit') . "</span>: <span class='iptc_credit'>{$iptc['Credit'][0]}</span>";
@@ -572,24 +576,24 @@ function show_meta( $filedata )
 
             $output .= "<br><span class='iptc_source_tag'>". ___('iptc_Source') . "</span>: <span class='iptc_Source'>{$source}</span>";
         }
-	}   // <<< Header
-	timer_set( 'show_image_header');
+    }   // <<< Header
+    timer_set( 'show_image_header');
     
     //----------------------------------------------------------------------
         
     $output .=  "<br clear=both>";
 
     
-	// IPTC
-	timer_set( 'show_image_iptc', 'IPTC');
-	$output	.= "<br clear=both><br><details><summary title='"
+    // IPTC
+    timer_set( 'show_image_iptc', 'IPTC');
+    $output    .= "<br clear=both><br><details><summary title='"
     .   ___('iptc')
     .   "'><img src='{$GLOBALS['config']['display']['iptc']['icon']}'>IPTC</summary><table border=1>";
     
     foreach ( array_flatten2($iptc) as $iptc_key => $itpc_value )
     {
         if ( 'CodedCharacterSet' == $iptc_key ) continue;
-        $output	.= "<tr><td class='iptc_key'>"
+        $output    .= "<tr><td class='iptc_key'>"
         .   ___("iptc_{$iptc_key}")
         .   "</td><td class='iptc_value'>"
         .   (
@@ -598,15 +602,15 @@ function show_meta( $filedata )
         .   "</td></tr>\n"
         ;
     }
-	$output	.= "</table></details>";
-	timer_set( 'show_image_iptc');
+    $output    .= "</table></details>";
+    timer_set( 'show_image_iptc');
     //<<< IPTC
 
     //----------------------------------------------------------------------
     
-	// EXIF
-	timer_set( 'show_image_exif', 'EXIF');
-	$output	.= "<br clear=both><details><summary title='"
+    // EXIF
+    timer_set( 'show_image_exif', 'EXIF');
+    $output    .= "<br clear=both><details><summary title='"
     .   ___('exif_title')
     .   "'><img src='{$GLOBALS['config']['display']['exif']['icon']}'>EXIF</summary><table border=1>";
 
@@ -615,14 +619,14 @@ function show_meta( $filedata )
         if ( ! is_array( $exif_block ) )
             continue;
         //if ( 'CodedCharacterSet' == $exif_key ) continue;
-        $output	.= "<tr><td class='exif_group'>"
+        $output    .= "<tr><td class='exif_group'>"
         .   ___("exif_{$exif_section}")
         .   "</td><td><table border>"
         ;
 
         foreach ( $exif_block as $exif_key => $exif_value )
         {
-            $output	.= "<tr><td class='exif_key'>"
+            $output    .= "<tr><td class='exif_key'>"
             .   ___("exif_{$exif_key}")
             .   "</td><td class='exif_value'>"
             .   (
@@ -633,46 +637,46 @@ function show_meta( $filedata )
             .   "</td></tr>\n";
         }
 
-        $output	.= "</table></td></tr>\n";
+        $output    .= "</table></td></tr>\n";
     }
-	$output	.= "</table></details>";
+    $output    .= "</table></details>";
 
-    $output	.= sprintf(
+    $output    .= sprintf(
         "<details><summary title='%s'>%s</summary><pre>%s</pre></details>"
     ,   ___('exif_title')
     ,   ___('exif_array')
     ,   var_export( $exif, TRUE )
     );
 
-	timer_set( 'show_image_exif');
+    timer_set( 'show_image_exif');
     //<<< EXIF
 
     //----------------------------------------------------------------------
 
     // Maps
-	timer_set( 'show_image_maps', 'Maps');
-	if ( ! empty($exif['GPS']["GPSLongitude"]) )
-	{
-		$lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
-		$lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
-		$zoom	= $_REQUEST['zoom'] ?? 15;
+    timer_set( 'show_image_maps', 'Maps');
+    if ( ! empty($exif['GPS']["GPSLongitude"]) )
+    {
+        $lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
+        $lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
+        $zoom    = $_REQUEST['zoom'] ?? 15;
 
         echo "<br>";
-		echo getMapEmbed( $lat, $lon, $zoom, $GLOBALS['config']['maps']['map_source'] );
+        echo getMapEmbed( $lat, $lon, $zoom, $GLOBALS['config']['maps']['map_source'] );
         echo "<br>";
         echo getMapLink( $lat, $lon, $zoom, $GLOBALS['config']['maps']['map_source'] );
-		echo " @ $lon,$lat<br>";
+        echo " @ $lon,$lat<br>";
+    }   // <<< Maps
 
-	}   // <<< Maps
-
-	timer_set( 'show_image_maps');
+    timer_set( 'show_image_maps');
     return( $output );
 }   // show_meta(
 
+//----------------------------------------------------------------------
 /**
  *   @brief      Build image display
  *   
- *   @param [in]	$filedata	Source file
+ *   @param [in]    $filedata    Source file
  *   @return     HTML figure
  *   
  *   
@@ -680,17 +684,17 @@ function show_meta( $filedata )
  */
 function show_image( $filedata )
 {
-	global $db;
-	$output	= '';
+    global $db;
+    $output    = '';
 
-	timer_set( 'show_image_show_image', 'Show image');
-	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
-	,	$filedata['display']
-	,	$filedata['path'] . '/' . $filedata['file'] 
-	);
-   	timer_set( 'show_image_show_image');
+    timer_set( 'show_image_show_image', 'Show image');
+    $output    .= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
+    ,    $filedata['display']
+    ,    $filedata['path'] . '/' . $filedata['file'] 
+    );
+       timer_set( 'show_image_show_image');
 
-	return( $output );
+    return( $output );
 }   // show_image()
 
 //----------------------------------------------------------------------
@@ -698,14 +702,14 @@ function show_image( $filedata )
 /**
  *   @brief      reduce complexity of array
  *   
- *   @param [in]	)	$(description)
+ *   @param [in]    )    $(description)
  *   @return     $(Return description)
  *   
  *   @details    Reduce sub arrays with only one entry to string
  *   
 @code
-$a	=' {"Multi entries":["entry1","entry2"],"Single entry":["Just one"]}';
-$b	= json_decode( $a, TRUE, 512, JSON_OBJECT_AS_ARRAY | JSON_INVALID_UTF8_IGNORE );
+$a    =' {"Multi entries":["entry1","entry2"],"Single entry":["Just one"]}';
+$b    = json_decode( $a, TRUE, 512, JSON_OBJECT_AS_ARRAY | JSON_INVALID_UTF8_IGNORE );
 
 var_export( $b );
 echo PHP_EOL;
@@ -742,18 +746,17 @@ function array_flatten2( $arr, $out=array() )  {
         $out=[];
         return $out;
     }
-	foreach( $arr as $key => $item ) {
-		if ( is_array( $item ) && 1 < count( $item ) ) {
-			$out[$key] = $item;
-		} else {
-			$out[$key] = $item[0] ?? '';
-		}
-	}
-	return $out;
-}	// array_flatten2()
+    foreach( $arr as $key => $item ) {
+        if ( is_array( $item ) && 1 < count( $item ) ) {
+            $out[$key] = $item;
+        } else {
+            $out[$key] = $item[0] ?? '';
+        }
+    }
+    return $out;
+}    // array_flatten2()
 
 //----------------------------------------------------------------------
-
 
 /**
  *   @brief      Pick a random image in database
