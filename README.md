@@ -8,8 +8,7 @@ All functionallity is build in PHP, JavaScript and SQL on top of a SQLite databa
 This is heavyly inspired by [Single File PHP Gallery](https://sye.dk/sfpg/), but build from scratch.
 _Single File PHP Gallery_ is a nice out-of-the-box gallery app. But has it's issues with handling larger collection of images (YES! I'm impatient).
 
-My own collection holds more than 250,000 images. And I do NOT want to load that onto a webserver!
-
+My own collection holds more than 250,000 images. And I do NOT want to load that onto a webserver. 
 
 
 ## Pros and cons of **Simple Image Gallery**
@@ -34,38 +33,37 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
  
 <table  width=100%>
 <tr><td width=100%>
-	<figure style='float: right;'>
-	  <img src='doc/sig_002.jpg' width=300px height=auto>
-	  <figcaption>Directory list.</figcaption>
-	</figure> 
-
-	List of subdirectories and individual images
+<figure style='float: right;'>
+  <img src='doc/sig_002.jpg' width=300px height=auto>
+  <figcaption>Directory list.</figcaption>
+</figure> 
+List of subdirectories and individual images
 </td></tr>
 
 <tr><td>
-	<figure style='float: right;'>
-	  <img src='doc/sig_003.jpg' width=300px height=auto>
-	  <figcaption>Image view.</figcaption>
-	</figure> 
-
+<figure style='float: right;'>
+  <img src='doc/sig_003.jpg' width=300px height=auto>
+  <figcaption>Image view.</figcaption>
+</figure> 
+Display an individual image
 </td></tr>
 <tr><td>
-	<figure style='float: right;'>
-	  <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
-	  <figcaption>IPTC and EXIF metadata.</figcaption>
-	</figure> 
-
+<figure style='float: right;'>
+  <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
+  <figcaption>IPTC and EXIF metadata.</figcaption>
+</figure> 
+List IPTC and EXIF metadata
 </td></tr>
 <tr><td>
-	<figure style='float: right;'>
-	  <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
-	  <figcaption>EXIF array view.</figcaption>
-	</figure> 
-	
+<figure style='float: right;'>
+  <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
+  <figcaption>EXIF array view.</figcaption>
+</figure> 
+List EXIF technical data as array
 </td></tr>
 </table>
 
-
+<BR clear=both>
 
 
 
@@ -183,13 +181,14 @@ So you can either set the arguments on the command line - OR edit the configurat
 {
 	"data": {
 		"virtual_root": "./",
-		"data_root": "./data/",
 		"data_root": "W:/gallery_test/",
 		"image_ext": [
 			"jpg",
 			"JPEG"
 		]
 	},
+```
+```json
 	"database": {
 		"file_name": "database/data.db",
 		"image_ext": [
