@@ -16,7 +16,7 @@ My own collection holds more than 250,000 images. And I do NOT want to load that
 Pros | cons
 ---|---
 Fast loading	| Manual rebuil and database load
-Keeps you originals away from the net	| Max display width and heigt defined by database
+Keeps you originals away from the net	| Max display width and height defined by database
 Watermarking in database[^watermark] | Requires resizing of ALL images
 
 [^watermark]: If you put a watermark into your display images, the original are unaffected.
@@ -30,31 +30,27 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
-#### Directory list.
+### Directory list.
 List of subdirectories and individual images
 
 <img src='doc/sig_002.jpg' width='300px' height=auto>
 
-#### Image view.
+### Image view.
 Display an individual image
 
 <img src='doc/sig_003.jpg' width=300px height=auto>
 
-#### IPTC and EXIF metadata.
+### IPTC and EXIF metadata.
 List IPTC and EXIF metadata
 
   <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
   
-#### EXIF array view.</h3>
+### EXIF array view.</h3>
 List EXIF technical data as array
 
   <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
 
 <BR clear=both>
-
-
-
-
 
 
 ## Setup
@@ -72,14 +68,13 @@ LICENSE         License
 ├───examples    Examples for test run
 ├───icons*      Icons for display.
 │   └───.flags* National flags (in SVG).
-├───js*         Javascripts.
+├───js*         JavaScripts.
 ├───lib*        Function libraries.
 ├───sql         SQLscript for administration.
 └───util        Utilities: rebuild, reindex.
 ```
 
 * Files and directories needed on web. If you only run it locally, just ignore.
-
 
 > [!CAUTION]
 > The directories marked * will include a default .htaccess file for Apache servers to prevent users from poking in your data file.
