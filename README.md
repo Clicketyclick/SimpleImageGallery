@@ -34,22 +34,22 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 ### Directory list.
 List of subdirectories and individual images
 
-<img src='doc/sig_002.jpg' width='300px' height=auto>
+<img src='doc/sig_002.jpg' width='500px' height=auto>
 
 ### Image view.
 Display an individual image
 
-<img src='doc/sig_003.jpg' width=300px height=auto>
+<img src='doc/sig_003.jpg' width=500px height=auto>
 
 ### IPTC and EXIF metadata.
 List IPTC and EXIF metadata
 
-  <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
+  <img src='doc/sig_003_iptc_exif.jpg' width=500px height=auto>
   
 ### EXIF array view.</h3>
 List EXIF technical data as array
 
-  <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
+  <img src='doc/sig_003_exif_array.jpg' width=500px height=auto>
 
 <BR clear=both>
 
