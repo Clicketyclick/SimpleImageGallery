@@ -1,7 +1,7 @@
-# Simple Image Gallery 	
+## SIG
 
-<img src='doc/sig_001.jpg' style='float: right;' width=300px height=auto>
-List and display images by folder showing metadata like EXIF and IPTC from images.
+<img src='doc/sig_001.jpg' style='float: right;' width=500px height=auto>
+Simple Image Gallery lists and display images by folder showing metadata like EXIF and IPTC from images.
 
 All functionallity is build in PHP, JavaScript and SQL on top of a SQLite database.
 
@@ -34,29 +34,29 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 ### Directory list.
 List of subdirectories and individual images
 
-<img src='doc/sig_002.jpg' width='500px' height=auto>
+<img src='doc/sig_002.jpg' style='float: right;' width='500px' height=auto>
 
 ### Image view.
 Display an individual image
 
-<img src='doc/sig_003.jpg' width=500px height=auto>
+<img src='doc/sig_003.jpg' style='float: right;' width=800px height=auto>
 
 ### IPTC and EXIF metadata.
 List IPTC and EXIF metadata
 
-  <img src='doc/sig_003_iptc_exif.jpg' width=500px height=auto>
+  <img src='doc/sig_003_iptc_exif.jpg' style='float: right;' width=500px height=auto>
   
 ### EXIF array view.</h3>
 List EXIF technical data as array
 
-  <img src='doc/sig_003_exif_array.jpg' width=500px height=auto>
+  <img src='doc/sig_003_exif_array.jpg' style='float: right;' width=300px height=auto>
 
 <BR clear=both>
 
 
 ## Setup
 
-```
+```console
 index.php *     The Gallery
 version.txt *   Version identification
 LICENSE         License 
