@@ -30,37 +30,25 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
-<table  width=100%>
-<tr>
- <td width=100%>
-   <h3>Directory list.</h3>
-   List of subdirectories and individual images
-</td><td>
-   <img src='doc/sig_002.jpg' width='300px' height=auto>
-</td>
-</tr>
+#### Directory list.
+List of subdirectories and individual images
 
-<tr><td>
+<img src='doc/sig_002.jpg' width='300px' height=auto>
 
-<h3>Image view.</h3>
+#### Image view.
 Display an individual image
-</td><td>
-  <img src='doc/sig_003.jpg' width=300px height=auto>
-</td></tr>
 
-<tr><td>
-<h3>IPTC and EXIF metadata.</h3>
+<img src='doc/sig_003.jpg' width=300px height=auto>
+
+#### IPTC and EXIF metadata.
 List IPTC and EXIF metadata
-</td><td>
+
   <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
-</td></tr>
-<tr><td>
-<h3>EXIF array view.</h3>
-  List EXIF technical data as array
-</td><td>
+  
+#### EXIF array view.</h3>
+List EXIF technical data as array
+
   <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
-</td></tr>
-</table>
 
 <BR clear=both>
 
