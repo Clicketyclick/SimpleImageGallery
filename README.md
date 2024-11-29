@@ -186,5 +186,5 @@ So you can either set the arguments on the command line - OR edit the configurat
 
 <dl>
   <dt>Persons</dt>
-  <dd>Due to the lack of support of IPTC field "[Person Shown](https://www.iptc.org/std/photometadata/documentation/userguide/#_persons_depicted_in_the_image)" the field "Suplemental Categories" is used.</dd>
+  <dd>Due to the lack of support of IPTC field "<a href='https://www.iptc.org/std/photometadata/documentation/userguide/#_persons_depicted_in_the_image'>Person Shown</a>" the field "Suplemental Categories" is used.</dd>
 </dl>
