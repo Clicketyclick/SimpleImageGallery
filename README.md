@@ -33,34 +33,41 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 <table  width=100%>
 <tr>
  <td width=100%>
+   <h3>Directory list.</h3>
+   List of subdirectories and individual images
+</td><td>
  <figure style='float: right;'>
    <img src='doc/sig_002.jpg' width='300px' height=auto>
-   <figcaption>Directory list.</figcaption>
  </figure> 
-<br>List of subdirectories and individual images
 </td>
 </tr>
 
 <tr><td>
+
+<h3>Image view.</h3>
+Display an individual image
+</td><td>
 <figure style='float: right;'>
   <img src='doc/sig_003.jpg' width=300px height=auto>
-  <figcaption>Image view.</figcaption>
 </figure> 
-<br>Display an individual image
+
 </td></tr>
+
 <tr><td>
+<h3>IPTC and EXIF metadata.</h3>
+List IPTC and EXIF metadata
+</td><td>
 <figure style='float: right;'>
   <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
-  <figcaption>IPTC and EXIF metadata.</figcaption>
 </figure> 
-<br>List IPTC and EXIF metadata
 </td></tr>
 <tr><td>
+<h3>EXIF array view.</h3>
+  List EXIF technical data as array
+</td><td>
 <figure style='float: right;'>
   <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
-  <figcaption>EXIF array view.</figcaption>
 </figure> 
-<br>List EXIF technical data as array
 </td></tr>
 </table>
 
