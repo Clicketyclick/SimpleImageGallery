@@ -13,7 +13,7 @@
 function shutdown()
 {
     // Footer
-    printf( "<br clear=both><hr><small>{$GLOBALS['config']['system']['copyright']} 
+    printf( "<br clear=both><hr><br clear=both><small>{$GLOBALS['config']['system']['copyright']} 
     - <a href='{$GLOBALS['config']['display']['home_url']}'>{$GLOBALS['config']['system']['app_name']}</a></small> %s"
     ,   date('Y')
     ,   getGitVersion()

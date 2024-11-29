@@ -40,13 +40,15 @@ details.debug {
 
 .display {
 	float: right;
-	max-width: 1200px;
+	vertical-align: top;
+/*	max-width: 1200px;
 	max-height: 1000px;
 	max-width: 70%;
 	max-height: 90%;
-	position: absolute; 
-	top: 50px;
-	right: 0;
+	max-width: 70vw;
+*/
+	max-width: 65vw;
+	max-height: 80vh;
 }
 
 .flag {
@@ -136,6 +138,10 @@ details.debug {
 button {
   transition-duration: 0.4s;
   border-radius: 8px;	/*Rounded corner*/
+}
+
+.navi_button {
+  font-size: x-large;
 }
 
 button:hover {
@@ -239,8 +245,25 @@ kbd {
 table, td, th {
 	border-collapse: collapse;
 	border: 1px solid;
+	
+	vertical-align: top;
+	
+	
 }
 
 details {
 	/*border: 1px solid red;*/
+}
+
+.metadata {
+	max-width: 26vw;
+	text-align: top;
+	vertical-align: top;
+	/*background-color: darkgreen;*/
+}
+.showimage {
+	max-width: 60vw;
+	max-height: 80vh;
+	vertical-align: top;
+	/*background-color: darkblue;*/
 }

@@ -55,11 +55,6 @@ timer_set('open_db', 'Opening database');
 $db	= openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
 timer_set('open_db');
 
-/*
-echo "<pre>";
-var_export( $GLOBALS['timers'] );
-exit;
-*/
 
 timer_set('build_dir_tree', 'Built tree from path');
 $sql	= sprintf( $GLOBALS['database']['sql']['select_path'], $_REQUEST['path']  );
@@ -72,7 +67,6 @@ timer_set('build_dir_tree');
 // >>> Top menu
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "<span title='".___('breadcrumptrail')."'>". $GLOBALS['config']['display']['breadcrumptrail'] . "</span>";
-//$trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
 $trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
 echo ( empty($trail) ? "<span title='".___('empty_breadcrumb_trail')."'>." : $trail ) ;
 echo '/'. basename($_REQUEST['path']);
@@ -88,13 +82,6 @@ if ( ! empty( $GLOBALS['url']['args']['browser:language'] ))
     unset($GLOBALS['url']['args']['browser:language']);
 $escaped_url    = '?'.http_build_query($GLOBALS['url']['args']);
 
-/**/
-/* * /
-$url =  "//{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
-$url = preg_replace("/&browser:language=../", "", $url);
-$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
-$escaped_url = htmlspecialchars( $url, ENT_QUOTES, 'UTF-8' );
-/**/
 echo "<a class='translate' href='{$escaped_url}&browser:language="
 .   (
         'en' == $GLOBALS['browser']['language'] ? 'da' : 'en'
@@ -140,7 +127,7 @@ debug($thumbs, 'thumbs');
 foreach( $subdirs as $subdir )
 {
     logging( "Start: $subdir");
-    //$GLOBALS['timers'][$subdir]['start']	= microtime(TRUE);
+
     timer_set( $subdir, 'Getting subdirs' );
     
 	$dir	= $_REQUEST['path'] .'/'. pathinfo( $subdir, PATHINFO_BASENAME);
@@ -194,6 +181,10 @@ if( empty($_REQUEST['show']) )
 else
 {	// Show image
 	$prev	= $next	= FALSE;
+
+//echo "<span class='metadata'>";
+echo "<table width='100%'>
+<tr><td class='metadata'>";
 
     timer_set('select_path_file', 'Show image');
 	$sql	= sprintf($GLOBALS['database']['sql']['select_path_file'], $_REQUEST['path'] );
@@ -251,11 +242,11 @@ else
     
 	echo "<button 
         id='prevButton' 
-        class='float-left submit-button' 
+        class='float-left submit-button navi_button' 
         onclick = 'goto_image( \"".http_build_query($GLOBALS['url']['args'])."\", \"$prev\" );' 
         title='".___('prev_image')."'
         {$prev_active_button}
-    ><big>&#x2BAA;</big></button>";
+    >&#x2BAA;</button>";
     echo "<script>
         path=\"".http_build_query($GLOBALS['url']['args'])."\";
         prev=\"$prev\";
@@ -266,30 +257,49 @@ else
 	";
     
 	// Close
-	echo "<button id='prevButton' class='float-left submit-button' onclick = 'close_image(\"".http_build_query($GLOBALS['url']['args'])."\");'  title='".___('up_to_index')."'><big>&#x2BAC;</big></button>";
+	echo "<button id='prevButton' class='float-left submit-button navi_button' onclick = 'close_image(\"".http_build_query($GLOBALS['url']['args'])."\");'  title='".___('up_to_index')."'>&#x2BAC;</button>";
 
 	// Next
 	echo "<button 
         id='nextButton' 
-        class='float-left submit-button' 
+        class='float-left submit-button navi_button' 
         onclick = 'goto_image( \"".http_build_query($GLOBALS['url']['args'])."\", \"$next\" );' 
         title='".___('next_image')."'
 ,        {$next_active_button}
-    ><big>&#x2BAB;</big></button>
+    >&#x2BAB;</button>
     ";
 
 	// slideshow
-	echo "<button id='slideshowButton' class='float-left submit-button' onclick = 'slideshow( true , {$GLOBALS['config']['display']['slide']['delay']}, {$GLOBALS['config']['display']['slide']['loop']} );'  title='".___('slideshow_title')."'><big>&#x1F4FD; ".___('slideshow')." <span id='slide_id' class='slide_id'></span></big></button>";
+	echo "<button id='slideshowButton' 
+        class='float-left submit-button' 
+        onclick = 'slideshow( true , {$GLOBALS['config']['display']['slide']['delay']}, {$GLOBALS['config']['display']['slide']['loop']} );'  
+        title='".___('slideshow_title')."'
+        ><big>&#x1F4FD; ".___('slideshow')." <span id='slide_id' class='slide_id'></span></big></button>";
 
 	// Random image
-	echo "<button id='randomButton' class='float-left submit-button' onclick = \"window.location = '".getRandomImage()."'\"  
-    title=\"".___('random_title')."\"><big>&#x1F3B2;</big> ".___('random')."</button>";
+	echo "<button 
+        id='randomButton' 
+        class='float-left submit-button' 
+        onclick = \"window.location = '".getRandomImage()."'\"  
+        title=\"".___('random_title')."\"
+    ><big>&#x1F3B2;</big> ".___('random')."</button>";
 
     timer_set('buttons');
+
+    // Metadata
+    timer_set('show_meta', 'Build meta for display image');
+	echo show_meta( $file[0] );
+    timer_set('show_meta');
     
+    // Display
+    echo "</td><td class='showimage'>";
+
     timer_set('show_image', 'Build display image');
 	echo show_image( $file[0] );
     timer_set('show_image');
+
+    echo "</td></tr></table>";
+
 }
 
 ob_flush();
@@ -384,7 +394,7 @@ function buildDirTree( &$dirs )
 		}
 	}
 	return( array_unique($tree) );
-}
+}   // buildDirTree()
 
 //----------------------------------------------------------------------
 
@@ -408,7 +418,7 @@ function subdirsToCurrent( $haystack, $current )
     rsort( $matches );
     debug( $matches, '$matches' );
 	return($matches);
-}
+}   // subdirsToCurrent()
 
 //----------------------------------------------------------------------
 
@@ -425,40 +435,33 @@ function show_thumb( $filedata, $dir = false, $show = false )
 	global $db;
 	$output	= '';
     
-    //var_export($filedata['path']);
-    //var_export($dir);
-    //var_export( $filedata['path'] );
-/*
-	$sql	= sprintf( $GLOBALS['database']['sql']['select_meta'], $filedata['file'], $filedata['path'] );
-	$meta	= querySql( $db, $sql );
-	$exif	= json_decode( $meta[0]['exif'] ?? "??", TRUE );
-*/
-	$output	.= sprintf( 
+
+    $output	.= sprintf( 
         // Print figure for thumb display
-        //SESSION['config']['display']['figure_template']
         $dir ? $GLOBALS['config']['display']['figure_template_dir'] : $GLOBALS['config']['display']['figure_template']
 	,	$dir
         ?   basename($filedata['path']) 
         :   $filedata['name'] // dir ?  dir name : image name
     .   " "
-    .   (( $filedata['exif'] ?? FALSE ) ? "<img src='{$GLOBALS['config']['display']['exif']['icon']}' class='type_icon' title='EXIF'>" : '' ) // EXIF icon
-    .   (( $filedata['iptc'] ?? FALSE ) ? "<img src='{$GLOBALS['config']['display']['iptc']['icon']}' class='type_icon' title='IPTC'>" : '' ) // IPTC icon
+    .   (( $filedata['exif'] ?? FALSE ) 
+        ?   "<img src='{$GLOBALS['config']['display']['exif']['icon']}' class='type_icon' title='EXIF'>" 
+        :   '' ) // EXIF icon
+    .   (( $filedata['iptc'] ?? FALSE ) 
+        ?   "<img src='{$GLOBALS['config']['display']['iptc']['icon']}' class='type_icon' title='IPTC'>"
+        :   '' ) // IPTC icon
 
     ,   $filedata['path'] . ( $show ? '&show=' . $filedata['file'] : '' ) // Link
 	,	$filedata['thumb']  // thump to display
-	//,	$filedata['path'] 
-    ,''
-    .   '/'
-    .   $filedata['file']
+    ,   '/' . $filedata['file']
 	);
-//var_export($filedata['file']);
+
 	return( $output );
 }
 //----------------------------------------------------------------------
 
 
 /**
- *   @brief      Build image display
+ *   @brief      Build meta for image display
  *   
  *   @param [in]	$filedata	Source file
  *   @return     HTML figure
@@ -466,7 +469,7 @@ function show_thumb( $filedata, $dir = false, $show = false )
  *   
  *   @since      2024-11-15T01:32:29
  */
-function show_image( $filedata )
+function show_meta( $filedata )
 {
 	global $db;
 	$output	= '';
@@ -486,12 +489,7 @@ function show_image( $filedata )
 	$iptc	= json_decode( $meta[0]['iptc'] ?? "", TRUE );
 	timer_set( 'show_image_decode_meta');
 
-	timer_set( 'show_image_show_image', 'Show image');
-	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
-	,	$filedata['display']
-	,	$filedata['path'] . '/' . $filedata['file'] 
-	);
-   	timer_set( 'show_image_show_image');
+    $output .=  "<br clear=both>";
 
 	// Header
 	timer_set( 'show_image_header', 'Image header');
@@ -499,16 +497,26 @@ function show_image( $filedata )
 	{
         // Flag
         $flag	= $iptc['Country-PrimaryLocationCode'][0] ?? 'ZZ';
-        $output	.= "<img "
-         .   "src='{$GLOBALS['config']['display']['flag']['path']}{$flag}.{$GLOBALS['config']['display']['flag']['ext']}' "
-        //.	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != 'icons/.flags/ZZ.svg') this.src = 'icons/.flags/ZZ.svg'; \" "
-        .	"onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != '"
-        .   "{$GLOBALS['config']['display']['flag']['path']}{$GLOBALS['config']['display']['flag']['default']}.{$GLOBALS['config']['display']['flag']['ext']}"
-        .   "') this.src = '"
-        .   "{$GLOBALS['config']['display']['flag']['path']}{$flag}.{$GLOBALS['config']['display']['flag']['ext']}"
-        .   "'; \" "
+
+        $output	.= sprintf( "<img src='%s%s.%s' "           // img src 
+        .   "onerror=\"this.onerror=null; this.className='flag_mini'; if (this.src != '%s%s%s.%s') " // error
+        .   "this.src = '%s%s.%s'; \" "   // replacement
         .	"class='flag' "
-        .">";
+        .">"
+        // img src
+        ,   $GLOBALS['config']['display']['flag']['path']
+        ,   $flag
+        ,   $GLOBALS['config']['display']['flag']['ext']
+        // error
+        ,   $GLOBALS['config']['display']['flag']['path']
+        ,   $GLOBALS['config']['display']['flag']['default']
+        ,   $flag
+        ,   $GLOBALS['config']['display']['flag']['ext']
+        // replacement
+        ,   $GLOBALS['config']['display']['flag']['path']
+        ,   $flag
+        ,   $GLOBALS['config']['display']['flag']['ext']
+        );
 
         // Headline
 		$headline	= $iptc['Headline'][0] ?? '...';
@@ -530,7 +538,10 @@ function show_image( $filedata )
         $output .= "<br clear=both><span class='iptc_location_tag'>"
         .   ___('iptc_location_tag')
         .   "</span>: <span class='iptc_location'>"
-        .   ( $iptc['ContentLocationName'][0] ?? str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) )
+        .   ( 
+                $iptc['ContentLocationName'][0] 
+                ??  str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) 
+            )
         .   '</span>'
         ;
 
@@ -540,7 +551,6 @@ function show_image( $filedata )
             $supcat	= implode( ', ', $iptc['SupplementalCategories'] ?? ['']);
             $output .= "<br><span class='iptc_location_tag'>". ___('iptc_SupplementalCategories') . "</span>: <span class='iptc_location'>{$supcat}</span>";
         }
-
 
         // Credit and source
         /*
@@ -562,10 +572,13 @@ function show_image( $filedata )
 
             $output .= "<br><span class='iptc_source_tag'>". ___('iptc_Source') . "</span>: <span class='iptc_Source'>{$source}</span>";
         }
-	}
+	}   // <<< Header
 	timer_set( 'show_image_header');
+    
+    //----------------------------------------------------------------------
+        
+    $output .=  "<br clear=both>";
 
-    echo "<br clear=both>";
     
 	// IPTC
 	timer_set( 'show_image_iptc', 'IPTC');
@@ -587,8 +600,10 @@ function show_image( $filedata )
     }
 	$output	.= "</table></details>";
 	timer_set( 'show_image_iptc');
+    //<<< IPTC
 
-
+    //----------------------------------------------------------------------
+    
 	// EXIF
 	timer_set( 'show_image_exif', 'EXIF');
 	$output	.= "<br clear=both><details><summary title='"
@@ -621,14 +636,21 @@ function show_image( $filedata )
         $output	.= "</table></td></tr>\n";
     }
 	$output	.= "</table></details>";
-    	$output	.= "<details><summary title='".___('exif_title')."'><!--img src='{$GLOBALS['config']['display']['exif']['icon']}'-->".___('exif_array')."</summary><pre>";
-	$output	.= var_export( $exif, TRUE );
-	$output	.= "</pre></details>";
-	timer_set( 'show_image_exif');
 
-	timer_set( 'show_image_maps', 'Maps');
+    $output	.= sprintf(
+        "<details><summary title='%s'>%s</summary><pre>%s</pre></details>"
+    ,   ___('exif_title')
+    ,   ___('exif_array')
+    ,   var_export( $exif, TRUE )
+    );
+
+	timer_set( 'show_image_exif');
+    //<<< EXIF
+
+    //----------------------------------------------------------------------
 
     // Maps
+	timer_set( 'show_image_maps', 'Maps');
 	if ( ! empty($exif['GPS']["GPSLongitude"]) )
 	{
 		$lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
@@ -641,12 +663,35 @@ function show_image( $filedata )
         echo getMapLink( $lat, $lon, $zoom, $GLOBALS['config']['maps']['map_source'] );
 		echo " @ $lon,$lat<br>";
 
-	}
-	$output	.= "<br clear=both><hr>";
+	}   // <<< Maps
+
 	timer_set( 'show_image_maps');
-	
+    return( $output );
+}   // show_meta(
+
+/**
+ *   @brief      Build image display
+ *   
+ *   @param [in]	$filedata	Source file
+ *   @return     HTML figure
+ *   
+ *   
+ *   @since      2024-11-15T01:32:29
+ */
+function show_image( $filedata )
+{
+	global $db;
+	$output	= '';
+
+	timer_set( 'show_image_show_image', 'Show image');
+	$output	.= sprintf( "<br><small></small><img class='display' src='data:jpg;base64, %s' title='%s'>"
+	,	$filedata['display']
+	,	$filedata['path'] . '/' . $filedata['file'] 
+	);
+   	timer_set( 'show_image_show_image');
+
 	return( $output );
-}
+}   // show_image()
 
 //----------------------------------------------------------------------
 
@@ -709,21 +754,32 @@ function array_flatten2( $arr, $out=array() )  {
 
 //----------------------------------------------------------------------
 
+
+/**
+ *   @brief      Pick a random image in database
+ *   
+ *   @return     HTML link to random image
+ *   
+ *   @details    
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   @since      2024-11-29T14:48:05
+ */
 function getRandomImage()
 {
     global $db;
     $rand   = rand( 1 , $GLOBALS['tmp']['no_of_images']);
     $img    = querySqlSingleRow( $db, "SELECT file, path FROM images WHERE rowid = {$rand};" );
     
-    // ?path=./Gamle%20album/OdenseBilleder/1943-08-19_Asylgade&show=7393192296_9f54c9ff59_h.jpg
     $url    = "?path={$img['path']}&show={$img['file']}";
-    //$url    = "<a href='{$url}'>random</a>";
     
     return( $url );
-    return( var_export( $url, TRUE ) );
-    return( var_export( $img, TRUE ) );
-    return( $rand  );
 }   //getRandomImage()
 
+//----------------------------------------------------------------------
 
 ?>
