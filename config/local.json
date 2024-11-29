@@ -655,8 +655,8 @@
 		"da": "JPEG Interchange format længde"
 	},
 	"exif_EXIF": {
-		"en": "THUMBNAIL",
-		"da": "THUMBNAIL"
+		"en": "EXIF",
+		"da": "EXIF"
 	},
 	"exif_ExposureTime": {
 		"en": "Exposure Time",

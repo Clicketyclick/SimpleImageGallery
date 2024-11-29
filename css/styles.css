@@ -161,6 +161,7 @@ button:hover:disabled {
 }
 .exif_group {
 	color: cyan;
+	font-size: x-small;
 }
 
 .iptc_value {
@@ -168,8 +169,7 @@ button:hover:disabled {
 }
 .slide_id {
 	font-size: x-small;
-	 
- }
+}
 .translate {
 		float: right;
 

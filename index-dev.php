@@ -93,7 +93,8 @@ echo "<span class='db_name'>{$GLOBALS['config']['database']['file_name']}</span>
 echo "&nbsp;<span class='welcome'><details class='welcome'><summary class='welcome_summary'>[".___('welcome')."]</summary>".___('welcome_intro')."</details></span>";
 
 // Clear before folders
-echo "<br clear=both><hr>";
+//echo "<br clear=both><hr>";
+echo "<hr>";
 
 // <<< Top menu
 
@@ -642,7 +643,7 @@ function show_meta( $filedata )
     $output    .= "</table></details>";
 
     $output    .= sprintf(
-        "<details><summary title='%s'>%s</summary><pre>%s</pre></details>"
+        "<details><summary title='%s'>&#x25A4;%s</summary><pre>%s</pre></details>"
     ,   ___('exif_title')
     ,   ___('exif_array')
     ,   var_export( $exif, TRUE )
