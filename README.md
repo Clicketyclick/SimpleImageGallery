@@ -13,17 +13,18 @@ My own collection holds more than 250,000 images. And I do NOT want to load that
 
 ## Pros and cons of **Simple Image Gallery**
 
+> [!WARNING]  
+> Do *NOT* any personal/private images online!!! This is *not* a security system - and you "share with the world" online!
+
+
 Pros | cons
 ---|---
 Fast loading	| Manual rebuil and database load
 Keeps you originals away from the net	| Max display width and height defined by database
-Watermarking in database[^watermark] | Requires resizing of ALL images
+Watermarking in database | Requires resizing of ALL images
 
-[^watermark]: If you put a watermark into your display images, the original are unaffected.
-
-
-> [!WARNING]  
-> Do *NOT* any personal/private images online!!! This is *not* a security system - and you "share with the world" online!
+> [!TIP]
+> If you put a watermark into your display images, the original are unaffected.
 
 
 ## Demo
