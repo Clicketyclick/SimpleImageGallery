@@ -30,15 +30,16 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
- 
 <table  width=100%>
-<tr><td width=100%>
-<figure style='float: right;'>
-  <img src='doc/sig_002.jpg' width=300px height=auto>
-  <figcaption>Directory list.</figcaption>
-</figure> 
+<tr>
+ <td width=100%>
+ <figure style='float: right;'>
+   <img src='doc/sig_002.jpg' width='300px' height=auto>
+   <figcaption>Directory list.</figcaption>
+ </figure> 
 List of subdirectories and individual images
-</td></tr>
+</td>
+</tr>
 
 <tr><td>
 <figure style='float: right;'>
