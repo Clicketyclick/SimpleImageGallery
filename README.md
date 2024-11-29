@@ -184,5 +184,7 @@ So you can either set the arguments on the command line - OR edit the configurat
 
 ## &#x1F41B;Bugs, quirks &#x1F480; &#x1F47F;  etc. &#x1F4A3;
 
-- Persons
-: Due to the lack of support of IPTC field ["Person Shown"](https://www.iptc.org/std/photometadata/documentation/userguide/#_persons_depicted_in_the_image) the field "Suplemental Categories" is used.
+<dl>
+  <dt>Persons</dt>
+  <dd>Due to the lack of support of IPTC field "[Person Shown](https://www.iptc.org/std/photometadata/documentation/userguide/#_persons_depicted_in_the_image)" the field "Suplemental Categories" is used.</dd>
+</dl>
