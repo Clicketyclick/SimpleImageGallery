@@ -30,10 +30,6 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
-![|300](doc/sig_002.jpg)
-*image_caption*
-
-
 <table  width=100%>
 <tr>
  <td width=100%>
@@ -41,7 +37,7 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
    <img src='doc/sig_002.jpg' width='300px' height=auto>
    <figcaption>Directory list.</figcaption>
  </figure> 
-List of subdirectories and individual images
+<br>List of subdirectories and individual images
 </td>
 </tr>
 
@@ -50,21 +46,21 @@ List of subdirectories and individual images
   <img src='doc/sig_003.jpg' width=300px height=auto>
   <figcaption>Image view.</figcaption>
 </figure> 
-Display an individual image
+<br>Display an individual image
 </td></tr>
 <tr><td>
 <figure style='float: right;'>
   <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
   <figcaption>IPTC and EXIF metadata.</figcaption>
 </figure> 
-List IPTC and EXIF metadata
+<br>List IPTC and EXIF metadata
 </td></tr>
 <tr><td>
 <figure style='float: right;'>
   <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
   <figcaption>EXIF array view.</figcaption>
 </figure> 
-List EXIF technical data as array
+<br>List EXIF technical data as array
 </td></tr>
 </table>
 
