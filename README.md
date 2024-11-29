@@ -30,7 +30,7 @@ Watermarking in database[^watermark] | Requires resizing of ALL images
 
 Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 
-![|300]((doc/sig_002.jpg)
+![|300](doc/sig_002.jpg)
 *image_caption*
 
 
