@@ -36,9 +36,7 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
    <h3>Directory list.</h3>
    List of subdirectories and individual images
 </td><td>
- <figure style='float: right;'>
    <img src='doc/sig_002.jpg' width='300px' height=auto>
- </figure> 
 </td>
 </tr>
 
@@ -47,27 +45,20 @@ Take a look at the latest [demo](https://gallerydemo.clicketyclick.dk)
 <h3>Image view.</h3>
 Display an individual image
 </td><td>
-<figure style='float: right;'>
   <img src='doc/sig_003.jpg' width=300px height=auto>
-</figure> 
-
 </td></tr>
 
 <tr><td>
 <h3>IPTC and EXIF metadata.</h3>
 List IPTC and EXIF metadata
 </td><td>
-<figure style='float: right;'>
   <img src='doc/sig_003_iptc_exif.jpg' width=300px height=auto>
-</figure> 
 </td></tr>
 <tr><td>
 <h3>EXIF array view.</h3>
   List EXIF technical data as array
 </td><td>
-<figure style='float: right;'>
   <img src='doc/sig_003_exif_array.jpg' width=300px height=auto>
-</figure> 
 </td></tr>
 </table>
 
