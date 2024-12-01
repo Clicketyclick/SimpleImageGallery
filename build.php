@@ -121,12 +121,13 @@ function clicked( str ) {
             <label for="action">action:</label>
         </th><td>
             <input id='action' name='action' type="hidden" size=50 value='{$_REQUEST['action']}'>
-<!--        </td><td>
+        </td><td>
 <!-- Grouping -- >
             <button type="button" onClick="clicked('action=grouping_images');">Grouping images</button>
 <!-- Index -- >
             <button type="button" onClick="clicked('action=update_index');">Update index</button>
 -->
+            <button class="btn btn-success" onclick="window.open('index.php','_blank');return false;">Test</button>
         </td></tr>
 
     </table>
