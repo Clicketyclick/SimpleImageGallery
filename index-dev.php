@@ -145,7 +145,7 @@ foreach( $subdirs as $subdir )
     {
         logging( 'dirs' );
         $newestthumb['thumb']    = $thumbs[$subdir];
-        $newestthumb['file']    = '$dir';
+        $newestthumb['file']    = "$dir";
     }
     
     $newestthumb['path']    = $dir;
