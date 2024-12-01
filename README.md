@@ -99,8 +99,20 @@ Prepare you images in a folder structure (See: `./examples`) like this:
         └───1943-08-19_Asylgade
 ```
 
-From the root directory of the Gallery run:
+1. Run the PHP webserver:
+```console
+php -S localhost:8083
+```
+2. Opening a browser window with the address: `http://localhost:8083/build.php`
 
+<img src='doc/sig_build_001.jpg'     width='500px' height=auto>
+
+3. On the form press <kbd>Create database</kbd> and the database will be created and populated:
+
+<img src='doc/sig_build_002.jpg'     width='500px' height=auto>
+
+
+<!--
 ```console
 php util/rebuild.php 
 ```
@@ -137,15 +149,12 @@ And the database `./database/data.db` will be populated the data from the images
 - Runtime                        [00:00:07.5467638969421]
 - Log                            [none]
 ```
+-->
 
 You can now test the gallery by:
 
-1. Running php webserver:
-```console
-php -S localhost:8083
-```
-2. Opening a broswer window with the address: `http://localhost:8083/index.php`
-3. Et voila! The Gallery is up and running.
+4. Opening a browser window with the address: `http://localhost:8083/index.php`
+5. Et voila! The Gallery is up and running.
 
 ## Configuration
 
