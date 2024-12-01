@@ -105,11 +105,11 @@ php -S localhost:8083
 ```
 2. Opening a browser window with the address: `http://localhost:8083/build.php`
 
-<img src='doc/sig_build_001.jpg'     width='500px' height=auto style='border: 1px solid blue'>
+>	<img src='doc/sig_build_001.jpg'     width='500px' height=auto style='border: 1px solid blue'>
 
 3. On the form press <kbd>Create database</kbd> and the database will be created and populated:
 
-<img src='doc/sig_build_002.jpg'     width='500px' height=auto style='border: 1px solid blue'>
+>	<img src='doc/sig_build_002.jpg'     width='500px' height=auto style='border: 1px solid blue'>
 
 
 <!--
