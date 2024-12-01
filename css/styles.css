@@ -267,3 +267,10 @@ details {
 	vertical-align: top;
 	/*background-color: darkblue;*/
 }
+
+.status {
+	background-color: darkgreen;
+	background-color: #355E3B;
+	background-color: #003E1B;
+
+}

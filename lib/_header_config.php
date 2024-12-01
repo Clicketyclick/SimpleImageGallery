@@ -104,7 +104,7 @@ foreach ( $_REQUEST as $cmd => $cmdvalue )
 debug( $GLOBALS, 'SESSION:');
 timer_set('parse_request');
 
-
+/*
 timer_set('init_db', 'Open - or create database');
 // Open - or create database
 initDatabase( $db, $GLOBALS['config']['database']['file_name'], $GLOBALS['database'] );
@@ -118,7 +118,7 @@ timer_set('get_no_images', 'Get no of images');
 $sql	= $GLOBALS['database']['sql']['select_files_count'];
 $GLOBALS['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
 timer_set('get_no_images');
-
+*/
 timer_set('save_query_from_str', 'Save Query from URL');
 // Save Query from URL
 parse_str( $_SERVER['QUERY_STRING'] ?? 'path=.', $GLOBALS['url']['args'] );
@@ -192,9 +192,11 @@ function initDatabase( &$db, $dbfile )
 		status(  "Create database", $dbfile );
 		$db	= createSqlDb($dbfile);
 
+        pstatus( "Database created" );
+
 		$GLOBALS['tmp']['tables_total']    = count($GLOBALS['database']['tables']);
 		$count	= 0;
-		
+		$max    = $GLOBALS['tmp']['tables_total'];
 		status("Create tables", $GLOBALS['tmp']['tables_total'] );
 		foreach( $GLOBALS['database']['tables'] as $action => $sql )
 		{
@@ -213,27 +215,24 @@ function initDatabase( &$db, $dbfile )
 			}
 			
 			echo progressbar( ++$count, $GLOBALS['tmp']['tables_total'], 30, $action, 30 );
-			//logging( "{$count}/{$GLOBALS['tables_total']} {$group}: " . microtime2human( microtime( TRUE ) - $microtime_start ));
-            /*
-            echo "total";
-            var_export($GLOBALS['tmp']['tables_total']);
-            echo " count";
-            var_export($count);
-            echo " action";
-            var_export($action);
-            echo " timer";
-            var_export($GLOBALS['timers'][$action]);
-            */
+
+            pbar( 'progress', $max, $count, "Create tables: {$count}/{$max}" );
+            
 			logging( progress_log( $GLOBALS['tmp']['tables_total'], $count, $GLOBALS['timers'][$action], 1 ) );
-            //echo "\n";
 		}
         echo "\n";
+
+        pstatus( "Tables added: {$count}/{$max}" );
+
 	}
 	else
 	{
 		//verbose( $dbfile, "Opening database:\t");
 		debug( $dbfile, "Opening database");
 		$db	= openSqlDb($dbfile);
+
+        pstatus( "Database open" );
+
 	}
 	return( ! empty( $db ) );
 }	// initDatabase()

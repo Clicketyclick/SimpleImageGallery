@@ -12,6 +12,7 @@
  *   @version    @include version.txt
  */
 
+include_once('lib/debug.php');
 include_once('lib/_header.php');
 
 // Update ALL
