@@ -153,7 +153,7 @@ And the database `./database/data.db` will be populated the data from the images
 
 You can now test the gallery by:
 
-4. Opening a new browser window/tab with the address: `http://localhost:8083/index.php`
+4. Opening a new browser window/tab with the address: `http://localhost:8083/index.php` OR simply press the <kbd>Test</kbd> button 
 5. Et voila! The Gallery is up and running.
 
 ## Configuration
