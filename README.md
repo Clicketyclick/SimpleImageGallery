@@ -45,7 +45,13 @@ Display an individual image
 List IPTC and EXIF metadata
 
   <img src='doc/sig_003_iptc_exif.jpg'     width=500px height=auto>
-  
+
+
+> [!TIP]
+> And it is up to YOU to enrich you images with metadata in IPTC format.
+> Use [Photoshop](ttps://www.adobe.com), [Gimp](https://www.gimp.org/), [XnView](https://www.xnview.com/), [Geosetter](https://geosetter.de/), [ExifTool](https://exiftool.org/) .. or whatever tool you like. Check IPTC's [list of software](https://iptc.org/standards/photo-metadata/software-support/)
+
+
 ### EXIF array view.
 List EXIF technical data as array
 
