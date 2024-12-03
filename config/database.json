@@ -33,6 +33,12 @@
 		"select_thumb": "SELECT name, path, file, thumb, exif, iptc FROM IMAGES WHERE path like '%s' ORDER BY path DESC, file DESC",
 		"select_display": "SELECT path, file, display FROM IMAGES WHERE path = '%s' AND file = '%s'",
 		"select_meta": "SELECT exif, iptc FROM images WHERE file = '%s' AND path = '%s'",
+		
+		
+		"select_count_source_dir": "SELECT count(*) FROM images WHERE source = '%s';",
+		"delete_image_by_source": "DELETE FROM images WHERE source = '%s';",
+		"select_distinct_source": "SELECT DISTINCT source FROM images WHERE source glob '%s*';",
+		
 		"newest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path DESC, file DESC LIMIT 1;",
 		"oldest_picture_in_path": "SELECT * FROM images WHERE path LIKE '%s%%' ORDER BY path ASC, file ASC LIMIT 1;",
 		"thumb_from_dirs": "SELECT path, thumb FROM dirs WHERE path IN ( '%s' ) ;",

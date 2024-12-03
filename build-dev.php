@@ -15,6 +15,7 @@ include_once( 'lib/handleJson.php');
 include_once( 'lib/handleSqlite.php');
 include_once( 'lib/debug.php');
 include_once( 'lib/map.php');
+include_once( 'lib/push.php');
 
 // Include script specific shutdown function. BEFORE _header.php !
 include_once( 'lib/'.basename(__FILE__,".php").'.shutdown.php');
@@ -22,7 +23,6 @@ include_once( 'lib/'.basename(__FILE__,".php").'.shutdown.php');
 //timer_set('_header');
 include_once('lib/_header.php');
 //timer_set('_header');
-//include_once("lib/database.php");
 
 timer_set('header', 'Reading header info');
 echo '
@@ -34,6 +34,14 @@ echo '
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/display.js"></script>
   <link rel="icon" type="image/x-icon" href="{$GLOBALS[\'config\'][\'system\'][\'favicon\']}">
+
+<script>
+// [How to prevent form resubmission when page is refreshed (F5 / CTRL+R)](https://stackoverflow.com/a/45656609)
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+
 </head>
 <body>
 ';
@@ -57,7 +65,7 @@ if ( empty( $_REQUEST['QUERY_STRING']) )
 timer_set('header', 'end');
 
 // Argument / config / hard coded default
-$database   = $_REQUEST['database'] 
+$database_name   = $_REQUEST['database'] 
     ??  $GLOBALS['config']['database']['file_name']
     ??  'database/data.db' ;
 $source     = $_REQUEST['source'] 
@@ -71,15 +79,12 @@ $source     = $_REQUEST['source']
 
 echo <<<EOF
 
-<style>
-iframe {
-    width: calc( 100% - 60px);
-    height: calc( 50% - 60px);
-}
-</style>
 <script>
 function clicked( str ) {
-    document.getElementById("action").value='sub.php?{$_REQUEST['QUERY_STRING']}&' + str;
+    //document.getElementById("action").value='build_sub.php?{$_REQUEST['QUERY_STRING']}&' + str;
+    document.getElementById("action").value='build_sub.php?' + str;
+    //document.getElementById("action").value='build_sub.php?';
+    //document.getElementById("action").value+='&action='  + document.getElementById("action").value;
     document.getElementById("action").value+='&database_name='  + document.getElementById("database_name").value;
     document.getElementById("action").value+='&source_dir='     + document.getElementById("source_dir").value;
 
@@ -99,10 +104,10 @@ function clicked( str ) {
         <tr><th>
             <label for="database_name">Database:</label>
         </th><td>
-            <input type="text" id="database_name" name="database_name" size=50 value="{$database}">
+            <input type="text" id="database_name" name="database_name" size=50 value="{$database_name}">
         </td><td>
 <!-- Create -->
-            <button type="button" onClick="clicked('action=create_database');">Create database</button>
+            <button type="button" onClick="clicked('action=create_database');">&#x1F5CD; Create database</button>
         </td></tr>
 <!-- Source -->
         <tr><th>
@@ -110,24 +115,17 @@ function clicked( str ) {
         </th><td>
             <input type="text" id="source_dir" name="source_dir" size=50 value="{$source}">
         </td><td>
-<!-- Load -- >
-            <button type="button" onClick="clicked('action=load_images');">Load images</button>
-<!-- Update -- >
-            <button type="button" onClick="clicked('action=update_images');">Update images</button>
--->
+<!-- Update -->
+            <button type="button" onClick="clicked('action=update_images');">&#x1F5D8; Update images</button>
+            <button type="button" onClick="clicked('action=delete_images');">&#x2326; Delete directories &#x1F5BE;</button>
         </td></tr>
 <!-- Action -->    
         <tr><th>
             <label for="action">action:</label>
         </th><td>
-            <input id='action' name='action' type="hidden" size=50 value='{$_REQUEST['action']}'>
+            <input id='action' name='action' type="text" size=50 value='{$_REQUEST['action']}'>
         </td><td>
-<!-- Grouping -- >
-            <button type="button" onClick="clicked('action=grouping_images');">Grouping images</button>
-<!-- Index -- >
-            <button type="button" onClick="clicked('action=update_index');">Update index</button>
--->
-            <button class="btn btn-success" onclick="window.open('index.php','_blank');return false;">Test</button>
+            <button class="btn btn-success" onclick="window.open('index.php','_blank');return false;">&#x1F5BD; Test</button>
         </td></tr>
 
     </table>
@@ -146,23 +144,44 @@ function clicked( str ) {
 
 <details>
 <summary>Iframe</summary>
-<iframe id='action_frame' src="{$_REQUEST['action']}" title="description" width=100%></iframe>
+<iframe id='action_frame' src="{$_REQUEST['action']}" title="description" width=600 height=600></iframe>
 </details>
 
 <div id='status' name='status' class='status'></div>
 EOF;
 
+echo "<script>document.getElementById( 'status' ).innerHTML = '';</script>\n";
 
-
-//$GLOBALS['url']['args']
-
-/*
-timer_set('open_db', 'Opening database');
-$db    = openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
-timer_set('open_db');
-*/
-
-
+if ( !empty( $_REQUEST['action'] ) )
+{
+    pstate( "<div>action: {$_REQUEST['action']}</div>");
+    switch( $_REQUEST['action'])
+    {
+        case 'delete_action':
+            if ( ! empty($_REQUEST['files'] ))
+            {
+                pstate( "<div>Deleting directories: ");
+                foreach($_REQUEST['files'] as $dir)
+                {
+                    // Get count of images in dir
+                    $sql    = sprintf( $GLOBALS['database']['sql']['select_count_source_dir'], $dir );
+                    $count  = querySqlSingleValue( $db, $sql );
+                    // Delete by dir
+                    $sql    = sprintf( $GLOBALS['database']['sql']['delete_image_by_source'], $dir );
+                    $db->exec( $sql );
+                    pstate( "<div>- &#x2326; $count $dir</div>");
+                }
+                pstate( "<div>done</div>");
+                
+            }
+            else
+                pstate("<div>No files to delete</div>");
+                
+        break;
+        default:
+        pstate( "<div>do nothing</div>" );
+    }
+}
 
 
 //----------------------------------------------------------------------
