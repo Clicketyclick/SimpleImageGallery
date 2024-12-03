@@ -1,20 +1,20 @@
-config Configuration for SIG
-sql SQL statements for admin perpuses
-database Database directory
-sandbox Sandbox for testing functionality
-lib Function library
 .git GIT data
-icons Icons for index
-doc Doxygen doc
-descript.ion This list of file and directory descriptions
-index.php Main page for accessing the databases\nLoad database and display image gallery [Production]Â
-reindex.cmd WinDos: Start reindexing
-rebuild.cmd WinDos: Start rebuilding
-index-dev.php Load database and display image gallery [Developper edition]
-version.txt Version from GIT
 .gitignore GIT ignore list
-README.md Main documentation file
-run.cmd WinDos: Start local PHP webserver for testing
-sqlite.cmd WinDos: Open SQLite database w. database as argument
-LICENSE Licens file
 .htaccess .htaccess files (or "distributed configuration files") provide a way to make configuration changes on a per-directory basis.\nIn root used for activating authentification.Â
+LICENSE Licens file
+README.md Main documentation file
+build-dev.php Create, update/add/remove, reindex database [Developper edition]
+build.php Create, update/add/remove, reindex database [Production]
+config Configuration for SIG
+database Database directory
+descript.ion This list of file and directory descriptions
+doc Doxygen doc
+icons Icons and flags
+index-dev.php Load database and display image gallery [Developper edition]
+index.php Main page for accessing the databases\nLoad database and display image gallery [Production]Â
+lib Function library
+run.cmd WinDos: Start local PHP webserver for testing
+sandbox Sandbox for testing functionality
+sql SQL statements for admin perpuses
+sqlite.cmd WinDos: Open SQLite database w. database as argument
+version.txt Version from GIT
