@@ -1,10 +1,10 @@
 <?php
 
 /**
- * @package ./lib/handleStrings.php
- *  
- * String handling rutines
+  *  @file      handleStrings.php
+ * @brief       String handling rutines
  *
+ * @details
  * Function|brief
  * ---|---
  * getBetween                   | Extract substring between start pattern and end pattern
@@ -16,22 +16,18 @@
  * codeStr                      | Encode latin1 -> UTF-8 -> HTML. Special characters only!
  * controlCharacterReplacement  | Replace Control Characters from string
  * escapeBlanksInStrings        | Escaping blanks, parenteses and quotes in CCL query string
- * ?resolve_vars_in_str         | Expand variables in str ????             Replace w. expandGlobalVarsRef
- * ?replaceVariablesInTemplate  | fill the template with variables, returns filled template.   Replace w. expandGlobalVarsRef
  * strhex                       | String to string of Hex values
  * hexstr                       | String of Hex values to string
  * remove_utf8_bom              | Remove UTF-8 BOM prefix from string
- * !strStartsWith               | Test if a string starts with a given substring (use str_starts_with )
  * expandUnicode2Html           | Expanding Danbib encoded Unicode characters to HTML
- * !strEndWith                  | Test if a string ends with a given substring (use str_ends_with )
  * superSubScript               | Expand superscript and subscript in string
- * get_doc                      | 
- * getDetailSummary             | 
+ * get_doc                      | Read Markdown file and parse to HTML
+ * getDetailSummary             | Build details/summary block in HTML
  * getNoOfDigits                | Return the no of digits in a number
  * getDoxygenFileHeader         | Extract Doxygen file header from file
  * number_formatted             | Format a number with grouped thousands and decimal separator
  * stringExpand                 | Expand simple variables inside a string
- * ?expandLocal                 | expand localisation from global $__local; Replace w. expandGlobalVarsRef
+ * expandLocal                  | Expand localisation from global $__local;
  * platformSlashes              | Set slashes in path according to OS
  * expandGlobalVarsRef          | Expand complex variables in string
  * truncate_center_word         | Zap the middle of a string
@@ -41,34 +37,25 @@
  * All headers, diagnose and test results goes to STDERR
  * Notes goes to STDOUT
  *
- *  @fn        linkTo
- *  @brief     Brief description
- *  @fn         expandGlobalVarsRef
- *  @brief      Expand complex variables in string
- 
- * @link URL
- *
- * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ * @copyright   http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  * @author      Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  * @since       2018-07-30 10:51:00
- * @version     2024-07-14T22:17:41
+ * @version     2024-12-03T11:34:46
  */
 
-
 /**
- *  @fn        linkTo
  *  @brief     Brief description
  *  
  *  @param [in] $keys 	Description for $keys
  *  @return    Return description
  *  
- *  @details   More details
+ *  @details   
  *  
- *  @example   
+
  *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *  @_todo      
+ *  @_bug       
+ *  @_warning   
  *  
  *  @see       https://
  *  @since     2022-11-23T11:10:59 / erba
@@ -86,12 +73,9 @@ function linkTo( $keys ) {
 }
 
  
- 
 /** 
- * @subpackage  bes_html()
- *
- * Converting special BES charaters to HTML entries
- * Decode BESMARC double a
+ * @brief   Converting special BES charaters to HTML entries
+ * @details Decode BESMARC double a
  *
  * @todo    This function is hard coded. Need redesign
  *
@@ -116,11 +100,9 @@ function bes_html( $string ) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  getBetween()
+ * @Brief   Extract substring between start pattern and end pattern
  *
- * Extract substring between start pattern and end pattern
- *
- * Extract only first substring
+ * @details Extract only first substring
  *
  * @param content   String to analyse
  * @param start     Start pattern
@@ -143,9 +125,7 @@ function getBetween($content,$start,$end){
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  getBetweens()
- *
- * Extract every substring between start and end pattern
+ * @Brief   Extract every substring between start and end pattern
  *
  *
  * @param content   String to analyse
@@ -174,9 +154,7 @@ function getBetweens($content,$start,$end){
 //----------------------------------------------------------------------
 
 /**
- *  @subpackage dm2_html()
- *
- * Encoding danMARC2 special characters to HTML entities
+ * @briefEncoding danMARC2 special characters to HTML entities
  *
  *| @*	| U+002A	| asterisk |
  *| @@	| U+0040	| commercial at |
@@ -186,11 +164,11 @@ function getBetweens($content,$start,$end){
  *
  * This function MUST be encoded in UTF-8 w/o BOM
  *
- * @link    http://php.net/manual/en/function.htmlentities.php#82534
  *
  * @param string $str   String to encode
  * @return string       encodet string
  *
+ * @see    http://php.net/manual/en/function.htmlentities.php#82534
  * @since 2018-07-30 10:51:00
  */
 function dm2_html( $string ) {
@@ -212,17 +190,15 @@ function dm2_html( $string ) {
 //---------------------------------------------------------------------
 
 /**
- * @subpackage  utf2latin()
- *
- * Encode UTF-8 -> latin1
+ * @brief   Encode UTF-8 -> latin1
  *
  * @since 2018-07-30 10:51:00
  *
- * @link    http://php.net/manual/en/function.htmlentities.php#82534
  *
  * @param string $str   String to encode
  * @return string       encodet string
  *
+ * @see    http://php.net/manual/en/function.htmlentities.php#82534
  * @version 2018-07-30 10:51:00
  */
 function utf2latin($text) { 
@@ -233,12 +209,9 @@ function utf2latin($text) {
 //---------------------------------------------------------------------
 
 /**
- * @subpackage  latin2utf()
- *
- * Encode latin1 -> UTF-8
+ * @brief   Encode latin1 -> UTF-8
  *
  *
- * @link 
  *
  * @param string $str   String to encode
  * @return string       encodet string
@@ -254,12 +227,10 @@ function latin2utf($text) {
 //---------------------------------------------------------------------
 
 /**
- * @subpackage  codeStr()
  *
- * Encode latin1 -> UTF-8 -> HTML
- * Special characters only!
+ * @brief   Encode latin1 -> UTF-8 -> HTML
+ * @details Special characters only!
  *
- * @link 
  *
  * @param string $str   String to encode
  * @return string       encodet string
@@ -274,13 +245,10 @@ function codeStr( $str ) {
 //---------------------------------------------------------------------
 
 /**
- * @subpackage  controlCharacterReplacement()
- *
- * Replace Control Characters from string
+ * @brief   Replace Control Characters from string
  *
  * @since 2018-07-30 10:51:00
  *
- * @link URL
  *
  * @param string $str   from which control characters should be replaced
  * @return string       string with replacements
@@ -303,11 +271,9 @@ function controlCharacterReplacement( $str ) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  escapeBlanksInStrings()
+ * @brief   Escaping blanks, parenteses and quotes in CCL query string
  *
- * Escaping blanks, parenteses and quotes in CCL query string
- *
- * Inserts blanks in parenteses: (this) -> ( this )
+ * @details Inserts blanks in parenteses: (this) -> ( this )
  *
  * @param ccl       CCL query string
  * @param mask      masking replacement symbol
@@ -344,111 +310,17 @@ function escapeBlanksInStrings( $ccl, $mask ) {
 //---------------------------------------------------------------------
 
 /**
- *  @subpackage  resolve_vars_in_str
- *  @brief     Expand variables in str
- *  
- *  @param [in] $out 	Description for $out
- *  @param [in] $text 	Description for $text
- *  @return    Return description
- *  
- *  @details   Expand global variables like `${myVar}` in a string.
- *      Using references to specific entries in array even nested values can be expanded.
- *  
- *  @example
- *  
- *      $world  = 'World';              // Simple global var
- *      $matter = 'matter';             // Simple global var
- *      $array  = [                     // Arrays cannot expand
- *          "reference" => "REFERENCE"
- *      ];
- *      $ref    =& $array["reference"]; // Reference to array can
- *      
- *      $text  = 'hello ${array["reference"]}, what is the $matter? I like $world!\n';  // will not expand
- *      $text1 = 'hello ${world}, what is the ${matter}? I like a ${world}!';           // Will expand
- *      $text2 = 'hello ${ref}, what is the ${matter}? I like ${world}!';               // Will expand using reference
- *      
- *      echo  resolve_vars_in_str( $text ) . "\n";
- *      echo  resolve_vars_in_str( $text1 ) . "\n";
- *      echo  resolve_vars_in_str( $text2 ) . "\n";
- *      
- *      echo "{$array['reference']} $ref";
- *  
- *  @todo      
- *  @bug       
- *  @warning    DEPRECATED - use expandGlobalVarsRef()
- *  
- *  @see        https://stackoverflow.com/a/37996798
- *  @since      2019-02-04T08:53:59
- */
-function resolve_vars_in_str( $input ) {
-    trigger_error( "DEPRECATED function: use expandGlobalVarsRef()", E_USER_WARNING );
-
-    preg_match_all('/\$[\{]{0,1}+([a-zA-Z0-9-_]+)[\}]{0,1}+/', $input, $out, PREG_PATTERN_ORDER);
-
-    foreach(array_unique($out[1]) as $variable) {
-		if ( isset( $GLOBALS["$variable"] ) )
-			$input=str_replace('${'.$variable.'}', $GLOBALS["$variable"], $input);
-    }
-    
-    return $input ;
-}   // resolve_vars_in_str()
-
-
-//---------------------------------------------------------------------
-
-/** 
- * @subpackage  replaceVariablesInTemplate()
- *
- * A function to fill the template with variables, returns filled template.
- * 
- * $template   = "Example \${About} me but \${Abstract} is \${not} found";
- * echo replaceVariablesInTemplate($template, $localiseString['da'] ) . "!\n";
-
- * @url     https://stackoverflow.com/a/19404373
- *
- * @param string $template A template with variables placeholders {$varaible}.
- * @param array $variables A key => value store of variable names and values.
- * 
- * @return string  
- *
- *  @todo      
- *  @bug       
- *  @warning    DEPRECATED - use expandGlobalVarsRef()
- *
- * @tutorial        doc/manual.md
- * @see             
- * @since           2019-02-04T08:53:59
- */
-function replaceVariablesInTemplate($template, array $variables, $pattern = '#\${(.*?)}#i' ){
-    trigger_error( "DEPRECATED function: use expandGlobalVarsRef()", E_USER_WARNING );
-
- return preg_replace_callback($pattern ,
- //return preg_replace_callback('#\$_{(.*?)}#i',
-       function($match) use ($variables){
-            $match[1]=trim($match[1],'$');
-            if ( isset($variables[$match[1]]) ) {
-                // Return expanded
-                return $variables[$match[1]];
-            } else return $match[1]; // return key
-       },
-       $template);
-       //'['.$template.']');
-}   // replaceVariablesInTemplate()
-
-//---------------------------------------------------------------------
-
-/**
- *  @subpackage strhex
- *
  *  @brief String to string of Hex values
  *  
  *  @param [in] $string Description for $string
  *  @return Return description
  *  
- *  @example    $hex = strhex("test sentence...");
- *  @example    // $hex contains 746573742073656e74656e63652e2e2e
- *  @example    print hexstr($hex);
- *  @example    // outputs: test sentence...
+ *@code
+ *  $hex = strhex("test sentence...");
+ *  // $hex contains 746573742073656e74656e63652e2e2e
+ *  print hexstr($hex);
+ *  // outputs: test sentence...
+ *@endcode
  *
  *  @url https://www.php.net/manual/en/language.types.type-juggling.php#45062
  *  @details More details
@@ -463,18 +335,18 @@ function strhex($string) {
 //---------------------------------------------------------------------
 
 /**
- *  @subpackage hexstr
- *
  *  @brief String of Hex values to string
  *  
  *  @param [in] $hex String of Hex values
  *  @return Return String
  *  
- *  @example    $hex = strhex("test sentence...");
- *  @example    // $hex contains 746573742073656e74656e63652e2e2e
- *  @example    print hexstr($hex);
- *  @example    // outputs: test sentence...
- *  
+ *@code
+ *  $hex = strhex("test sentence...");
+ *  // $hex contains 746573742073656e74656e63652e2e2e
+ *  print hexstr($hex);
+ *  // outputs: test sentence...
+ *@endcode
+ *
  *  @url https://www.php.net/manual/en/language.types.type-juggling.php#45062
  *  @details More details
  */
@@ -488,7 +360,6 @@ function hexstr($hex) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        remove_utf8_bom
  *  @brief     Remove UTF-8 BOM prefix from string
  *  
  *  @param [in] $text	Text sting to strip BOM from
@@ -496,14 +367,15 @@ function hexstr($hex) {
  *  
  *  @details   
  *  
- *  @example   
+ *@code
  *  	$text	= "\xEF\xBB\xBFBOM";
  *  	print bin2hex( remove_utf8_bom( $text ) );
  *  If remove_utf8_bom succedes this will print:
  *  	424f4d
  *  if it fails:
  *  	efbbbf424f4d
- *  
+ *@endcode
+ *
  *  @todo      
  *  @bug       
  *  @warning   
@@ -520,63 +392,6 @@ function remove_utf8_bom( &$text ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        strStartsWith()
- *  @brief     Test if a string starts with a given substring
- *  
- *  @details   Binary safe string comparison of the first n characters
- *  
- *  @param [in] $haystack String to test
- *  @param [in] $needle   Substring to match
- *  @return    TRUE on match, FALSE otherwise
- *  
- *  @example   strStartsWith( "Monkey", "Mon")
- *  
- *  @todo     
- *  @bug     
- *  @warning    PHP 8+: Use: str_starts_with() - Checks if a string starts with a given substring
- *  
- *  @see        https://stackoverflow.com/a/7168986
- *  @since      2019-11-03T18:30:10
- */
-function strStartsWith($haystack, $needle) {
-    if ( empty($haystack) || empty($needle) ) return FALSE; // Empty string hack
-    return $haystack[0] === $needle[0]
-        ? strncmp($haystack, $needle, strlen($needle)) === 0
-        : false;
-}   // strStartsWith()
-
-
-/**
- *  @fn        strEndWith()
- *  @brief     Brief description
- *  
- *  @details   More details
- *  
- *  @param [in] $haystack Description for $haystack
- *  @param [in] $needle   Description for $needle
- *  @return    Return description
- *  
- *  @example   strncmp_endswith2
- *  
- *  @todo     
- *  @bug     
- *  @warning    PHP 8+ Use: str_ends_with() — Checks if a string ends with a given substring
- *  
- *  @see        https://stackoverflow.com/a/7168986
- *  @since      2019-11-03T18:30:34
- */
-function strEndWith($haystack, $needle) {
-    if ( empty($haystack) || empty($needle) ) return FALSE; // Empty string hack
-    return $haystack[strlen($haystack)-1] === $needle[strlen($needle)-1]
-        ? strncmp($haystack, $needle, strlen($needle)) === 0
-        : false;
-}   // strEndWith()
-
-
-//----------------------------------------------------------------------
-
-/**
- *  @fn         expandUnicode2Html
  *  @brief      Expanding Danbib encoded Unicode characters to HTML
  *  
  *  @details    Unicode prefixed by @ is expanded to HTML.
@@ -591,7 +406,9 @@ function strEndWith($haystack, $needle) {
  *  @param [in] $str 	String to expand
  *  @return     String expanded
  *  
- *  @example    expandUnicode( "@00AE" ) == "&#x00AE";
+ *@code
+ * expandUnicode( "@00AE" ) == "&#x00AE";
+ *@endcode
  *  
  *  @todo       
  *  @bug        
@@ -609,7 +426,6 @@ function expandUnicode2Html( $str ) {
 //----------------------------------------------------------------------
 
 /**
- *  @fn         superSubScript
  *  @brief      Expand superscript and subscript in string
  *  
  *  @details    String sequences for superscript (¹) and subscript expanded to valid HTML
@@ -631,7 +447,7 @@ function expandUnicode2Html( $str ) {
  *  @param [in] $str 	String with superscript or subscript sequences
  *  @return     Plain HTML
  *  
- *  @example    
+ *@code
  *  // Byte sequences:
  *  	$uparrow	= "\xE2\x86\x91";
  *  	$downarrow	= "\xE2\x86\x93";
@@ -640,7 +456,8 @@ function expandUnicode2Html( $str ) {
  *  	$str	= "Super${uparrow}s${downarrow}cript and sub${downarrow}s${uparrow}cript";
  *  	$result	= superSubScript( $str );
  *  	echo $result == $expected ? "OK" : "Failed";
- *  
+ *@endcode
+ *
  *  @todo       
  *  @bug        
  *  @warning    
@@ -695,6 +512,29 @@ function superSubScript( $str ) {
 
 //>>>-------------------------------------------------------------------
 
+
+/**
+ *   @brief      Read Markdown file and parse to HTML
+ *   
+ *   @param [in]	$docfile	File to read and parse
+ *   @return     HTML string
+ *   
+ *   @details    
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-12-03T11:36:04
+ */
+
 function get_doc( $docfile ) {
     $note   = file_get_contents( $docfile );
     $Extra  = new ParsedownExtra();
@@ -702,6 +542,28 @@ function get_doc( $docfile ) {
 }	// get_doc()
 
 
+/**
+ *   @brief      Build details/summary block in HTML
+ *   
+ *   @param [in]	$summary	Summary/headline
+ *   @param [in]	$detail	    Details/body
+ *   @param [in]	$preformat=FALSE	On TRUE preformatted
+ *   @return     HTML string
+ *   
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-12-03T11:37:10
+ */
 function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
 	$text	= sprintf( "<details><summary>%s</summary><span id='%s'>%s%s%s</span></details>"
 	,	$summary
@@ -715,7 +577,6 @@ function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
 
 
 /**
- *  @fn        getNoOfDigits
  *  @brief     Return the no of digits in a number
  *  
  *  @param [in] $num 	Number to process
@@ -723,7 +584,9 @@ function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
  *  
  *  @details   
  *  
- *  @example   $count   = getNoOfDigits( 12357 ); // 5 digits
+ *@code
+ *  $count   = getNoOfDigits( 12357 ); // 5 digits
+ *@endcode
  *  
  *  @todo      
  *  @bug       
@@ -738,7 +601,6 @@ function getNoOfDigits( $num )
 }   //*** getNoOfDigits() ***
 
 /**
- *  @fn        getDoxygenFileHeader
  *  @brief     Extract Doxygen file header from file
  *  
  *  @param [in] $file	File to extract header from
@@ -747,7 +609,9 @@ function getNoOfDigits( $num )
  *  @details   More details
  *  
  *  
- *  @example   fputs( getDoxygenFileHeader( __FILE__ ) );
+ *@code
+ *  fputs( getDoxygenFileHeader( __FILE__ ) );
+ *@endcode
  *  
  *	* [file]      filename.php
  *	* [brief]     Brief description
@@ -776,7 +640,6 @@ function getDoxygenFileHeader( $file )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        number_formatted
  *  @brief     Format a number with grouped thousands and decimal separator
  *  
  *  @param [in] $no     Number to format
@@ -787,7 +650,6 @@ function getDoxygenFileHeader( $file )
  *          en: 1,000.00
  *          da: 1.000,000
  *  
- *  @example   
  *  
  *  @todo      
  *  @bug       
@@ -805,7 +667,6 @@ function number_formatted( $no, $dec = 0 ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        stringExpand
  *  @brief     Expand simple variables inside a string
  *  
  *  @param [in] $subject 	Description for $subject
@@ -814,14 +675,19 @@ function number_formatted( $no, $dec = 0 ) {
  *  
  *  @details   Even in single quoted strings
  *  
- *  @example   
+ *@code
  *      $str    = 'Just to say {$__local_hello} ${__local_hello} $__local_hello to you';
  *      print stringExpand( $str, [ "__local_hello" => "Hello"  ] );
+ *@endcode
  *  
  *  will produce:
+@verbatim
  *      Just to say Hello Hello Hello to you
+@endverbatim
  *  
  *  Or a more complex example:
+ *@endcode
+ *
  *      // Language
  *      $lang   = 'en';
  *      // Localisation
@@ -841,9 +707,12 @@ function number_formatted( $no, $dec = 0 ) {
  *      }
  *  
  *      echo $str ;
+ *@endcode
  *  
  *  Produces:
- *       Hello    Hello    world
+@verbatim
+Hello    Hello    world
+@endverbatim
  *  
  *  @todo      
  *  @bug       
@@ -857,21 +726,12 @@ function stringExpand($subject, array $vars) {
 	// loop over $vars map
 	foreach ($vars as $name => $value) {
 		// use preg_replace to match ${`$name`} or $`$name`
-		//$subject = preg_replace(sprintf('/\$\{?%s\}?/', $name), $value, $subject);
-        // match both ${var} and {$var}
-/** /
-        printf( "<pre>name[%s], value[%s], subject[%s]</pre>"
-        ,   var_export( $name, TRUE )
-        ,   var_export( $value, TRUE )
-        ,   var_export( $subject, TRUE )
-        );
-/**/
-        //                              '/\$\{?%s\}?/',
         $subject = preg_replace(sprintf('/\{?\$\{?%s\}/', $name), $value, $subject);
 	}
 	// return variable expanded string
 	return $subject;
 }   // stringExpand()
+
 
 //---------------------------------------------------------------------
 
@@ -914,7 +774,6 @@ function expandLocal( $str )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        platformSlashes
  *  @brief     Set slashes in path according to OS
  *  
  *  @param [in] $path   Path to be normalised
@@ -922,8 +781,10 @@ function expandLocal( $str )
  *  
  *  @details   
  *  
- *  @example   `platformSlashes( "/tmp/subdir\myfile.txt");`
- *  
+ *@code
+ platformSlashes( "/tmp/subdir\myfile.txt");
+ *@endcode
+ *
  *  - Windows:  "\tmp\subdir\myfile.txt"
  *  - Linux:    "/tmp/subdir/myfile.txt"
  *  
@@ -941,7 +802,6 @@ function platformSlashes($path) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn         expandGlobalVarsRef
  *  @brief      Expand complex variables in string
  *  
  *  @param [in] $str    Reference to string
@@ -953,7 +813,7 @@ function platformSlashes($path) {
  *
  *      "Simple" variable names (like '$x' or '${x}') are not expanded.
  *  
- *  @example    
+ *@code
  *     $str='hello $x {$x} {\$x} {$x}';
  *     $x="<globalX>";
  *     $arr = [ 'x' => "<localX>" ];
@@ -961,16 +821,16 @@ function platformSlashes($path) {
  *     echo "start: [$str]\n";
  *     echo expandGlobalVarsRef( $str ).PHP_EOL;       # Use GLOBALS
  *     echo expandGlobalVarsRef( $str, $arr ).PHP_EOL; # Use $arr
+ *@endcode
  *  Will produce:
+@verbatim
  *     start: [hello $x {$x} {\$x} {$x}]
  *     hello $x <globalX> {\$x} <globalX>
  *     hello $x <localX> {\$x} <localX>
+@endverbatim
+ *
+ *  @note   Replaces: resolve_vars_in_str(), replaceVariablesInTemplate()
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see        https://
  *  @since      2024-07-10T13:19:10 / erba
  */
 function expandGlobalVarsRef( $str, $refs = FALSE  )
@@ -990,7 +850,6 @@ function expandGlobalVarsRef( $str, $refs = FALSE  )
 //---------------------------------------------------------------------
 
 /**
- *  @fn         expandGlobalVarsRef
  *  @brief      Expand complex variables in string w. delimiter
  *  
  *  @param [in] $str        Reference to string
@@ -1004,15 +863,18 @@ function expandGlobalVarsRef( $str, $refs = FALSE  )
  *
  *      "Simple" variable names (like '$x' or '${x}') are not expanded.
  *  
- *  @example    
+ *  @code
  *     $str='keyword=x y z';
  *     $arr = [ 'keyword' => "subject" ];
  *     
  *     echo "start: [$str]\n";
  *     echo expandGlobalVarsRef_prefix( $str, $arr ).PHP_EOL; # Use $arr
+ *@endcode
  *  Will produce:
- *     start: [keyword=x y z]
- *     subject:x y z
+@verbatim
+start: [keyword=x y z]
+subject:x y z
+@endverbatim
  *  
  *  @todo      
  *  @bug       

@@ -1,39 +1,37 @@
 <?php
 /**
- *   @file       sub.php
- *   @brief      $(Brief description)
- *   @details    $(More details)
+ *   @file       build_sub.php
+ *   @brief      Background function run in iframe from `build.php`
+ *   @details    Create/open database, reindex, add/remove
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-30T23:18:16 / ErBa
- *   @version    2024-11-30T23:18:16
+ *   @version    @include version.txt
  */
 
 
 include_once( 'lib/debug.php' );
-//include_once( 'lib/handleJson.php' );
-//include_once( 'lib/_header.php' );
 include_once( 'lib/_header_config.php' );
+include_once( 'lib/push.php' );
 
 // Init global variables
 $files		= [];
+
+// Normalising dates
 $cfg_normalise    = [
-'/\.jpg$/i' => '',  // Extention
-'/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]\d\d-\d\d-\d\d[_,\.,\s]/' => '', // Full ISO
-'/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]/' => '',    // Date only
+    '/\.jpg$/i' => '',  // Extention
+    '/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]\d\d-\d\d-\d\d[_,\.,\s]/' => '', // Full ISO
+    '/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]/' => ''    // Date only
 ];
 
 echo "<style>body{ color: yellow;};</style>";
-//echo "[{$_REQUEST['action']}]";
 
-printf( "<pre>[%s]</pre>", var_export($_REQUEST, TRUE ) );
+//printf( "<pre>[%s]</pre>", var_export($_REQUEST, TRUE ) );
 
 echo <<<EOL
 
 <script>
-var i = 0;
-
 function progress_bar( id, max, value, note ) {
     if (undefined === note) { note = '?'; }
     
@@ -42,48 +40,22 @@ function progress_bar( id, max, value, note ) {
     pct     = value * 100 / max;
 
     elem.value          = pct;
-    //status.value        = pct +'%';
     status.innerHTML    = Math.trunc( pct ) +'% '+note;
 }   // progress_bar()
 
-
-/*
-function move() {
-  if (i == 0) {
-    i = 1;
-    var elem    = parent.document.getElementById("progress");
-    var status  = parent.document.getElementById("status");
-    var width   = 1;
-    var id      = setInterval(frame, 10);
-
-        function frame() {
-          if (width >= 100) {
-            clearInterval(id);
-            console.log('done');
-            i = 0;
-          } else {
-            width++;
-            //elem.style.width  = width + "%";
-            elem.value          = width;
-            status.value        = width +'%';
-            status.innerHTML    = width +'%';
-          }
-        }   // frame()
-    
-  }
+function setStatus( str )
+{
+    parent.document.getElementById( 'status' ).innerHTML += str;
 }
 
-//move();
-*/
-
-parent.document.getElementById( 'status' ).innerHTML = '[{$_REQUEST['action']}]: {$_REQUEST['database_name']} <- {$_REQUEST['source_dir']}<br>';</script>\n";
+parent.document.getElementById( 'status' ).innerHTML = '';
+setStatus( '[{$_REQUEST['action']}]: [{$_REQUEST['source_dir']}] &rarr; [{$_REQUEST['database_name']}]<br>' );
 </script>
 
 EOL;
 
 timer_set('init_db', 'Open - or create database');
 // Open - or create database
-//initDatabase( $db, $GLOBALS['config']['database']['file_name'], $GLOBALS['database'] );
 initDatabase( $db, $_REQUEST['database_name'] );
 timer_set('init_db');
 
@@ -95,45 +67,123 @@ switch( $_REQUEST['action'] ?? '?' )
         rebuild_update();
         post_proccessing();
         
-//		"replace_into_dirs": "REPLACE INTO dirs( path ) SELECT DISTINCT path FROM images ORDER BY path DESC ;",
-//		"update_dirs": "UPDATE dirs SET thumb = ( SELECT thumb FROM images WHERE path LIKE dirs.path ORDER BY path DESC, FILE DESC LIMIT 1 );",
-    $r  = $db->exec( $GLOBALS['database']['sql']['replace_into_dirs'] );
-    $r  = querySqlSingleValue( $db, "SELECT count(path) FROM dirs;");
-    pstatus( "- replace_into_dirs: {$r}" );
+        $r  = $db->exec( $GLOBALS['database']['sql']['replace_into_dirs'] );
+        $r  = querySqlSingleValue( $db, "SELECT count(path) FROM dirs;");
+        pstatus( "- replace_into_dirs: {$r}" );
 
-    $r  = $db->exec( $GLOBALS['database']['sql']['update_dirs'] );
-    $r  = querySqlSingleValue( $db, "SELECT count(thumb) FROM dirs;");
+        $r  = $db->exec( $GLOBALS['database']['sql']['update_dirs'] );
+        $r  = querySqlSingleValue( $db, "SELECT count(thumb) FROM dirs;");
     pstatus( "- update_dirs: {$r}" );
 
     break;
+    /*
     case 'load_images':
         load_images();
     break;
+    */
     case 'update_images':
-        update_images();
+        $files  = update_images();
+        rebuild_update($files);
+        //post_proccessing();
     break;
+    case 'delete_images':
+        delete_images();
+    break;
+    case 'delete_action':
+        delete_action();
+    break;
+    break;
+    /*
     case 'grouping_images':
         grouping_images();
     break;
     case 'update_index':
         update_index();
     break;
+    */
     default:
         echo "Sorry: Don't know how to: [{$_REQUEST['action']}]";
 }
 
-	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
-	pstatus( "Runtime " . microtime2human( $Runtime ) );
+$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
+pstatus( "Runtime " . microtime2human( $Runtime ) );
 
 
 pstatus( 'Done' );
+
 //----------------------------------------------------------------------
+function delete_action()
+{
+    pstatus( 'delete action' );
+    echo "- <pre>[".var_export($_REQUEST, TRUE)."</pre>";
+}
+//----------------------------------------------------------------------
+
+function delete_images()
+{
+    global $db;
+    echo "- [{$_REQUEST['action']}]";
+	verbose( 'Delete images' );
+    // Select directories for deletion
+    // Get files from db
+    //$sql = sprintf( "SELECT DISTINCT source FROM images WHERE source glob '%s*';", $_REQUEST['source_dir'] );
+    $sql    = sprintf( $GLOBALS['database']['sql']['select_distinct_source'], $_REQUEST['source_dir'] );
+    $files_db    = array_flatten( querySql( $db, $sql ) );
+    //logging( var_export( $files_db, TRUE ) );
+    
+    $output =  '<form id="delete_form" action="build-dev.php"  method="post">'
+    //.   '<input type="text" id="action" name="action" size=50 value="build-dev.php?action=delete_action">'
+    .   '<input type="hidden" id="action" name="action" size=50 value="delete_action">'
+    .   '<input type="hidden" id="title" name="title" size=50 value="do_what">'
+    ;
+/**/    $loop=0;
+    foreach ( $files_db as $dir )
+    {
+        $sql    = "SELECT count(*) FROM images WHERE source = '{$dir}';";
+        $count  = querySqlSingleValue( $db, $sql );
+        $loop++;
+        //$output .= sprintf("<<br>- %s", $dir );
+        $output .= sprintf("<input type=\"checkbox\" id=\'%s\' name=\'files[]\' value=\'%s\'>"
+        , $loop
+        , $dir 
+        );
+        //$output .= sprintf("<label for=\'%s\'>%s</label><br>"
+        $output .= sprintf("<label for=\'%s\'>%10.10s: %s</label><br>"
+        ,   $loop
+        ,   $count
+        ,   $dir 
+        );
+        
+        verbose($dir);
+        logging( $dir );
+    }
+    /**/
+    //$output .= "
+    pstate( "$output<input type=\'submit\' value=\'Submit\'>" 
+/*    .   "<input type=\'button\' value=\'Clear\' onClick=\'"
+    .       "console.log(parent.document.getElementById( \"action_frame\" ).src );"
+    .       "top.document.getElementById( \"action_frame\" ).src = \"del.php?hello=world&"
+    .       implode(',', $files_db)
+    .       "\";"
+    .       "console.log(\"boo\");"
+    .   "\'>"
+    .   "<button name=\'submit\' onclick=\'parent.document.getElementById(\'action_frame\').location = \"del.php\";\'>Go</button>"
+*/    
+    
+    .   "</form>");
+    /**/
+    //pstatus( "To delete?: {$output}" );
+    //logging( $output );
+
+    //echo "<script>console.log(parent.document.getElementById( 'action_frame' ).src );</script>";
+    //echo "<script>parent.document.getElementById( 'action_frame' ).src = \"del.php?hello=world\";</script>";
+    $_REQUEST['action'] = 'fugl';
+    //pstatus( 'finito' );
+}
 
 function create_database()
 {
     echo "- [{$_REQUEST['action']}]";
-//function rebuild_full()
-//{	// Process all
 	verbose( 'Process all' );
 	verbose( 'Clear tables' );
     clear_tables();
@@ -165,7 +215,28 @@ function load_images()
 
 function update_images()
 {
+    global $db;
+    $files  =[];
     echo "- [{$_REQUEST['action']}]";
+    // Get files from dir
+    getImagesRecursive( $_REQUEST['source_dir'], $GLOBALS['config']['data']['image_ext'], $files, ['jpg'] );
+    //logging( var_export( $files, TRUE ) );
+    
+    // Get files from db
+    $sql = sprintf( "SELECT source||'/'||file FROM images WHERE source glob '%s*';", $_REQUEST['source_dir'] );
+    $files_db    = array_flatten( querySql( $db, $sql ) );
+    logging( var_export( $files_db, TRUE ) );
+    
+    // Compare
+    $new_files  = array_diff( $files, $files_db);
+    logging( var_export( $new_files, TRUE ) );
+    
+    putFilesToDatabase( $new_files );
+    
+    //trigger_error( "<pre>img from dir: ".var_export(array_diff( $files, $files_db), TRUE), E_USER_ERROR);
+    
+    
+    return( $new_files );
 }   // update_images()
 
 function grouping_images()
@@ -246,11 +317,31 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 		else
 			$files[]	= str_replace( "\\", '/', "$file");
 		
-		echo progressbar( ++$count, $GLOBALS['tmp']['files_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
+		//echo progressbar( ++$count, $GLOBALS['tmp']['files_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
+
+        $max    = $GLOBALS['tmp']['files_total'];
+        $count++;
+        if ('cli' === PHP_SAPI ) 
+        {
+            echo progressbar(
+                $count
+            ,   $max
+            ,   $GLOBALS['config']['process']['progressbar_size']
+            ,   $file, $GLOBALS['config']['process']['progressbar_lenght'] 
+            );
+        }
+        else 
+        {
+            pbar( 'progress', $max, $count, "Rebuild: {$count}/{$max}" );
+        }
+
+        
+        
+        
 	}
     echo PHP_EOL;
 
-    pstatus( "Got images: {$count}/{$GLOBALS['tmp']['files_total']}" );
+    pstatus( "Got images: {$count}/{$GLOBALS['tmp']['files_total']} &#x1F5BC;" );
 	return( ! empty($files) );
 }	// getImagesRecursive()
 
@@ -297,25 +388,22 @@ function putFilesToDatabase( $files )
 	}
 	$r  = $db->exec( "COMMIT;" );
 
-    pstatus( "Images written to database: {$count}/{$max}" );
+    pstatus( "Images written to database: {$count}/{$max} &#x1F5BC;" );
 
 }	// putFilesToDatabase()
 
 
-function rebuild_update()
+function rebuild_update( $files = FALSE)
 {	// Process all
     global $db;
 	verbose( 'Update' );
     verbose( '// Write meta data, thumb and view for each file' );
 
     $GLOBALS['timers']['add_meta']     = microtime(TRUE);
-    
-    //var_export($GLOBALS['database']['sql']['select_all_files']);
-    //echo($GLOBALS['database']['sql']['select_all_files']);
 
-    $files  = array_flatten( querySql( $db, $GLOBALS['database']['sql']['select_all_files'] ) );
-    //var_export($files);
-    //exit;
+    // If no files given update ALL files!
+    if ( empty( $files ) )
+        $files  = array_flatten( querySql( $db, $GLOBALS['database']['sql']['select_all_files'] ) );
     
     $GLOBALS['tmp']['images_total']    = count($files);
     $count      = 0;
@@ -460,31 +548,51 @@ function rebuild_update()
         $r  = $db->exec( "COMMIT;" );
 
         logging( progress_log( $GLOBALS['tmp']['images_total'], $count, $GLOBALS['timers']['add_meta'], 1 ) );
-        echo progressbar($count, $GLOBALS['tmp']['images_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
 
         $max    = $GLOBALS['tmp']['images_total'];
-
-        pbar( 'progress', $max, $count, "Rebuild: {$count}/{$max}" );
-        
+        //update_progressbar( $id, $max, $count, $note, $size=30, $length=50);
+        /**/
+        if ('cli' === PHP_SAPI ) 
+        {
+            echo progressbar(
+                $count
+            ,   $max
+            ,   $GLOBALS['config']['process']['progressbar_size']
+            ,   $file
+            ,   $GLOBALS['config']['process']['progressbar_lenght'] 
+            );
+        }
+        else 
+        {
+            pbar( 'progress', $max, $count, "Rebuild: {$count}/{$max}" );
+        }
+        /**/
     }
     logging( progress_log( $GLOBALS['tmp']['images_total'], $count, $GLOBALS['timers']['add_meta'], 1 ) );
 
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['rebuild_full'], 1 ) );
-    pstatus( "Metadata added: {$count}/{$GLOBALS['tmp']['images_total']}" );
+    pstatus( "Metadata added: {$count}/{$GLOBALS['tmp']['images_total']} &#x1F5BA;" );
 }   // rebuild_update()
-
-function pbar( $id, $max, $value, $note )
+/*
+function update_progressbar( $id, $max, $count, $note, $size=30, $length=50)
 {
-    echo "<script>progress_bar( '{$id}', {$max}, {$value}, '{$note}' );</script>\n";
-    flush();
-    ob_flush();
+    print("$id, $max, $count, $note<br>\n");
+    if ('cli' === PHP_SAPI ) 
+    {
+        echo progressbar(
+            $count
+        ,   $max
+        ,   $size
+        ,   $note
+        ,   $length
+        );
+    }
+    else 
+    {
+        pbar( $id, $max, $count, "{$count}/{$max}" );
+    }
 }
-function pstatus( $status )
-{
-    echo "<script>parent.document.getElementById( 'status' ).innerHTML += '- {$status}<br>';</script>\n";
-    flush();
-    ob_flush();
-}
+*/
 
 function post_proccessing()
 {
@@ -515,7 +623,7 @@ function post_proccessing()
             $count++;
             //logging( "$count/$post_total: $group " . microtime2human( microtime( TRUE ) - $microtime_start ));
             logging( progress_log( $GLOBALS['tmp']['post_total'], $count, $GLOBALS['timers']["post_{$group}_{$action_no}"], 1 ) );
-        echo progressbar($count, $GLOBALS['tmp']['post_total'], $GLOBALS['config']['process']['progressbar_size'], "{$group}: {$sql}", $GLOBALS['config']['process']['progressbar_lenght'] );
+            echo progressbar($count, $GLOBALS['tmp']['post_total'], $GLOBALS['config']['process']['progressbar_size'], "{$group}: {$sql}", $GLOBALS['config']['process']['progressbar_lenght'] );
         }
         logging( progress_log( $GLOBALS['tmp']['post_total']   , $count, $GLOBALS['timers']["post_{$group}"], 1 ) );
     }

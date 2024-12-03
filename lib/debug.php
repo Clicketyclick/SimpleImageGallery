@@ -140,22 +140,13 @@ function debug ( $str, $extend = FALSE )
  */
 function verbose( $str, $extend = FALSE )
 {
-    //global $verbose;
-    //if ( $GLOBALS['verbose'] ?? false )
 	if ( ( $_SESSION['verbose'] ?? false ) || ( $GLOBALS['verbose'] ?? false ) || ( getenv('VERBOSE') ?? false ) ) 
     {
-        //$bt     = debug_backtrace();
-        //$caller = array_shift($bt);
-        $bt     = debug_backtrace()[1] ?? debug_backtrace()[0] ;
-        $caller = $bt;
-        $func   = (__FUNCTION__ == $caller['function']) ? 'MAIN' : $caller['function'];
-
         if ('cli' === PHP_SAPI ) {
-            //fprintf( STDERR, "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
             fprintf( STDERR, "- %s%s\n", ($extend ?? '?') , $str );
         } else {
-            //printf( "%s[%s](%s): %s\n", basename($caller['file']), $caller['line'], $func, $str );
-            printf( "<tr><th>%s</th><td>%s</td></tr>\n", ($extend ?? '?') , $str );
+            //printf( "<tr><th>%s</th><td>%s</td></tr>XX\n", ($extend ?? '?') , $str );
+            printf( "<p>\n%s\t%s</p>\n", ($extend ?? '?') , $str );
         }
     }
 }   // verbose()
@@ -283,7 +274,6 @@ function state( $tag, $value )
 }
 */
 
-
 /**
  *   @brief      Prints formated one-liner with key, value
  *   
@@ -297,7 +287,6 @@ function state( $tag, $value )
  *   
  *   @since      2024-11-28T12:18:22
  */
-
 function status( $tag, $value )
 {
 	verbose( sprintf( "%-30.30s [%s]", $tag, $value ) );

@@ -192,7 +192,7 @@ function initDatabase( &$db, $dbfile )
 		status(  "Create database", $dbfile );
 		$db	= createSqlDb($dbfile);
 
-        pstatus( "Database created" );
+        pstatus( "Database created &#x1F5BF;" );
 
 		$GLOBALS['tmp']['tables_total']    = count($GLOBALS['database']['tables']);
 		$count	= 0;
@@ -222,16 +222,14 @@ function initDatabase( &$db, $dbfile )
 		}
         echo "\n";
 
-        pstatus( "Tables added: {$count}/{$max}" );
-
+        pstatus( "Tables added: {$count}/{$max} &#x1F5CD;" );
 	}
 	else
 	{
-		//verbose( $dbfile, "Opening database:\t");
 		debug( $dbfile, "Opening database");
 		$db	= openSqlDb($dbfile);
 
-        pstatus( "Database open" );
+        pstatus( "Database open &#x1F5C1;" );
 
 	}
 	return( ! empty( $db ) );
