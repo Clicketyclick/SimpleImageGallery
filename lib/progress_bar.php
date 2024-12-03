@@ -208,9 +208,9 @@ function getClockface( $pct )
  *   
  *   @param [in]	$done		Count
  *   @param [in]	$total		Total 
- *   @param [in]	$size=30	Length of bar
+ *   @param [in]	$value	    Current value
  *   @param [in]	$trailer    String to append
- *   @param [in]	$langth=30	Max. length of string
+ *   @param [in]	$length=30	Max. length of string incl. trailer
  *   @return     Bar as string
  *   
  *   @details    
@@ -224,7 +224,7 @@ for($x=1;$x<=100;$x++){
  *   
  *   @since      2024-11-16T13:04:08
  */
-function progressbar($done, $total, $size=30, $trailer = FALSE, $length = 30 ) 
+function progressbar($done, $total, $size=30, $trailer = FALSE, $length = 50 ) 
 {
     include_once( __DIR__.'./handleStrings.php');
     static $width;
