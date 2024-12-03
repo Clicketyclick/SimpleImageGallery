@@ -12,6 +12,7 @@
 body {
 	background-color: black;
 	color: white;
+	height: 100vh;
 }
 a {
 	color: cyan;
@@ -273,4 +274,12 @@ details {
 	background-color: #355E3B;
 	background-color: #003E1B;
 
+}
+
+iframe {
+    width: calc( 100% - 60px);
+    /*height: calc( 80% - 10px);*/
+	    height: -moz-calc(100% - (20px + 30px));
+    height: -webkit-calc(100% - (20px + 30px));
+    height: calc(100% - (20px + 30px));
 }
