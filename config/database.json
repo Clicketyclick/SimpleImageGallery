@@ -48,7 +48,10 @@
 		"path": [
 			"-- *** POST updates moved to rebuild_full ***",
 			"-- Update path",
-			"-- UPDATE images SET path = replace (path, './data', '.');"
+			"-- UPDATE images SET path = replace (path, './data', '.');",
+			"UPDATE images SET path = replace (path, 'W:/GALLERY', '.');",
+			"UPDATE dirs   SET path = replace (path, 'W:/GALLERY', '.');",
+			"-- Update path end"
 		],
 		"name": [
 			"-- *** POST updates moved to rebuild_full ***",
