@@ -1,7 +1,7 @@
 <?php
 
 /**
-  *  @file      handleStrings.php
+ * @file        handleStrings.php
  * @brief       String handling rutines
  *
  * @details
@@ -40,7 +40,7 @@
  * @copyright   http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  * @author      Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  * @since       2018-07-30 10:51:00
- * @version     2024-12-03T11:34:46
+ * @version     2024-12-04T08:16:40
  */
 
 /**
@@ -610,7 +610,7 @@ function getNoOfDigits( $num )
  *  
  *  
  *@code
- *  fputs( getDoxygenFileHeader( __FILE__ ) );
+ *  fputs( STDERR, getDoxygenFileHeader( __FILE__ ) );
  *@endcode
  *  
  *	* [file]      filename.php
@@ -634,7 +634,7 @@ function getDoxygenFileHeader( $file )
 {
     $source = file_get_contents( $file );
     $header = getBetween($source, "/**", "*/");
-    return( var_export( preg_replace( "/\n \*\s*\@(\w*)/", "\n * [$1]", $header ), true ) );
+    return( trim(var_export( preg_replace( "/\n \*\s*\@(\w*)/", "\n * [$1]", $header ), true ), "'" ));
 }	// getDoxygenFileHeader()
 
 //---------------------------------------------------------------------
