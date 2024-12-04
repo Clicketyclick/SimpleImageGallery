@@ -10,7 +10,6 @@
  *   @version    @include version.txt
  */
 
-
 include_once( 'lib/debug.php' );
 include_once( 'lib/_header_config.php' );
 include_once( 'lib/push.php' );
@@ -25,31 +24,29 @@ $cfg_normalise    = [
     '/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]/' => ''    // Date only
 ];
 
-echo "<style>body{ color: yellow;};</style>";
-
-//printf( "<pre>[%s]</pre>", var_export($_REQUEST, TRUE ) );
 
 echo <<<EOL
+<style>body{ color: yellow;};</style>
 
 <script>
-function progress_bar( id, max, value, note ) {
-    if (undefined === note) { note = '?'; }
-    
-    var elem    = parent.document.getElementById( id );
-    var status  = parent.document.getElementById( id +"_status");
-    pct     = value * 100 / max;
+    function progress_bar( id, max, value, note ) {
+        if (undefined === note) { note = '?'; }
+        
+        var elem    = parent.document.getElementById( id );
+        var status  = parent.document.getElementById( id +"_status");
+        pct     = value * 100 / max;
 
-    elem.value          = pct;
-    status.innerHTML    = Math.trunc( pct ) +'% '+note;
-}   // progress_bar()
+        elem.value          = pct;
+        status.innerHTML    = Math.trunc( pct ) +'% '+note;
+    }   // progress_bar()
 
-function setStatus( str )
-{
-    parent.document.getElementById( 'status' ).innerHTML += str;
-}
+    function setStatus( str )
+    {
+        parent.document.getElementById( 'status' ).innerHTML += str;
+    }   // setStatus()
 
-parent.document.getElementById( 'status' ).innerHTML = '';
-setStatus( '[{$_REQUEST['action']}]: [{$_REQUEST['source_dir']}] &rarr; [{$_REQUEST['database_name']}]<br>' );
+    parent.document.getElementById( 'status' ).innerHTML = '';
+    setStatus( '[{$_REQUEST['action']}]: [{$_REQUEST['source_dir']}] &rarr; [{$_REQUEST['database_name']}]<br>' );
 </script>
 
 EOL;
@@ -84,7 +81,7 @@ switch( $_REQUEST['action'] ?? '?' )
     case 'update_images':
         $files  = update_images();
         rebuild_update($files);
-        //post_proccessing();
+        post_proccessing();
     break;
     case 'delete_images':
         delete_images();
@@ -111,43 +108,56 @@ pstatus( "Runtime " . microtime2human( $Runtime ) );
 
 pstatus( 'Done' );
 
+
 //----------------------------------------------------------------------
+
+/**
+ *   @brief      Reporting the deletion
+ *   
+ *   @since      2024-12-04T18:22:46
+ */
 function delete_action()
 {
     pstatus( 'delete action' );
     echo "- <pre>[".var_export($_REQUEST, TRUE)."</pre>";
 }
+
 //----------------------------------------------------------------------
 
+/**
+ *   @brief      Select image directories for deletion
+ *   
+ *   
+ *   @details    $(More details)
+ *   
+ *   @since      2024-12-04T18:24:02
+ */
 function delete_images()
 {
     global $db;
     echo "- [{$_REQUEST['action']}]";
 	verbose( 'Delete images' );
+
     // Select directories for deletion
     // Get files from db
-    //$sql = sprintf( "SELECT DISTINCT source FROM images WHERE source glob '%s*';", $_REQUEST['source_dir'] );
     $sql    = sprintf( $GLOBALS['database']['sql']['select_distinct_source'], $_REQUEST['source_dir'] );
     $files_db    = array_flatten( querySql( $db, $sql ) );
-    //logging( var_export( $files_db, TRUE ) );
     
     $output =  '<form id="delete_form" action="build-dev.php"  method="post">'
-    //.   '<input type="text" id="action" name="action" size=50 value="build-dev.php?action=delete_action">'
     .   '<input type="hidden" id="action" name="action" size=50 value="delete_action">'
     .   '<input type="hidden" id="title" name="title" size=50 value="do_what">'
     ;
-/**/    $loop=0;
+    $loop=0;
     foreach ( $files_db as $dir )
     {
         $sql    = "SELECT count(*) FROM images WHERE source = '{$dir}';";
         $count  = querySqlSingleValue( $db, $sql );
         $loop++;
-        //$output .= sprintf("<<br>- %s", $dir );
         $output .= sprintf("<input type=\"checkbox\" id=\'%s\' name=\'files[]\' value=\'%s\'>"
         , $loop
         , $dir 
         );
-        //$output .= sprintf("<label for=\'%s\'>%s</label><br>"
+
         $output .= sprintf("<label for=\'%s\'>%10.10s: %s</label><br>"
         ,   $loop
         ,   $count
@@ -157,30 +167,28 @@ function delete_images()
         verbose($dir);
         logging( $dir );
     }
-    /**/
-    //$output .= "
-    pstate( "$output<input type=\'submit\' value=\'Submit\'>" 
-/*    .   "<input type=\'button\' value=\'Clear\' onClick=\'"
-    .       "console.log(parent.document.getElementById( \"action_frame\" ).src );"
-    .       "top.document.getElementById( \"action_frame\" ).src = \"del.php?hello=world&"
-    .       implode(',', $files_db)
-    .       "\";"
-    .       "console.log(\"boo\");"
-    .   "\'>"
-    .   "<button name=\'submit\' onclick=\'parent.document.getElementById(\'action_frame\').location = \"del.php\";\'>Go</button>"
-*/    
-    
-    .   "</form>");
-    /**/
-    //pstatus( "To delete?: {$output}" );
-    //logging( $output );
 
-    //echo "<script>console.log(parent.document.getElementById( 'action_frame' ).src );</script>";
-    //echo "<script>parent.document.getElementById( 'action_frame' ).src = \"del.php?hello=world\";</script>";
-    $_REQUEST['action'] = 'fugl';
-    //pstatus( 'finito' );
+    pstate( "$output<input type=\'submit\' value=\'Submit\'>" 
+    .   "</form>");
+
+    $_REQUEST['action'] = '';
 }
 
+//----------------------------------------------------------------------
+
+/**
+ *   @brief      Create new database
+ *   
+ *   
+ *   @details    $(More details)
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   @since      2024-12-04T18:24:41
+ */
 function create_database()
 {
     echo "- [{$_REQUEST['action']}]";
@@ -192,8 +200,8 @@ function create_database()
 
 	$GLOBALS['timers']['get_images_recursive']	= microtime(TRUE);
 	verbose( '// Find all image files recursive' );
+
 	// Find all image files recursive
-	//getImagesRecursive( $GLOBALS['config']['data']['data_root'], $GLOBALS['config']['data']['image_ext'], $files, ['jpg'] );
 	getImagesRecursive( $_REQUEST['source_dir'], $GLOBALS['config']['data']['image_ext'], $files, ['jpg'] );
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['get_images_recursive'], 1 ) );
 	debug( $files );
@@ -204,15 +212,39 @@ function create_database()
 	// Put all files to database: images
 	putFilesToDatabase( $files );
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['put_files_to_database'], 1 ) );
-//}   // rebuild_full()
 
 }   // create_database()
 
+//----------------------------------------------------------------------
+
+/**
+ *   @brief      load images (Dummy)
+ *   
+ *   
+ *   @todo       Remove
+ *
+ *   @since      2024-12-04T18:25:53
+ */
 function load_images()
 {
     echo "- [{$_REQUEST['action']}]";
 }   // load_images()
 
+//----------------------------------------------------------------------
+
+/**
+ *   @brief      Update database with new images
+ *   
+ *   
+ *   @details    $(More details)
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-12-04T18:26:33
+ */
 function update_images()
 {
     global $db;
@@ -239,11 +271,17 @@ function update_images()
     return( $new_files );
 }   // update_images()
 
+//----------------------------------------------------------------------
+
+// DUMMY
 function grouping_images()
 {
     echo "- [{$_REQUEST['action']}]";
 }   // grouping_images()
 
+//----------------------------------------------------------------------
+
+// DUMMY
 function update_index()
 {
     echo "- [{$_REQUEST['action']}]";
@@ -253,8 +291,18 @@ function update_index()
 //----------------------------------------------------------------------
 
 
-//----------------------------------------------------------------------
-
+/**
+ *   @brief      Clear tables in existing database (Irreversible)
+ *   
+ *   @param [in]		$(description)
+ *   @return     $(Return description)
+ *   
+ *   @details    $(More details)
+ *   
+ *   @warning    Irreversible
+ *   
+ *   @since      2024-12-04T18:27:34
+ */
 function clear_tables()
 {
     global $db;
@@ -262,20 +310,7 @@ function clear_tables()
     $r  = $db->exec( $GLOBALS['database']['sql']['delete_all_images'] );
 }   //clear_tables()
 
-
-/*
-for ($i = 0; $i <= 10; $i++) {
-    $str    = number2word( $i );
-    echo "<script>progress_bar( 'progress', 10, {$i}, '{$i}={$str}' );</script>\n";
-    ob_flush(); // Flush fluently
-    flush();
-    sleep(1);
-}
-    echo "<script>progress_bar( 'progress', 10, 10, 'Done' );</script>\n";
-*/
-
-
-
+//----------------------------------------------------------------------
 
 /**
  *   @brief      Get a list of images recursive from root
@@ -298,8 +333,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 	
 	$count	= 0;
 	$GLOBALS['tmp']['files_total']	= 0;
-	//$it2	= new RecursiveIteratorIterator($it);
-	//$it3 = new RegexIterator($it2, '/^.+\.jpg$/i', RecursiveRegexIterator::GET_MATCH);
 
 	foreach(new RecursiveIteratorIterator($it) as $file)
 		$GLOBALS['tmp']['files_total']++;
@@ -309,7 +342,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 	{
 		if ( ! empty( $allowed ) )
 		{	// extention after last . to lowercast
-			//if( in_array( strtolower( substr( $file, strrpos($file, '.') + 1) ), $allowed ) ) {
 			if( in_array( strtolower( pathinfo( $file, PATHINFO_EXTENSION ) ), $allowed ) ) {
 				$files[]	= str_replace( "\\", '/', "$file");
 			}
@@ -317,8 +349,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 		else
 			$files[]	= str_replace( "\\", '/', "$file");
 		
-		//echo progressbar( ++$count, $GLOBALS['tmp']['files_total'], $GLOBALS['config']['process']['progressbar_size'], $file, $GLOBALS['config']['process']['progressbar_lenght'] );
-
         $max    = $GLOBALS['tmp']['files_total'];
         $count++;
         if ('cli' === PHP_SAPI ) 
@@ -334,10 +364,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
         {
             pbar( 'progress', $max, $count, "Rebuild: {$count}/{$max}" );
         }
-
-        
-        
-        
 	}
     echo PHP_EOL;
 
@@ -345,7 +371,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 	return( ! empty($files) );
 }	// getImagesRecursive()
 
-//----------------------------------------------------------------------
 //----------------------------------------------------------------------
 
 /**
@@ -368,7 +393,7 @@ function putFilesToDatabase( $files )
 	foreach ( $files as $path )
 	{
 		['basename' => $basename, 'dirname' => $dirname] = pathinfo( $path );
-		//$sql	= sprintf( $GLOBALS['database']['sql']['insert_files'], 'images', $dirname, $dirname, $basename, $basename );
+
 		$sql	= sprintf( $GLOBALS['database']['sql']['insert_files'], 'images', $dirname, 
             str_replace( 
                 [$GLOBALS['config']['data']['data_root']] //, trim($GLOBALS['config']['data']['data_root'], '/')
@@ -383,8 +408,6 @@ function putFilesToDatabase( $files )
         $count++;
 
         pbar( 'progress', $max, $count, "Put image to database: {$count}/{$max}" );
-        //sleep(1);
-
 	}
 	$r  = $db->exec( "COMMIT;" );
 
@@ -392,7 +415,27 @@ function putFilesToDatabase( $files )
 
 }	// putFilesToDatabase()
 
+//----------------------------------------------------------------------
 
+/**
+ *   @brief      Write meta data, thumb and view for each file
+ *   
+ *   @param [in]	$files=FALSE	Files to update
+ *   
+ *   @details    
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-12-04T18:28:51
+ */
 function rebuild_update( $files = FALSE)
 {	// Process all
     global $db;
@@ -421,7 +464,7 @@ function rebuild_update( $files = FALSE)
         // Get image dimentions
         list($width, $height, $type, $attr) = getimagesize($file);
 
-        // Get EXIF - in quiet mode
+    //>> Get EXIF - in quiet mode
         $exif 	= @exif_read_data( $file, 0, true);
         if ( empty( $exif ) )
         {
@@ -433,8 +476,9 @@ function rebuild_update( $files = FALSE)
             $exifjson 	= json_encode_db( $exif );
         }
         debug($exifjson, 'EXIF_json');
+    //<< Get EXIF - in quiet mode
 
-        // Get IPTC
+    //>> Get IPTC
         $iptc		= parseIPTC( $file );
         if ( empty( $iptc ) )
         {
@@ -445,6 +489,7 @@ function rebuild_update( $files = FALSE)
             $iptcjson 	= json_encode_db( $iptc );
 
         debug($iptcjson, 'IPTC_json');
+    //<< Get IPTC
 
         // Get thumbnail - in quiet mode
         $thumb 		= @exif_thumbnail( $file );
@@ -463,6 +508,7 @@ function rebuild_update( $files = FALSE)
                 ,	$GLOBALS['config']['images']['image_resize_type']
                 ,	$GLOBALS['config']['images']['crop']
                 );
+            logging( "Thumb rebuild");
         }
         else
         {
@@ -473,6 +519,7 @@ function rebuild_update( $files = FALSE)
                 $gdThumb	= gdReorientateByOrientation( $gdThumb, $exif['IFD0']['Orientation'], $file );
                 $thumb		= stringcreatefromimage( $gdThumb, 'jpg');
             }
+            logging( "Thumb extracted");
         }
         
         if ( empty( $thumb ) )
@@ -482,8 +529,8 @@ function rebuild_update( $files = FALSE)
             $thumb	= '';
             //continue;
         }
-        //debug(microtime( TRUE ) - $currenttime, 'get thumb');
-        // Rotate EXIF
+
+        //>> Rotate EXIF
         $thumb 		= base64_encode( $thumb );
 
         $dst		= "FALSE";
@@ -506,8 +553,9 @@ function rebuild_update( $files = FALSE)
         }
         //debug(microtime( TRUE ) - $currenttime, 'view resize');
         $view 		= base64_encode( $view );
+        //<< Rotate EXIF
 
-        // Update thumb and view
+    //>> Update thumb and view in database
         $sql	= sprintf( 
             $GLOBALS['database']['sql']['replace_into_images']
         ,	$dirname
@@ -525,8 +573,10 @@ function rebuild_update( $files = FALSE)
         );
         debug( $sql );
         $r  = $db->exec( $sql );
-
-        // Update meta
+    //>> Update thumb and view in database
+    
+    
+    //>> Update meta
         $sql	= sprintf($GLOBALS['database']['sql']['replace_into_meta'], $exifjson, $iptcjson, $dirname, $basename );
         debug( $sql  );
         //verbose( $sql  );
@@ -546,7 +596,9 @@ function rebuild_update( $files = FALSE)
         ,	"Image: "
         );
         $r  = $db->exec( "COMMIT;" );
-
+    //<< Update meta
+    
+//>> Logging
         logging( progress_log( $GLOBALS['tmp']['images_total'], $count, $GLOBALS['timers']['add_meta'], 1 ) );
 
         $max    = $GLOBALS['tmp']['images_total'];
@@ -572,31 +624,23 @@ function rebuild_update( $files = FALSE)
 
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['rebuild_full'], 1 ) );
     pstatus( "Metadata added: {$count}/{$GLOBALS['tmp']['images_total']} &#x1F5BA;" );
+//<< Logging
+    
 }   // rebuild_update()
-/*
-function update_progressbar( $id, $max, $count, $note, $size=30, $length=50)
-{
-    print("$id, $max, $count, $note<br>\n");
-    if ('cli' === PHP_SAPI ) 
-    {
-        echo progressbar(
-            $count
-        ,   $max
-        ,   $size
-        ,   $note
-        ,   $length
-        );
-    }
-    else 
-    {
-        pbar( $id, $max, $count, "{$count}/{$max}" );
-    }
-}
-*/
 
+//----------------------------------------------------------------------
+
+/**
+ *   @brief      Running post processing SQL after data load
+ *   
+ *   @details    Executing each group under $GLOBALS['database']['post']
+ *   
+ *   @since      2024-12-04T18:17:05
+ */
 function post_proccessing()
 {
     verbose( "Post-processing", "\n- ");
+
     // Count all post action - names
     $GLOBALS['tmp']['post_total']  = count( $GLOBALS['database']['post'], COUNT_RECURSIVE ) - count( $GLOBALS['database']['post'] );
     $count	= 0;
@@ -613,15 +657,17 @@ function post_proccessing()
             if ( str_starts_with( $sql, '--') )
             {
                 debug( $sql, 'skip:' );
+                logging( "Skip: {$sql};")
                 //$group	= '';
             }
             else
             {
                 debug($sql);
+                logging( "Exec: {$sql};")
                 $r  = $db->exec( $sql );
             }
             $count++;
-            //logging( "$count/$post_total: $group " . microtime2human( microtime( TRUE ) - $microtime_start ));
+
             logging( progress_log( $GLOBALS['tmp']['post_total'], $count, $GLOBALS['timers']["post_{$group}_{$action_no}"], 1 ) );
             echo progressbar($count, $GLOBALS['tmp']['post_total'], $GLOBALS['config']['process']['progressbar_size'], "{$group}: {$sql}", $GLOBALS['config']['process']['progressbar_lenght'] );
         }
@@ -634,6 +680,27 @@ function post_proccessing()
 
 //----------------------------------------------------------------------
 
+/**
+ *   @brief      Name normalisation according to rules
+ *   
+ *   @param [in]	&$cfg	Rules
+ *   @param [in]	$name	Name
+ *   @return     String w. normalised name
+ *   
+ *   @details    $GLOBALS['cfg_normalise']
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   @todo       
+ *   @bug        
+ *   @warning    
+ *   
+ *   @see        https://
+ *   @since      2024-12-04T18:19:44
+ */
 function normalise_name( &$cfg, $name )
 {
     $r  = $name;
@@ -646,116 +713,16 @@ function normalise_name( &$cfg, $name )
 
 //----------------------------------------------------------------------
 
-
-function number2word( $number, $lang = 'en' )
-{
-    $_1to19 = [
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        "ten",
-        "eleven",
-        "twelve",
-        "thirteen",
-        "fourteen",
-        "fifteen",
-        "sixteen",
-        "seventeen",
-        "eighteen",
-        "nineteen",
-    ];
-    $_teen = [
-        "twenty",
-        "thirty",
-        "forty",
-        "fifty",
-        "sixty",
-        "seventy",
-        "eighty",
-        "ninety",
-    ];
-    $_mult = [
-        2  => 'hundred',
-        3  => 'thousand',
-        6  => 'million',
-        9  => 'billion',
-        12 => 'trillion',
-        15 => 'quadrillion',
-        18 => 'quintillion',
-        21 => 'sextillion',
-        24 => 'septillion', // php can't count this high
-        27 => 'octillion',
-    ];
-    $fnBase = function ($n, $x) use (&$fn, $_mult) {
-        return $fn($n / (10 ** $x)) . ' ' . $_mult[$x];
-    };
-    $fnOne = function ($n, $x) use (&$fn, &$fnBase) {
-            $y = ($n % (10 ** $x)) % (10 ** $x);
-            $s = $fn($y);
-            $sep = ($x === 2 && $s ? " and " : ($y < 100 ? ($y ? " and " : '') : ', '));
-            return $fnBase($n, $x) . $sep . $s;
-        };
-        $fnHundred = function ($n, $x) use (&$fn, &$fnBase) {
-            $y = $n % (10 ** $x);
-            $sep = ($y < 100 ? ($y ? ' and ' : '') : ', ');
-            return ', ' . $fnBase($n, $x) . $sep . $fn($y);
-        };
-        $fn = function ($n) use (&$fn, $_1to19, $_teen, $number, &$fnOne, &$fnHundred) {
-            switch ($n) {
-                case 0:
-                    return ($number > 1 ? '' : 'zero');
-                case $n < 20:
-                    return $_1to19[$n - 1];
-                case $n < 100:
-                    return $_teen[($n / 10) - 2] . ' ' . $fn($n % 10);
-                case $n < (10 ** 3):
-                    return $fnOne($n, 2);
-            };
-            for ($i = 4; $i < 27; ++$i) {
-                if ($n < (10 ** $i)) {
-                    break;
-                }
-            }
-            return ($i % 3) ? $fnHundred($n, $i - ($i % 3)) : $fnOne($n, $i - 3);
-        };
-        $number = $fn((int)$number);
-        $number = str_replace(', , ', ', ', $number);
-        $number = str_replace(',  ', ', ', $number);
-        $number = str_replace('  ', ' ', $number);
-        $number = ltrim($number, ', ');
-
-        return $number;
-    $fn = function ($n) use (&$fn, $_1to19, $_teen, $number, &$fnOne, &$fnHundred) {
-        switch ($n) {
-            case 0:
-                return ($number > 1 ? '' : 'zero');
-            case $n < 20:
-                return $_1to19[$n - 1];
-            case $n < 100:
-                return $_teen[($n / 10) - 2] . ' ' . $fn($n % 10);
-            case $n < (10 ** 3):
-                return $fnOne($n, 2);
-        };
-        for ($i = 4; $i < 27; ++$i) {
-            if ($n < (10 ** $i)) {
-                break;
-            }
-        }
-        return ($i % 3) ? $fnHundred($n, $i - ($i % 3)) : $fnOne($n, $i - 3);
-    };
-    $number = $fn((int)$number);
-
-    return $number;
-}
-
+/**
+ *   @brief      Function for execution on shutdown
+ *   
+ *   @since      2024-12-04T18:20:01
+ */
 function shutdown()
 {
     echo "done";
-}
+}   // shutdown()
+
+//----------------------------------------------------------------------
+
 ?>

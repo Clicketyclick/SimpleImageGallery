@@ -25,26 +25,54 @@ include_once('lib/_header.php');
 //timer_set('_header');
 
 timer_set('header', 'Reading header info');
-echo '
+echo "
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8">
+  <meta charset='UTF-8'>
   <title>SIGbuild - Simple Image Gallery database builder</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="js/display.js"></script>
-  <link rel="icon" type="image/x-icon" href="{$GLOBALS[\'config\'][\'system\'][\'favicon\']}">
+  <link rel='stylesheet' href='css/styles.css'>
+  <!--script src='js/display.js'></script-->
+  <link rel='icon' type='image/x-icon' href=\"{$GLOBALS['config']['system']['favicon']}\">
 
 <script>
 // [How to prevent form resubmission when page is refreshed (F5 / CTRL+R)](https://stackoverflow.com/a/45656609)
     if ( window.history.replaceState ) {
         window.history.replaceState( null, null, window.location.href );
     }
+
+
+    function clicked( str ) {
+        document.getElementById('action').value='build_sub.php?' + str;
+        document.getElementById('action').value+='&database_name='  + document.getElementById('database_name').value;
+        document.getElementById('action').value+='&source_dir='     + document.getElementById('source_dir').value.replace('/\\/g', '/');;
+
+        document.getElementById('action_frame').src=document.getElementById('action').value;
+        console.log( 'clicked');
+        //alert( 'clicked ' + str);
+    }
+//----------------------------------------------------------------------
+
+    function replace_slash( str ) {
+        //console.log('change ' + str);
+        
+        // Replace backslash
+        str = str.replaceAll( /\\\\/g, \"/\");
+        
+        // Remove qoutes
+        str = str.replaceAll( /['\"]+/g, '' );
+        
+        //console.log('changed ' + str);
+        
+        return str;
+    }   // replace_slash()
+
 </script>
+
 
 </head>
 <body>
-';
+";
 
 debug( $GLOBALS['browser']['language'], "session language: ");
 
@@ -65,7 +93,7 @@ if ( empty( $_REQUEST['QUERY_STRING']) )
 timer_set('header', 'end');
 
 // Argument / config / hard coded default
-$database_name   = $_REQUEST['database'] 
+$database_name   = $_REQUEST['db'] 
     ??  $GLOBALS['config']['database']['file_name']
     ??  'database/data.db' ;
 $source     = $_REQUEST['source'] 
@@ -79,21 +107,6 @@ $source     = $_REQUEST['source']
 
 echo <<<EOF
 
-<script>
-function clicked( str ) {
-    //document.getElementById("action").value='build_sub.php?{$_REQUEST['QUERY_STRING']}&' + str;
-    document.getElementById("action").value='build_sub.php?' + str;
-    //document.getElementById("action").value='build_sub.php?';
-    //document.getElementById("action").value+='&action='  + document.getElementById("action").value;
-    document.getElementById("action").value+='&database_name='  + document.getElementById("database_name").value;
-    document.getElementById("action").value+='&source_dir='     + document.getElementById("source_dir").value;
-
-    document.getElementById("action_frame").src=document.getElementById("action").value;
-    console.log( 'clicked');
-    //alert( 'clicked ' + str);
-}
-</script>
-
 
 <h2>Build database for Simple Image Gallery</h2>
 
@@ -104,16 +117,16 @@ function clicked( str ) {
         <tr><th>
             <label for="database_name">Database:</label>
         </th><td>
-            <input type="text" id="database_name" name="database_name" size=50 value="{$database_name}">
+            <input type="text" id="database_name" name="database_name" onchange="this.value = replace_slash(this.value);" size=50 value="{$database_name}">
         </td><td>
 <!-- Create -->
-            <button type="button" onClick="clicked('action=create_database');">&#x1F5CD; Create database</button>
+            <button type="button" onClick="clicked('action=create_database');" >&#x1F5CD; Create database</button>
         </td></tr>
 <!-- Source -->
         <tr><th>
             <label for="source_dir">Source dir:</label>
         </th><td>
-            <input type="text" id="source_dir" name="source_dir" size=50 value="{$source}">
+            <input type="text" id="source_dir" name="source_dir" size=50  onchange="this.value = replace_slash(this.value);" value="{$source}">
         </td><td>
 <!-- Update -->
             <button type="button" onClick="clicked('action=update_images');">&#x1F5D8; Update images</button>
@@ -135,12 +148,12 @@ function clicked( str ) {
       <input type="button" value="Clear" onClick='document.getElementById("build_form").reset();'>
 </form> 
 
+
 <!-- Progress -->
-<label for="progress">progress:</label>
+    <label for="progress">progress:</label>
     <progress id="progress" value="0" max="100"> 0% </progress>
     <span id='progress_status'></span>
 <br>
-
 
 <details>
 <summary>Iframe</summary>
@@ -176,7 +189,6 @@ if ( !empty( $_REQUEST['action'] ) )
             }
             else
                 pstate("<div>No files to delete</div>");
-                
         break;
         default:
         pstate( "<div>do nothing</div>" );

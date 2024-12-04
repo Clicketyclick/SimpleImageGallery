@@ -17,10 +17,9 @@ home='.';
 		e = e || window.event; 
 		var charCode = e.charCode || e.keyCode, 
 			character = String.fromCharCode(charCode); 
-
-	  console.log(character+"_"+charCode);
+		//console.log(character+"_"+charCode);
 	  
-	  switch(charCode) {
+		switch(charCode) {
 			case 36:// Home
 				// Home
 				if (typeof(close_image) === typeof(Function) )
@@ -41,9 +40,8 @@ home='.';
 				break;
 			default:
 				// code block
-                console.log(charCode);
+                //console.log(charCode);
 		}
-	  
 	};
 //<<< Keybord events
 
