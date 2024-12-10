@@ -13,11 +13,12 @@
 include_once( 'lib/debug.php' );
 include_once( 'lib/_header_config.php' );
 include_once( 'lib/push.php' );
+include_once( 'lib/reindexwordclouds.php' );
 
-// Init global variables
+/** @brief Init global variables */
 $files		= [];
 
-// Normalising dates
+/** @brief Normalising dates */
 $cfg_normalise    = [
     '/\.jpg$/i' => '',  // Extention
     '/^(19|20)\d\d-\d\d-\d\d[T,_,\.,\s]\d\d-\d\d-\d\d[_,\.,\s]/' => '', // Full ISO
@@ -56,62 +57,63 @@ timer_set('init_db', 'Open - or create database');
 initDatabase( $db, $_REQUEST['database_name'] );
 timer_set('init_db');
 
-
 switch( $_REQUEST['action'] ?? '?' )
 {
     case 'create_database':
         create_database();
         rebuild_update();
         post_proccessing();
+
+        reindex_all();
         
+        /*
+        //** @brief temp var
         $r  = $db->exec( $GLOBALS['database']['sql']['replace_into_dirs'] );
+        
+        //** @brief temp var
         $r  = querySqlSingleValue( $db, "SELECT count(path) FROM dirs;");
+
         pstatus( "- replace_into_dirs: {$r}" );
 
         $r  = $db->exec( $GLOBALS['database']['sql']['update_dirs'] );
-        $r  = querySqlSingleValue( $db, "SELECT count(thumb) FROM dirs;");
-    pstatus( "- update_dirs: {$r}" );
+        */
+        //$r  = querySqlSingleValue( $db, "SELECT count(thumb) FROM dirs;");
 
+        $r  = querySqlSingleValue( $db, $GLOBALS['database']['sql']['select_count_thumb'] );
+        pstatus( "- ".___('update_dirs').": {$r}" );
     break;
-    /*
-    case 'load_images':
-        load_images();
-    break;
-    */
+
     case 'update_images':
         $files  = update_images();
         rebuild_update($files);
         post_proccessing();
+        reindex_all();
     break;
+
     case 'delete_images':
         delete_images();
     break;
-    case 'delete_action':
-        delete_action();
+
+    case 'reindex':
+        reindex_all();
+        reindex_wordclouds();
     break;
-    break;
-    /*
-    case 'grouping_images':
-        grouping_images();
-    break;
-    case 'update_index':
-        update_index();
-    break;
-    */
+
     default:
-        echo "Sorry: Don't know how to: [{$_REQUEST['action']}]";
+        //echo "Sorry: Don't know how to: [{$_REQUEST['action']}]";
+        echo ___('unable_to').": [{$_REQUEST['action']}]";
 }
 
-$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
-pstatus( "Runtime " . microtime2human( $Runtime ) );
+pstatus( ___('runtime'). " " . microtime2human( microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"] ) );
 
 
-pstatus( 'Done' );
+pstatus( ___('done') );
 
 
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        delete_action()
  *   @brief      Reporting the deletion
  *   
  *   @since      2024-12-04T18:22:46
@@ -120,11 +122,12 @@ function delete_action()
 {
     pstatus( 'delete action' );
     echo "- <pre>[".var_export($_REQUEST, TRUE)."</pre>";
-}
+}   // delete_action()
 
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        delete_images()
  *   @brief      Select image directories for deletion
  *   
  *   
@@ -172,11 +175,12 @@ function delete_images()
     .   "</form>");
 
     $_REQUEST['action'] = '';
-}
+}   // delete_images()
 
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        create_database()
  *   @brief      Create new database
  *   
  *   
@@ -196,8 +200,6 @@ function create_database()
 	verbose( 'Clear tables' );
     clear_tables();
     
-	$GLOBALS['timers']['rebuild_full']	= microtime(TRUE);
-
 	$GLOBALS['timers']['get_images_recursive']	= microtime(TRUE);
 	verbose( '// Find all image files recursive' );
 
@@ -206,24 +208,18 @@ function create_database()
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['get_images_recursive'], 1 ) );
 	debug( $files );
 
-	status( "Processing files", count( $files ));
+	status( ___('processing_files'), count( $files ));
 	$GLOBALS['timers']['put_files_to_database']	= microtime(TRUE);
 	
 	// Put all files to database: images
 	putFilesToDatabase( $files );
 	logging( progress_log( count( $files ), 1, $GLOBALS['timers']['put_files_to_database'], 1 ) );
-
 }   // create_database()
 
 //----------------------------------------------------------------------
 
 /**
  *   @brief      load images (Dummy)
- *   
- *   
- *   @todo       Remove
- *
- *   @since      2024-12-04T18:25:53
  */
 function load_images()
 {
@@ -233,6 +229,7 @@ function load_images()
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        update_images()
  *   @brief      Update database with new images
  *   
  *   
@@ -273,7 +270,8 @@ function update_images()
 
 //----------------------------------------------------------------------
 
-// DUMMY
+
+/** @brief Dummy */
 function grouping_images()
 {
     echo "- [{$_REQUEST['action']}]";
@@ -281,7 +279,7 @@ function grouping_images()
 
 //----------------------------------------------------------------------
 
-// DUMMY
+/** @brief Dummy */
 function update_index()
 {
     echo "- [{$_REQUEST['action']}]";
@@ -291,13 +289,116 @@ function update_index()
 //----------------------------------------------------------------------
 
 
+function reindex_all()
+{
+    global $db;
+
+    echo "- [{$_REQUEST['action']}]";
+    
+	$GLOBALS['timers']['reindex_all']	= microtime(TRUE);
+
+
+    $sql	= $GLOBALS['database']['sql']['select_source_meta'];
+    debug( $sql, 'SQL:' );
+    
+    $files 	= querySql( $db, $sql );
+    $total	= count( $files );
+    debug( $files, 'Files');
+
+	logging( progress_log( $total, 1, $GLOBALS['timers']['reindex_all'], 1 ) );
+
+    $loadfile	= fopen( 'loadfile.txt', 'w');
+    $GLOBALS['tmp']['keycount']    = 0;
+    $GLOBALS['tmp']['imagecount']  = 0;
+    
+    foreach($files as $no => $data)
+    {
+        $GLOBALS['tmp']['imagecount']++;
+        $file           = $data['file'];
+        // Parse metadata
+        $data['iptc']	= json_decode( $data['iptc'], TRUE) ?? [];
+        //$data['exif']	= json_decode( $data['exif'], TRUE);
+
+        $iptc   = [];
+        array2breadcrumblist($data['iptc'], $iptc );
+        
+        pstatus( "IPTC: ".var_export( $iptc, TRUE) );
+        logging( "IPTC: ".var_export( $iptc, TRUE) );
+        trigger_error( var_export( $iptc, TRUE), E_USER_WARNING );
+        //array2breadcrumblist($data['exif'], $exif );
+        
+        process_search( $iptc, $data['rowid'], $file );
+        //process_search( $exif, $no, $file );
+
+        echo progressbar($GLOBALS['tmp']['imagecount'], $total, $GLOBALS['config']['process']['progressbar_size'], $file );
+        logging( progress_log( count( $files ), $no, $GLOBALS['timers']['reindex_all'], 1 ) );
+    }
+    
+    // Delete doublets from search
+    $r  = $db->exec( $GLOBALS['database']['sql']['delete_doublets_from_search'] );
+    
+    $no++;
+    pstatus( "Reindexing : {$no}/{$total}" );
+}   // reindex_all()
+
+
+//----------------------------------------------------------------------
+
+
 /**
- *   @brief      Clear tables in existing database (Irreversible)
+ *   @brief      remove old entries and add new entries
  *   
- *   @param [in]		$(description)
+ *   @param [in]	$iptc   Data array
+ *   @param [in]	$file	File key (source + file)
  *   @return     $(Return description)
  *   
  *   @details    $(More details)
+ *   
+ *   @since      2024-11-19T22:33:07
+ */
+function process_search( $iptc, $no, $file )
+{
+    global $db;
+
+    // Remove old entries!
+    $sql	= sprintf( 
+                    $GLOBALS['database']['sql']['delete_search']
+                ,	$file
+            );
+    $r  = $db->exec( $sql );
+    logging( "Delete search: $sql");
+
+    // Insert new
+    foreach( $iptc as $key => $value )
+    {
+        foreach( $GLOBALS['database']["search"]["iptc"] as $iKey => $iValue )
+        {
+            if ( str_starts_with( $key, $iKey ) )
+            {
+                $sql	= sprintf( 
+                    $GLOBALS['database']['sql']['insert_search']
+                ,	$file
+                ,	$no
+                ,	"$iValue$value"
+                ,	strtolower("$iValue$value")
+                );
+                logging( "Insert search: $sql" );
+                $r  = $db->exec( $sql );
+                $GLOBALS['tmp']['keycount']++;
+            }
+        }
+    }
+}   // process_iptc_search()
+
+//----------------------------------------------------------------------
+
+
+
+/**
+ *   @fn        clear_tables()
+ *   @brief      Clear tables in existing database (Irreversible)
+ *   
+ *   @param [in]		$(description)
  *   
  *   @warning    Irreversible
  *   
@@ -313,6 +414,7 @@ function clear_tables()
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
  *   @brief      Get a list of images recursive from root
  *   
  *   @param [in]	$root		Start of search
@@ -330,7 +432,6 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 	$it = new RecursiveDirectoryIterator( $root, RecursiveDirectoryIterator::SKIP_DOTS );
 	$display = Array ( 'jpeg', 'jpg' );
 
-	
 	$count	= 0;
 	$GLOBALS['tmp']['files_total']	= 0;
 
@@ -374,6 +475,7 @@ function getImagesRecursive( $root, $image_ext, &$files, $allowed = [] )
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        putFilesToDatabase( $files )
  *   @brief      Write all file names to table.
  *   
  *   @param [in]	$files	List of file
@@ -418,6 +520,7 @@ function putFilesToDatabase( $files )
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        rebuild_update( $files = FALSE)
  *   @brief      Write meta data, thumb and view for each file
  *   
  *   @param [in]	$files=FALSE	Files to update
@@ -441,8 +544,9 @@ function rebuild_update( $files = FALSE)
     global $db;
 	verbose( 'Update' );
     verbose( '// Write meta data, thumb and view for each file' );
+    $GLOBALS['timers']['rebuild_full']  = microtime(TRUE);
 
-    $GLOBALS['timers']['add_meta']     = microtime(TRUE);
+    $GLOBALS['timers']['add_meta']      = microtime(TRUE);
 
     // If no files given update ALL files!
     if ( empty( $files ) )
@@ -631,6 +735,7 @@ function rebuild_update( $files = FALSE)
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        post_proccessing()
  *   @brief      Running post processing SQL after data load
  *   
  *   @details    Executing each group under $GLOBALS['database']['post']
@@ -639,8 +744,10 @@ function rebuild_update( $files = FALSE)
  */
 function post_proccessing()
 {
-    verbose( "Post-processing", "\n- ");
+    global $db;
 
+    verbose( "Post-processing", "\n- ");
+    logging( "Post-processing:");
     // Count all post action - names
     $GLOBALS['tmp']['post_total']  = count( $GLOBALS['database']['post'], COUNT_RECURSIVE ) - count( $GLOBALS['database']['post'] );
     $count	= 0;
@@ -657,13 +764,13 @@ function post_proccessing()
             if ( str_starts_with( $sql, '--') )
             {
                 debug( $sql, 'skip:' );
-                logging( "Skip: {$sql};")
+                logging( "Skip: {$sql};");
                 //$group	= '';
             }
             else
             {
                 debug($sql);
-                logging( "Exec: {$sql};")
+                logging( "Exec: {$sql};");
                 $r  = $db->exec( $sql );
             }
             $count++;
@@ -681,6 +788,7 @@ function post_proccessing()
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        normalise_name( &$cfg, $name )
  *   @brief      Name normalisation according to rules
  *   
  *   @param [in]	&$cfg	Rules
