@@ -10,6 +10,7 @@
  *   @version    @include version.txt
  */
 
+/** @brief Root for timer data */
 $GLOBALS['timer'] = TRUE;
 include_once( 'lib/handleJson.php');
 include_once( 'lib/handleSqlite.php');
@@ -30,7 +31,7 @@ echo "
 <html lang='en'>
 <head>
   <meta charset='UTF-8'>
-  <title>SIGbuild - Simple Image Gallery database builder</title>
+  <title>".___('sigbuild_window_title')."</title>
   <link rel='stylesheet' href='css/styles.css'>
   <!--script src='js/display.js'></script-->
   <link rel='icon' type='image/x-icon' href=\"{$GLOBALS['config']['system']['favicon']}\">
@@ -49,8 +50,8 @@ echo "
 
         document.getElementById('action_frame').src=document.getElementById('action').value;
         console.log( 'clicked');
-        //alert( 'clicked ' + str);
-    }
+    }   // clicked()
+
 //----------------------------------------------------------------------
 
     function replace_slash( str ) {
@@ -66,9 +67,7 @@ echo "
         
         return str;
     }   // replace_slash()
-
 </script>
-
 
 </head>
 <body>
@@ -76,9 +75,12 @@ echo "
 
 debug( $GLOBALS['browser']['language'], "session language: ");
 
+/** @brief Dummy dir */
 $releaseroot    = __DIR__ . '/';
 
+/** @brief Verbose mode on by default */
 $verbose=1;
+/** @brief Debug mode */                        
 //$debug=1;
 
 // Default path = all
@@ -92,62 +94,77 @@ if ( empty( $_REQUEST['QUERY_STRING']) )
 
 timer_set('header', 'end');
 
-// Argument / config / hard coded default
+/** @brief Database File Name: Argument / config / hard coded default */
 $database_name   = $_REQUEST['db'] 
     ??  $GLOBALS['config']['database']['file_name']
     ??  'database/data.db' ;
+/** @brief Image Source Dir: Argument / config / hard coded default */
 $source     = $_REQUEST['source'] 
     ??  $GLOBALS['config']['data']['data_root'] 
     ??  'C:/TMP/test_data/' ;
 
 
+echo "<h2>".___('sigbuild_title')."</h2>";
 
-//$database   = 'database/new.db';
-// Select database
+$loc    = [
+    'database'              => ___('database'),             // Database
+    'create_database'       => ___('create_database'),      // Create database
+    'source_dir'            => ___('source_dir'),           // Source dir
+    'update_images'         => ___('update_images'),        // {$loc['database']}
+    'delete_directories'    => ___('delete_directories'),           // {$loc['database']}
+    'submit'                => ___('submit'),
+    'clear'                 => ___('clear'),
+    'action'                => ___('action'),
+    'reindex'                => ___('reindex'),
+    'test_wordclouds'       => ___('test_wordclouds'),
+    'test_index'            => ___('test_index'),
+];
 
 echo <<<EOF
-
-
-<h2>Build database for Simple Image Gallery</h2>
 
 <form id="build_form" action="">    <!-- Action to self -->
 
     <table border=1>
 <!-- Database -->
         <tr><th>
-            <label for="database_name">Database:</label>
+            <label for="database_name">{$loc['database']}:</label>
         </th><td>
             <input type="text" id="database_name" name="database_name" onchange="this.value = replace_slash(this.value);" size=50 value="{$database_name}">
         </td><td>
-<!-- Create -->
-            <button type="button" onClick="clicked('action=create_database');" >&#x1F5CD; Create database</button>
+<!-- Button: Create -->
+            <button type="button" onClick="clicked('action=create_database');" >&#x1F5CD; {$loc['create_database']}</button>
         </td></tr>
 <!-- Source -->
         <tr><th>
-            <label for="source_dir">Source dir:</label>
+            <label for="source_dir">{$loc['source_dir']}:</label>
         </th><td>
             <input type="text" id="source_dir" name="source_dir" size=50  onchange="this.value = replace_slash(this.value);" value="{$source}">
         </td><td>
-<!-- Update -->
-            <button type="button" onClick="clicked('action=update_images');">&#x1F5D8; Update images</button>
-            <button type="button" onClick="clicked('action=delete_images');">&#x2326; Delete directories &#x1F5BE;</button>
+<!-- Button: Update -->
+            <button type="button" onClick="clicked('action=update_images');">&#x1F5D8; {$loc['update_images']}</button>
+<!-- Button: Delete dirs -->
+            <button type="button" onClick="clicked('action=delete_images');">&#x2326; {$loc['delete_directories']} &#x1F5BE;</button>
+<!-- Button: Reindex -->
+            <button type="button" onClick="clicked('action=reindex');">&#x1F5C3; {$loc['reindex']} &#x1F32A;</button>
         </td></tr>
 <!-- Action -->    
         <tr><th>
-            <label for="action">action:</label>
+            <label for="action">{$loc['action']}:</label>
         </th><td>
             <input id='action' name='action' type="text" size=50 value='{$_REQUEST['action']}'>
         </td><td>
-            <button class="btn btn-success" onclick="window.open('index.php','_blank');return false;">&#x1F5BD; Test</button>
+<!-- Button: Test index -->
+            <button class="btn btn-success" onclick="window.open('index.php','_blank');return false;">&#x1F5BD; {$loc['test_index']}</button>
+<!-- Button: Test wordclouds -->
+            <button class="btn btn-success" onclick="window.open('wordclouds.php','_blank');return false;">&#x1F5BD; {$loc['test_wordclouds']}</button>
         </td></tr>
 
     </table>
     <p>&nbsp;</p>
 <!-- Submit -->
-      <input type="submit" value="Submit">
-      <input type="button" value="Clear" onClick='document.getElementById("build_form").reset();'>
+      <input type="submit" value="{$loc['submit']}">
+      <input type="button" value="{$loc['clear']}" onClick='document.getElementById("build_form").reset();'>
 </form> 
-
 
 <!-- Progress -->
     <label for="progress">progress:</label>
