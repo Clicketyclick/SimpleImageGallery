@@ -10,7 +10,9 @@
  *   @version    @include version.txt
  */
 
+/** @brief Timers */
 $GLOBALS['timer'] = TRUE;
+
 include_once( 'lib/handleJson.php');
 include_once( 'lib/handleSqlite.php');
 include_once( 'lib/debug.php');
@@ -25,11 +27,12 @@ include_once('lib/_header.php');
 
 
 timer_set('header', 'Reading header info');
+
 echo '
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>SIG - Simple Image Gallery</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/display.js"></script>
@@ -40,9 +43,13 @@ echo '
 
 debug( $GLOBALS['browser']['language'], "session language: ");
 
+/** @brief Dummy */
 $releaseroot    = __DIR__ . '/';
 
+/** @brief Verbose mode on */
 $verbose=1;
+
+/** @brief Debug mode */
 //$debug=1;
 
 // Default path = all
@@ -52,21 +59,25 @@ if ( empty( $_REQUEST['path']) )
 timer_set('header');
 
 timer_set('open_db', 'Opening database');
+/** @brief Database handle */
 $db    = openSqlDb( $_REQUEST['db'] ?? $GLOBALS['config']['database']['file_name']);
 timer_set('open_db');
 
 
 timer_set('build_dir_tree', 'Built tree from path');
+/** @brief SQL statement */
 $sql    = sprintf( $GLOBALS['database']['sql']['select_path'], $_REQUEST['path']  );
-$dirs    = querySql( $db, $sql );
-
-$tree    = buildDirTree( $dirs );
+/** @brief Dirs */
+$dirs   = querySql( $db, $sql );
+/** @brief Dir tree */
+$tree   = buildDirTree( $dirs );
 debug( $tree, 'tree' );
 timer_set('build_dir_tree');
 
 // >>> Top menu
 // Build breadcrumb trail: 'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
 echo "<span title='".___('breadcrumptrail')."'>". $GLOBALS['config']['display']['breadcrumptrail'] . "</span>";
+/** @brief Trail */
 $trail  = breadcrumbTrail( $_REQUEST['path'], '?path=%s', 0, -1, '/' ) ;
 echo ( empty($trail) ? "<span title='".___('empty_breadcrumb_trail')."'>." : $trail ) ;
 echo '/'. basename($_REQUEST['path']);
@@ -79,6 +90,7 @@ echo "</span><script>path='". dirname( $_REQUEST['path'] ) . "';</script>";
 //!!! Use: $GLOBALS['url']['args']
 if ( ! empty( $GLOBALS['url']['args']['browser:language'] ))
     unset($GLOBALS['url']['args']['browser:language']);
+/** @brief Dummy */
 $escaped_url    = '?'.http_build_query($GLOBALS['url']['args']);
 
 echo "<a class='translate' href='{$escaped_url}&browser:language="
@@ -93,7 +105,6 @@ echo "<span class='db_name'>{$GLOBALS['config']['database']['file_name']}</span>
 echo "&nbsp;<span class='welcome'><details class='welcome'><summary class='welcome_summary'>[".___('welcome')."]</summary>".___('welcome_intro')."</details></span>";
 
 // Clear before folders
-//echo "<br clear=both><hr>";
 echo "<hr>";
 
 // <<< Top menu
@@ -102,17 +113,21 @@ echo "<hr>";
 
 
 // Get subdirectories to current directory
-$subdirs    = subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
+/** @brief Dummy */
+$subdirs        = subdirsToCurrent( array_unique($tree), $_REQUEST['path'] );
+/** @brief Dummy */
 $count_subdirs  = count($subdirs );
 debug($subdirs);
 printf( "%s: %s<br>"
 ,   ___('no_of_subdirs')
 ,   $count_subdirs
 );
+/** @brief Dummy */
 $count  = 0;
 
 $sql    = sprintf( $GLOBALS['database']['sql']['thumb_from_dirs'], implode( "', '", $subdirs ) );
 debug($sql, 'thumb_from_dirs');
+/** @brief Dummy */
 $thumbs    = querySql( $db, $sql );
 
 // flatten
@@ -145,7 +160,7 @@ foreach( $subdirs as $subdir )
     {
         logging( 'dirs' );
         $newestthumb['thumb']    = $thumbs[$subdir];
-        $newestthumb['file']    = '$dir';
+        $newestthumb['file']    = "$dir";
     }
     
     $newestthumb['path']    = $dir;
@@ -181,23 +196,28 @@ if( empty($_REQUEST['show']) )
 }
 else
 {    // Show image
-    $prev    = $next    = FALSE;
+    /** @brief Links to previous and next img */
+    $prev    = FALSE;
+    /** @brief Links to previous and next img */
+    $next    = FALSE;
 
-//echo "<span class='metadata'>";
-echo "<table width='100%'>
-<tr><td class='metadata'>";
+    echo "<table width='100%'>
+    <tr><td class='metadata'>";
 
     timer_set('select_path_file', 'Show image');
     $sql    = sprintf($GLOBALS['database']['sql']['select_path_file'], $_REQUEST['path'] );
     debug( $sql );
 
+    /** @brief files */
     $files    = querySql( $db, $sql );
     timer_set('select_path_file');
 
     debug("Files:<pre>".var_export( $files, TRUE) . "</pre>");
 
     timer_set('select_path_file_normalise');
+    /** @brief First file */
     $first  = $files[0]['file'];
+    /** @brief Lase file */
     $last   = $files[count($files)-1]['file'];
     foreach ( $files as $no => $filedata )
     {
@@ -300,7 +320,6 @@ echo "<table width='100%'>
     timer_set('show_image');
 
     echo "</td></tr></table>";
-
 }
 
 // Just in case!
@@ -310,23 +329,26 @@ flush();
 //----------------------------------------------------------------------
 
 /**
- *   @brief      Build breadcrumb trail
- *   
- *   @param [in]    $path        Path to break up
- *   @param [in]    $urlstub='?path=%s'    URL stub to crumbs
- *   @param [in]    $start=1    Start dir
- *   @param [in]    $end=-1        End dir
- *   @param [in]    $delimiter='&rightarrow;'    Delimiter between crumbs [Default: "&rightarrow;"]
- *   @return     Trail as HTML string
- *   
- *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+ *  @fn        breadcrumbTrail( $path, $urlstub, $start, $end, $delimiter)
+ *  @brief     Build breadcrumb trail
  *
- *   @since      2024-11-13T14:15:32
+ *  @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+ *
+ *  @param[in] $path        Path to break up
+ *  @param[in] $urlstub     URL stub to crumbs
+ *  @param[in] $start       Start dir
+ *  @param[in] $end         End dir
+ *  @param[in] $delimiter   Delimiter between crumbs [Default: "rightarrow;"]
+ *
+ *  @retvar    Trail as HTML string
+ *
+ *  @since      2024-11-13T14:15:32
  */
-function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
+//function breadcrumbTrail( $path, $urlstub = 'xxx?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
+function breadcrumbTrail( $path, $urlstub = FALSE, $start = 1, $end = -1, $delimiter = FALSE)
 {
-    $crumbs    = breadcrumbs( $path );
-    $trail    = [];
+    $crumbs = breadcrumbs( $path );
+    $trail  = [];
 
     // Ignore first and last element in list
     foreach( array_splice($crumbs, $start, $end ) as $crumb => $crumbtag )
@@ -342,10 +364,11 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        breadcrumbs( $path )
  *   @brief      Build a breadcrumb trail from a file path
  *   
- *   @param [in]    $path    $(description)
- *   @return     $(Return description)
+ *   @param [in]    $path    Path to expand
+ *   @retval        Array w. trail
  *
  *   @since      2024-11-13T14:10:11
  */
@@ -363,23 +386,23 @@ function breadcrumbs( $path )
 
 //----------------------------------------------------------------------
 
-
 /**
- *   @brief     Build directory tree
+ *  @fn        buildDirTree( &$dirs )
+ *  @brief     Build directory tree
  *   
- *   @param [in]    &$dirs    Root
- *   @return     array of directory names
+ *  @param [in]    &$dirs    Root
+ *  @retval     array of directory names
  *   
- *   @details    Recursive scandir
+ *  @details    Recursive scandir
  *   
  *   
- *   @see        https://
- *   @since      2024-11-15T01:24:07
+ *  @see        https://
+ *  @since      2024-11-15T01:24:07
  */
 function buildDirTree( &$dirs )
 {
-    $tree        = [];
-    $dirs2        = [];
+    $tree   = [];
+    $dirs2  = [];
 
     // 0->path=>dir 0->dir
     foreach( $dirs as $no => $dirinfo )
@@ -407,7 +430,7 @@ function buildDirTree( &$dirs )
  *   
  *   @param [in]    $haystack    Haystack of directories
  *   @param [in]    $current    Current directory
- *   @return     List of subdirectories to current directory
+ *   @retval     List of subdirectories to current directory
  *   
  *   @since      2024-11-15T01:29:30
  */
@@ -429,7 +452,9 @@ function subdirsToCurrent( $haystack, $current )
  *   @brief      Build thumb display
  *   
  *   @param [in]    $filedata    Source file
- *   @return     HTML figure
+ *   @param [in]    $dir        Directory
+ *   @param [in]    $show       Image
+ *   @retval     HTML figure
  *   
  *   @since      2024-11-15T01:31:11
  */
@@ -469,7 +494,7 @@ function show_thumb( $filedata, $dir = false, $show = false )
  *   @brief      Build meta for image display
  *   
  *   @param [in]    $filedata    Source file
- *   @return     HTML figure
+ *   @retval     HTML figure
  *   
  *   
  *   @since      2024-11-15T01:32:29
@@ -545,7 +570,8 @@ function show_meta( $filedata )
         .   "</span>: <span class='iptc_location'>"
         .   ( 
                 $iptc['ContentLocationName'][0] 
-                ??  str_replace( ', , ', ', ', implode( ', ', $ContentLocationName ) ) 
+                // Array_filter removes empty elements from array https://stackoverflow.com/a/5331111 https://stackoverflow.com/a/3654309
+                ?? implode(', ',array_filter( $ContentLocationName ) )
             )
         .   '</span>'
         ;
@@ -678,7 +704,7 @@ function show_meta( $filedata )
  *   @brief      Build image display
  *   
  *   @param [in]    $filedata    Source file
- *   @return     HTML figure
+ *   @retval     HTML figure
  *   
  *   
  *   @since      2024-11-15T01:32:29
@@ -704,7 +730,7 @@ function show_image( $filedata )
  *   @brief      reduce complexity of array
  *   
  *   @param [in]    )    $(description)
- *   @return     $(Return description)
+ *   @retval     $(Return description)
  *   
  *   @details    Reduce sub arrays with only one entry to string
  *   
@@ -762,7 +788,7 @@ function array_flatten2( $arr, $out=array() )  {
 /**
  *   @brief      Pick a random image in database
  *   
- *   @return     HTML link to random image
+ *   @retval     HTML link to random image
  *   
  *   @details    
  *   

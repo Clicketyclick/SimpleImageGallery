@@ -309,21 +309,25 @@ flush();
 
 //----------------------------------------------------------------------
 
+
+
+
+
 /**
- *   @brief      Build breadcrumb trail
- *   
- *   @param [in]    $path        Path to break up
- *   @param [in]    $urlstub='?path=%s'    URL stub to crumbs
- *   @param [in]    $start=1    Start dir
- *   @param [in]    $end=-1        End dir
- *   @param [in]    $delimiter='&rightarrow;'    Delimiter between crumbs [Default: "&rightarrow;"]
- *   @return     Trail as HTML string
+*   @fn        breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;');
+ *   @brief     Build breadcrumb trail
+ *   @param[in] $path                        Path to break up
+ *   @param[in] $urlstub          URL stub to crumbs
+ *   @param[in] $start                    Start dir
+ *   @param[in] $end                      End dir
+ *   @param[in] $delimiter    Delimiter between crumbs [Default: "&rightarrow;"]
+ *   @return    Trail as HTML string
  *   
  *   @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
  *
  *   @since      2024-11-13T14:15:32
  */
-function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
+function breadcrumbTrail( $path, $urlstub = 'xxx?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
 {
     $crumbs    = breadcrumbs( $path );
     $trail    = [];
@@ -342,10 +346,11 @@ function breadcrumbTrail( $path, $urlstub = '?path=%s', $start = 1, $end = -1, $
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        breadcrumbs( $path )
  *   @brief      Build a breadcrumb trail from a file path
  *   
- *   @param [in]    $path    $(description)
- *   @return     $(Return description)
+ *   @param [in]    $path    Path to expand
+ *   @return        Array w. trail
  *
  *   @since      2024-11-13T14:10:11
  */
@@ -365,16 +370,17 @@ function breadcrumbs( $path )
 
 
 /**
- *   @brief     Build directory tree
+ *  @fn        buildDirTree( &$dirs )
+ *  @brief     Build directory tree
  *   
- *   @param [in]    &$dirs    Root
- *   @return     array of directory names
+ *  @param [in]    &$dirs    Root
+ *  @return     array of directory names
  *   
- *   @details    Recursive scandir
+ *  @details    Recursive scandir
  *   
  *   
- *   @see        https://
- *   @since      2024-11-15T01:24:07
+ *  @see        https://
+ *  @since      2024-11-15T01:24:07
  */
 function buildDirTree( &$dirs )
 {
