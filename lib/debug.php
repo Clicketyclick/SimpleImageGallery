@@ -31,11 +31,12 @@
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         debug ( $str, $extend = FALSE ) 
  *  @brief     Debug message with location
  *  
  *  @param [in] $str	String to write
  *  @param [in] $extend	Flag for file info
- *  @return    VOID
+ *  @retval    VOID
  *  
  *  @details   Displaying in depth information with backtrace 
  *      for debugging if debug flag is active
@@ -66,9 +67,6 @@ details.debug {
     white-space: pre;
 }
 @endcode
- *
- *
- *
  *
  *  @since     2022-12-03T08:57:29 / Erik Bachmann Pedersen
  */
@@ -119,10 +117,11 @@ function debug ( $str, $extend = FALSE )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         verbose( $str, $extend = FALSE )
  *  @brief     Verbose message
  *  
  *  @param [in] $str	String to display on STDERR if in verbose mode
- *  @return    VOID
+ *  @param [in] $extend	Prefix
  *  
  *  @details   Function for debugging with simple backtracking using 
  *      verbose messaged using the verbose flag.
@@ -154,10 +153,11 @@ function verbose( $str, $extend = FALSE )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         logging( $str )
  *  @brief     Generates log intry in $GLOBALS['logfile'] if $GLOBALS['logging'] flag set
  *  
  *  @param [in] $str        Log string
- *  @return    VOID
+ *  @retval    VOID
  *  
  *  @details   More details
  *  
@@ -193,10 +193,11 @@ function logging( $str )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         self( $str = false )
  *  @brief        Return string w. file.function.stringtoken
  *  
  *  @param [in]   $str      Token to return
- *  @return       string w. file.function.string
+ *  @retval       string w. file.function.string
  *  
  *  @details      Used to locate function calls and localisation
  *  
@@ -225,18 +226,19 @@ function self( $str = false )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        progress_per
+ *  @fn         progress_per( $var, $limit, $function, $msg = FALSE, $type = E_USER_NOTICE )
  *  @brief     Generates a user-level message foreach x itterations
  *  
- *  @param [in] $var      Description for $var
- *  @param [in] $limit    Description for $limit
- *  @param [in] $function Description for $function
- *  @param [in] $type     Description for $type
- *  @return    Return description
+ *  @param [in] $var        Current value
+ *  @param [in] $limit      Max value
+ *  @param [in] $function   Name of function
+ *  @param [in] $msg        Message
+ *  @param [in] $type       Type of message
+ *  @retval    Return description
  *  
  *  @details   For each limit ittrations in $var a status message is generated
  *  
- *  @example   
+ *  @code
  *      for ( $x=1 ; $x < 100 ; $x++ )
  *      {
  *         progress_per( $x, 20, 'trigger_error', "loop=[\$var]");
@@ -244,14 +246,8 @@ function self( $str = false )
  *      }
  *  
  *  Notice (loop=) is given on values 20,40,60,80. Warning (var=) on 30,60,90
+ *  @endcode
  *  
- *  
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2024-02-28T06:14:47 / erba
  */
 function progress_per( $var, $limit, $function, $msg = FALSE, $type = E_USER_NOTICE )
@@ -275,7 +271,8 @@ function state( $tag, $value )
 */
 
 /**
- *   @brief      Prints formated one-liner with key, value
+ *  @fn         status( $tag, $value )
+ *  @brief      Prints formated one-liner with key, value
  *   
  *   @param [in]	$tag	Key
  *   @param [in]	$value	Value
@@ -295,7 +292,8 @@ function status( $tag, $value )
 //----------------------------------------------------------------------
 
 /**
- *   @brief      timer_set starts or ends timer slot in listing
+ *  @fn         timer_set( $key, $note = FALSE )
+ *  @brief      timer_set starts or ends timer slot in listing
  *   
  *   @param [in]	$key	key for identifying entry
  *   @param [in]	$note	Note added to entry
@@ -334,12 +332,6 @@ function timer_set( $key, $note = FALSE )
             //,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : $backtrace['function']
             ,   (__FUNCTION__ == $backtrace['function']) ? 'MAIN' : debug_backtrace()[0]['function']
             );
-            /** /
-            echo "<pre>".__FUNCTION__;
-            var_export($GLOBALS['timers'][$key]['trace']);
-            //var_export(debug_backtrace());
-            exit;
-            /**/
     }
     else
     {
@@ -352,9 +344,10 @@ function timer_set( $key, $note = FALSE )
 //----------------------------------------------------------------------
 
 /**
- *   @brief      Build output from $GLOBALS['timers']
+ *  @fn         timer_show()
+ *  @brief      Build output from $GLOBALS['timers']
  *   
- *   @return     HTML table as string
+ *   @retval     HTML table as string
  *   
  *   @details    List details from timing:
  *   - Start    Time from script start
@@ -416,5 +409,7 @@ function timer_show()
 
     return( $out );
 }   // timer_show()
+
+//----------------------------------------------------------------------
 
 ?>

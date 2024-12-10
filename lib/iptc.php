@@ -13,21 +13,12 @@
 
 
 /**
- *   @fn         parseIPTC
+ *   @fn         parseIPTC( $file )
  *   @brief      Parse IPTC block and remap to human readable
  *   
  *   @param [in]	$file	Image file
- *   @return     array with IPTC data
+ *   @retval     array with IPTC data
  *   
- *   @details    
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-11-13T13:38:16
  */
 function parseIPTC( $file )
@@ -65,38 +56,32 @@ function parseIPTC( $file )
 
 //----------------------------------------------------------------------
 
-	/**
-	 *   @fn         str_to_utf8
-	 *   @brief      Detects char set and convert any to UTF-8
-	 *   
-	 *   @param [in]	$fromStr	$(description)
-	 *   @param [in]	&$utf8_string	$(description)
-	 *   @param [in]	$encoding	$(description)
-	 *   @return     TRUE	Converted
-	 *   @return     FALSE	Not converted or UTF-8
-	 *   
-	 *   @details    ['ASCII', 'UTF-8', 'ISO-8859-1']
-	 *   
-	 *   @example    
-	 *   
-	 *   @todo       
-	 *   @bug        
-	 *   @warning    
-	 *   
-	 *   @see        https://
-	 *   @since      2024-11-03T20:35:34
-	 */
-	function str_to_utf8( $fromStr, &$utf8_string, $encoding = ['ASCII', 'UTF-8', 'ISO-8859-1' ])
-	{
-		$utf8_string	= $fromStr;
-		$charset		= mb_detect_encoding($fromStr, $encoding );
-		
-		if ( 'UTF-8' != $charset )
-		{	// string, to, from
-			$utf8_string = mb_convert_encoding($fromStr, 'UTF-8', $charset );
-			return( TRUE );
-		}
-		return( FALSE );
-	}	// str_to_utf8()
+/**
+ *   @fn         str_to_utf8
+ *   @brief      Detects char set and convert any to UTF-8
+ *   
+ *   @param [in]	$fromStr	    Source
+ *   @param [out]	&$utf8_string	Target
+ *   @param [in]	$encoding	    Encoding
+ *   @retval     TRUE	Converted | FALSE	Not converted or UTF-8
+ *   
+ *   @details    ['ASCII', 'UTF-8', 'ISO-8859-1']
+ *
+ *   @since      2024-11-03T20:35:34
+ */
+function str_to_utf8( $fromStr, &$utf8_string, $encoding = ['ASCII', 'UTF-8', 'ISO-8859-1' ])
+{
+    $utf8_string	= $fromStr;
+    $charset		= mb_detect_encoding($fromStr, $encoding );
+    
+    if ( 'UTF-8' != $charset )
+    {	// string, to, from
+        $utf8_string = mb_convert_encoding($fromStr, 'UTF-8', $charset );
+        return( TRUE );
+    }
+    return( FALSE );
+}	// str_to_utf8()
+
+//----------------------------------------------------------------------
 
 ?>

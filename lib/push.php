@@ -13,18 +13,13 @@
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        pbar( $id, $max, $value, $note )
  *   @brief      Push to progressbar
  *   
  *   @param [in]	$id	    Bar ID
  *   @param [in]	$max	Max value
  *   @param [in]	$value	Current value
  *   @param [in]	$note	Note
- *   
- *   
- *   @code
- *   @endcode
-@verbatim
-@endverbatim
  *   
  *   @since      2024-12-03T21:20:56
  */
@@ -39,6 +34,7 @@ function pbar( $id, $max, $value, $note )
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        pstatus( $status )
  *   @brief      Status entry to status
  *   
  *   @param [in]	$status	Entry
@@ -61,10 +57,11 @@ function pstatus( $status )
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        pstate( $status )
  *   @brief      Plain text added to status
  *   
  *   @param [in]	$status	$(description)
- *   @return     $(Return description)
+ *   @retval     $(Return description)
  *   
  *   @details    $(More details)
  *   

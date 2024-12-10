@@ -1,6 +1,7 @@
 <?php
  
-/*
+/**
+ *  @file       progress_bar.php
  
 Copyright (c) 2010, dealnews.com, Inc.
 All rights reserved.
@@ -32,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
  */
  
 /**
- *  @file       progress_bar.php
+ *  @fn        show_status($done, $total, $size=30)
  *  @brief      show a status bar in the console
  *  
  *  @details    
@@ -71,7 +72,8 @@ for($x=1;$x<=100;$x++){
  *  
  * @see     https://stackoverflow.com/a/9853018
  */
-function show_status($done, $total, $size=30) {
+function show_status($done, $total, $size=30)
+{
     static $width;
     static $timeframe;
     static $start_time;
@@ -132,7 +134,7 @@ function show_status($done, $total, $size=30) {
 }	// show_status
 
 /**
- *  @fn        getClockface
+ *  @fn        getClockface( $pct )
  *  @brief     Convert pct value to clock face
  *  
  *  @param [in] $pct Pct value
@@ -204,6 +206,7 @@ function getClockface( $pct )
 
 
 /**
+ *   @fn        progressbar($done, $total, $size=30, $trailer = FALSE, $length = 50 )
  *   @brief      simple progress bar
  *   
  *   @param [in]	$done		Count
@@ -270,5 +273,7 @@ function progressbar($done, $total, $size=30, $trailer = FALSE, $length = 50 )
 
     return( "$progressbar" );
 }	// progressbar
+
+//----------------------------------------------------------------------
 
 ?>

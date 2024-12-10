@@ -20,6 +20,7 @@
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        getGitHistory( $branch = 'main' )
  *   @brief      Get history from current .git
  *   
  *   @param [in]	$branch	Default branch [main]
@@ -65,6 +66,7 @@ function getGitHistory( $branch = 'main' )
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        getGitCommitInfo()
  *   @brief      Get latest commit from .git
  *   
  *   @return     array w. commit info
@@ -168,6 +170,7 @@ function getGitCommitInfo()
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
  *   @brief      Get software version from Git
  *   
  *   @param [in]	$major=0	Incompatible API changes
@@ -263,6 +266,22 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 	return( $gitVersion );
 }	// getGitVersion()
 
+
+
+/**
+ *   @fn         getVersion($level = 0)
+ *   @brief      Get version from `version.txt`
+ *   
+ *   @param [in]	$level=0	$(description)
+ *   @retval     $(Return description)
+ *   
+ *   @code
+ *   @endcode
+@verbatim
+@endverbatim
+ *   
+ *   @since      2024-12-06T14:04:09
+ */
 function getVersion($level = 0)
 {
 	$lifecycle	= [
@@ -297,6 +316,7 @@ function getVersion($level = 0)
 //----------------------------------------------------------------------
 
 /**
+ *   @fn        getDoxygenHeader( $file )
  *   @brief      Get Doxygen file header expanded for display.
  *   
  *   @return     String w. expanded Doxygen header.

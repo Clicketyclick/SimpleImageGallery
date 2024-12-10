@@ -26,17 +26,19 @@
 //---------------------------------------------------------------------
 
 /**
+ * @fn          timestamp_iso8601($timestamp)
  * @brief           UNIX timestamp to ISO 8601 (GMT)
  *
- * @param timestamp UNIX timestamp        
- * @return string   Date in ISO 8601 format [YYYY-MM-DDThh:mm:ss]
+ * @param $timestamp UNIX timestamp        
+ * @retval string   Date in ISO 8601 format [YYYY-MM-DDThh:mm:ss]
  *
  * @note tutorial doc/manual.md
  *
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function timestamp_iso8601($timestamp) {
+function timestamp_iso8601($timestamp)
+{
     $idate = date_format(date_create('@'. $timestamp), 'c') ;
     return($idate);
 }   // timestamp_iso8601
@@ -44,6 +46,7 @@ function timestamp_iso8601($timestamp) {
 //---------------------------------------------------------------------
 
 /**
+ * @fn              timestamp_iso8601_local($timestamp) 
  * @brief           UNIX timestamp to ISO 8601 (local time)
  *
 @code
@@ -54,13 +57,14 @@ echo timestamp_iso8601_local( filectime( $argv[0] ) );
 2019-09-06T05:45:31+00:00
 @endverbatim
  *
- * @param timestamp UNIX timestamp        
- * @return string   Date in ISO 8601 format (YYYY-MM-DDThh:mm:ss)
+ * @param $timestamp UNIX timestamp        
+ * @retval string   Date in ISO 8601 format (YYYY-MM-DDThh:mm:ss)
  * @note tutorial        doc/manual.md
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function timestamp_iso8601_local($timestamp) {
+function timestamp_iso8601_local($timestamp) 
+{
     //2022-11-14T14:22:33/EBP  Implicit conversion from float: (int) $timestamp
     $idate = date_format(date_timestamp_set(new DateTime(), (int) $timestamp), 'c');
     return($idate);
@@ -69,44 +73,49 @@ function timestamp_iso8601_local($timestamp) {
 //---------------------------------------------------------------------
 
 /**
+ * @fn          iso8601_timestamp($idate) 
  * @brief           ISO8601 to UNIX timestamp
  *
- * @param idate     ISO time string
- * @return string   UNIX timestamp
+ * @param $idate    ISO time string
+ * @retval string   UNIX timestamp
  *
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function iso8601_timestamp($idate) {
+function iso8601_timestamp($idate) 
+{
     return strtotime($idate);
 }   // iso8601_timestamp()
 
 //---------------------------------------------------------------------
 
 /**
+ * @fn          now_timestamp()
  * @brief           Return UNIX timestamp for NOW
  *
- * @param           <code>VOID</code>
- * @return string   UNIX timestamp
+ * @retval string   UNIX timestamp
+ *
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function now_timestamp() {
+function now_timestamp() 
+{
     return date_format( date_create(), 'U');
 }   // now_timestamp()
 
 //---------------------------------------------------------------------
 
 /**
+ * @fn          now_iso8601() 
  * @brief           Return ISO 8601 timestamp for NOW
  *
- * @param           <code>VOID</code>
- * @return string   ISO 8601 timestamp
+ * @retval string   ISO 8601 timestamp
  *
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function now_iso8601() {
+function now_iso8601() 
+{
     $timestamp = date_timestamp_get( date_create() );
     return date_format(date_timestamp_set(new DateTime(), $timestamp), 'c');
 }   // now_iso8601()
@@ -114,15 +123,17 @@ function now_iso8601() {
 //---------------------------------------------------------------------
 
 /**
+ * @fn          now_iso8601_filestamp() 
  * @brief           Return ISO 8601 timestamp for NOW formated for filename
  * Time formated as "hh-mm-ss" in stead of "hh:mm:ss"
  *
- * @param           None.
- * @return string   ISO 8601 filename
+
+ * @retval string   ISO 8601 filename
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
  */
-function now_iso8601_filestamp() {
+function now_iso8601_filestamp() 
+{
     //$timestamp = date_timestamp_get( date_create() );
     //return date_format(date_timestamp_set(new DateTime(), $timestamp), 'c');
     return( gmDate( "Y-m-d\TH-i-s" ) );;
@@ -131,6 +142,7 @@ function now_iso8601_filestamp() {
 //---------------------------------------------------------------------
 
 /**
+ * @fn          microTimestamp($mt) 
  * @brief           Microtime to human readable.
  * @note     Date information is truncated. Only hour, min, etc. are returned
  *
@@ -144,9 +156,8 @@ function now_iso8601_filestamp() {
 [1567748216.2247] [05:36:56,22469592]
 @endverbatim
  *
- * @param mt        Micro time stamp
- * @param depth     No of decimals used
- * @return string   ISO 8601 time stamp
+ * @param $mt        Micro time stamp
+ * @retval string   ISO 8601 time stamp
  *
  * @see             https://stackoverflow.com/a/35523439/7485823
  * @since           2019-02-04T08:53:59
@@ -159,6 +170,7 @@ function microTimestamp($mt)
 //---------------------------------------------------------------------
 
 /**
+ * @fn          microtime_float() 
  * @brief           Return microtime as float.
  *
  * @details           Replicate PHP 5 behaviour
@@ -170,8 +182,9 @@ function microTimestamp($mt)
 1567748785.9552
 @endverbatim
  *
- * @param           None.
- * @return float    microtime as float
+ * @retval float    microtime as float
+ *
+ * @deprecated  Use microtime( TRUE );
  *
  * @see             https://php.net/microtime
  * @since           2019-09-06T07:50:46
@@ -185,12 +198,13 @@ function microtime_float()
 //---------------------------------------------------------------------
 
 /**
+ * @fn          microtime2human( $microtime )
  *  @brief     Return a human readable version of microtime (float)
  *  
  *  @details   Uses ISO-86001 for periode: P[n]Y[n]M[n]DT[n]H[n]M[n]S
  *
  *  @param [in] $microtime    microtime value
- *  @return    ISO formated string
+ *  @retval    ISO formated string
  *  
  *  
 @code
@@ -252,13 +266,14 @@ function microtime2human( $microtime )
 //---------------------------------------------------------------------
 
 /**
+ * @fn          progress_log( $max, $count, $starttime, $level = 1000 )
  *  @brief      Log progress
  *  
  *  @param[in] $max       Max value in progress
  *  @param[in] $count     Current value
  *  @param[in] $starttime Start time in mcrotime
  *  @param[in] $level     Per xx (Defalt: 1/1000)
- *  @return     Log entry
+ *  @retval     Log entry
  *  
 @code
 	$GLOBALS['timers']['resume']	= microtime(TRUE);

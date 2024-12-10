@@ -64,7 +64,7 @@ if(!isset($dbfile))
 //---------------------------------------------------------------------
 
 
-// SQL's for creating and testing table
+/** @brief SQL's for creating and testing table */
 $jsondb_sql = 
 [
     'create_table'  => 
@@ -81,7 +81,7 @@ $jsondb_sql =
 
 
 /**
- *  @fn        putJsonDb
+ *  @fn        putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' )
  *  @brief     Store a JSON structure as key/value list
  *  
  *  @param [in] $db         Database handle
@@ -89,12 +89,12 @@ $jsondb_sql =
  *  @param [in] $struct     List to store
  *  @param [in] $section     Section
  *  @param [in] $language     Language code
- *  @return    Return description
+ *  @retval    Return description
  *  
  *  @details   Convert a mixed data structure to a breadcrumb list
  *  and store the list in a database
  *  
- *  @example   
+ *  @code
  *      // Given a table with the structure:
  *      // CREATE TABLE IF NOT EXISTS $tablename (
  *      //      section     text,
@@ -142,7 +142,8 @@ $jsondb_sql =
  *  | section | en       | display-main-button   | Button      |
  *  | section | en       | display-footer-send   | Footer      |
  *  | section | en       | display-footer-cancel | Cancel      |
-  *      
+ *  @endcode
+ *      
  *  @todo      
  *  @bug       
  *  @warning   
@@ -150,7 +151,8 @@ $jsondb_sql =
  *  @see       https://
  *  @since     2022-06-09T08:57:21 / Erik Bachmann
  */
-function putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' ) {
+function putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' )
+{
     $output    = [];
     $index = [];
 
@@ -171,7 +173,7 @@ function putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        putListDb
+ *  @fn        putListDb( &$db, $tablename, $struct, $section = '', $language = 'xx' )
  *  @brief     Update database with list
  *  
  *  @param [in] $db         Database handle
@@ -179,11 +181,12 @@ function putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' )
  *  @param [in] $struct     List to store
  *  @param [in] $section    Section
  *  @param [in] $language   Language code
- *  @return    VOID
+ *  @retval    VOID
  *  
  *  @details   In a transaction write each path/key set to database
  *  
- *  @example   $list    =
+ *  @code
+ *  $list    =
  *      [
  *          "test:str1" => "1",
  *          "test:str2" => "2"
@@ -194,15 +197,11 @@ function putJsonDb( &$db, $tablename, $struct, $section = '', $language = 'en' )
  *    |----------|----------|-----------------------|-----------|
  *    | section  | xx       | test:str1             | 1         |
  *    | section  | xx       | test:str2             | 2         |
+ * @endcode
  *
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2022-06-09T08:56:06 / Erik Bachmann
  */
-function putListDb( &$db, $tablename, $struct, $section = '', $language = 'xx' ) 
+function putListDb( &$db, $tablename, $struct, $section = '', $language = 'xx' )
 {
     //$output    = [];
     executeSql( $db, "BEGIN TRANSACTION;" );
@@ -220,20 +219,20 @@ function putListDb( &$db, $tablename, $struct, $section = '', $language = 'xx' )
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getJsonDb
+ *  @fn        getJsonDb( &$db, $tablename, $breadcrumbdelimiter = BREADCRUMBDELIMITER, $where = "", $order = false )
  *  @brief     Get mix from database and expand breadcrumb list
  *  
- *  @param [in] $db         Database handle
+ *  @param [in] &$db         Database handle
  *  @param [in] $tablename  Name of table to read from
+ *  @param [in] $breadcrumbdelimiter    Delimiter string
  *  @param [in] $where      Selection criteria
  *  @param [in] $order      Order
- *  @return    Return mix
+ *  @retval    Return mix
  *  
  *  @details   Get a data set of breadcrumb paths and keys and
  *      expand this to a valid mixed structure
  *  
- *  @example   
- *
+ *@code
  *    | section  | language |          key          |   value   |
  *    |----------|----------|-----------------------|-----------|
  *    | section  | xx       | test:str1             | 1         |
@@ -253,12 +252,8 @@ function putListDb( &$db, $tablename, $struct, $section = '', $language = 'xx' )
  *              }
  *          ]
  *      }
- *
- *  @todo      
- *  @bug       
- *  @warning   
+ *@endcode
  *  
- *  @see       https://
  *  @since     2022-11-24T15:16:08 / Erik Bachmann
  */
 function getJsonDb( &$db, $tablename, $breadcrumbdelimiter = BREADCRUMBDELIMITER, $where = "", $order = false ) 
@@ -284,17 +279,17 @@ function getJsonDb( &$db, $tablename, $breadcrumbdelimiter = BREADCRUMBDELIMITER
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getListDb
+ *  @fn        getListDb( &$db, $tablename, $where = "" )
  *  @brief     Get a mixed data set from database
  *  
  *  @param [in] $db         Database handle
  *  @param [in] $tablename  Name of table
  *  @param [in] $where      WHERE clause to extract list
- *  @return    mixed
+ *  @retval    mixed
  *  
  *  @details   More details
  *  
- *  @example   
+ *  @code
  *    | section  | language |          key          |   value   |
  *    |----------|----------|-----------------------|-----------|
  *    | section  | xx       | test:str1             | 1         |
@@ -306,7 +301,8 @@ function getJsonDb( &$db, $tablename, $breadcrumbdelimiter = BREADCRUMBDELIMITER
  *          [test:str1] => 1
  *          [test:str2] => 2
  *      )
- *  
+ *  @endcode
+ *
  *  @todo      
  *  @bug       
  *  @warning   
@@ -314,7 +310,8 @@ function getJsonDb( &$db, $tablename, $breadcrumbdelimiter = BREADCRUMBDELIMITER
  *  @see       https://
  *  @since     2022-06-09T08:58:47 / Erik Bachmann
  */
-function getListDb( &$db, $tablename, $where = "" ) {
+function getListDb( &$db, $tablename, $where = "" )
+{
     $output = [];
     $where  = empty( $where ) ? $where : "WHERE " . $where;
     $sql    = "SELECT * FROM $tablename $where;";
@@ -331,18 +328,16 @@ function getListDb( &$db, $tablename, $where = "" ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        setBreadcrumpValue
+ *  @fn        setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREADCRUMBDELIMITER )
  *  @brief     Insert value in arra using breadcrump path
  *  
  *  @param [in] $output	Array to hold value
  *  @param [in] $key     Breadcrump trail
  *  @param [in] $value     Value to assign
+ *  @param [in] $breadcrumbdelimiter Delimiter string
  *  
- *  @return    VOID
  *  
- *  @details   More details
- *  
- *  @example   
+ *  @code
  *          $list    =
  *          [
  *              "test:str1" => "1",
@@ -355,14 +350,12 @@ function getListDb( &$db, $tablename, $where = "" ) {
  *              "test:str2" => "2",
  *              "test:str3" => "Hello"
  *          ];
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
+ *  @endcode
+ *
  *  @since     2022-11-24T15:38:32 / Erik Bachmann
  */
-function setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREADCRUMBDELIMITER ) {
+function setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREADCRUMBDELIMITER )
+{
     $path = explode( $breadcrumbdelimiter, $key);
     setPathKey($path, $output, $value);
 }   // setBreadcrumpValue()
@@ -370,7 +363,7 @@ function setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREA
 //---------------------------------------------------------------------
 
 /**
- *  @fn        array2breadcrumblist
+ *  @fn        array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter = BREADCRUMBDELIMITER , &$output = false)
  *  @brief     Recursive build bread crum key / value array
  *  
  *  @param [in] $a          Array to process
@@ -379,11 +372,9 @@ function setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREA
  *  @param [in] $breadcrumbdelimiter      Delimititer used between breadcrumbs in index
  *  @param [in] $output     ??
  *  
- *  @return    Index
+ *  @retval    Index
  *  
- *  @details   
- *  
- *  @example
+ *  @code
  *      print_r( $input );
  *      print_r( array2breadcrumblist($input, $output ) );
  *  
@@ -403,15 +394,13 @@ function setBreadcrumpValue( &$output, $key, $value, $breadcrumbdelimiter = BREA
  *        'projects-0-id' => '1',
  *        'projects-1-id' => '4'
  *     ]
+ *  @endcode
  *      
- *  @todo      
- *  @bug       
- *  @warning   
- *  
  *  @see       https://stackoverflow.com/a/53998295
  *  @since     2022-04-27T11:29:36 / Erik Bachmann
  */
-function array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter = BREADCRUMBDELIMITER , &$output = false) {
+function array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter = BREADCRUMBDELIMITER , &$output = false)
+{
     //global $breadcrumbdelimiter;
     if (!is_array($a)) 
     {
@@ -431,13 +420,13 @@ function array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter =
 //----------------------------------------------------------------------
 
 /**
- *  @fn        setPathKey
+ *  @fn        setPathKey($path, &$array=array(), $value=null)
  *  @brief     Set value for each breadcrumb
  *  
  *  @param [in] $path       Breadcrump trail
  *  @param [in] $array      Array to insert into
  *  @param [in] $value      Value to assign
- *  @return    VOID
+ *  @retval    VOID
  *  
  *  @details   More details
  *      This combination will set a value in an existing array or create the array 
@@ -447,11 +436,12 @@ function array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter =
  *      existing array or create the array if you pass one that has not yet been defined. 
  *      Make sure to define $array to be passed
  *  
- *  @example   
+ *  @code
  *      $value = getPathKey($path, $arr); // by reference &$array:
  *      setPathKey($path, $arr);
  *      //or
  *      setPathKey($path, $arr, 'some value');
+ *  @endcode
  *
  *  @todo      
  *  @bug       
@@ -460,7 +450,8 @@ function array2breadcrumblist($a, &$index, $keys=array(), $breadcrumbdelimiter =
  *  @see       https://stackoverflow.com/a/27930028 How to access and manipulate multi-dimensional array by key names / path?
  *  @since     2022-04-26T16:52:48 / Erik Bachmann
  */
-function setPathKey($path, &$array=array(), $value=null) {
+function setPathKey($path, &$array=array(), $value=null)
+{
     $temp =& $array;
 
     foreach($path as $key)
@@ -473,26 +464,25 @@ function setPathKey($path, &$array=array(), $value=null) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        getPathKey
+ *  @fn        getPathKey( $path, &$array=array() )
  *  @brief     Return the value from path in array
  *  
  *  @param [in] $path	Exploded path
  *  @param [in] $array	Array to pick from
- *  @return    Return description
+ *  @retval    Return description
  *  
  *  @details   More details
  *  
  *  
- *  @example   getPathKey();
- *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *  @code
+ *  getPathKey();
+ *  @endcode
  *  
  *  @see       https://stackoverflow.com/a/27930028 How to access and manipulate multi-dimensional array by key names / path?
  *  @since     2023-02-25T09:26:25 / Erik Bachmann Pedersen
  */
-function getPathKey( $path, &$array=array() ) {
+function getPathKey( $path, &$array=array() )
+{
     $temp =& $array;
 
     foreach($path as $key) {
@@ -504,25 +494,16 @@ function getPathKey( $path, &$array=array() ) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn         deletePathKey
+ *  @fn         deletePathKey($path, &$array)
  *  @brief      Delete entry from path in array
  *  
  *  @param [in] $path       Breadcrump trail
  *  @param [in] $array      Array to insert into
- *  @return     Return description
  *  
- *  @details    More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see        https://
  *  @since     2023-02-25T09:26:25 / Erik Bachmann Pedersen
  */
-function deletePathKey($path, &$array) {
+function deletePathKey($path, &$array) 
+{
     //$path = explode('.', $path); //if needed
     $temp =& $array;
 

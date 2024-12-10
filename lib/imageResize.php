@@ -1,9 +1,14 @@
 <?php
 /**
  *   @file       imageResize.php
- *   @brief      $(Brief description)
- *   @details    $(More details)
- *   
+ *   @brief      Resizing function for images
+ *   @details    
+ *  image_resize()                  - Resize and rotate image
+ *  stringcreatefromimage()         - Create a string from image stream
+ *  gdReorientateByOrientation()    - Reorientate GD image by EXIF orientation 
+ *  rotateImage()                   - Rotate image to file
+ *  getResizedImage()               - Read and resize image
+ *
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
  *   @since      2024-11-11T10:11:41 / ErBa
@@ -13,15 +18,16 @@
  
 
 /**
- *            image_resize
+ *   @fn         image_resize($src, $dst, $width, $height, $orientation, $resizetype = 'scale', $crop=0)
  *   @brief      Resize and rotate image
  *   
- *   @param [in]	$src	Source file
- *   @param [in]	$dst	Image stream
- *   @param [in]	$width	New max width
- *   @param [in]	$height	New max height
+ *   @param [in]	$src	        Source file
+ *   @param [in]	$dst	        Image stream
+ *   @param [in]	$width	        New max width
+ *   @param [in]	$height	        New max height
+ *   @param [in]	$orientation    EXIF orientation
  *   @param [in]	$resizetype		'scale', 'resized' or 'resampled'
- *   @param [in]	$crop=0	Cropping FALSE/TRUE
+ *   @param [in]	$crop	Cropping FALSE/TRUE
  *   @return     New image stream
  *   
  *   @details    
@@ -152,11 +158,11 @@ function image_resize($src, $dst, $width, $height, $orientation, $resizetype = '
 
 
 /**
- *            	stringcreatefromimage
+ *   @fn         stringcreatefromimage( &$new, $type = 'jpg')
  *   @brief      Create a string from image stream
  *   
  *   @param [in]	&$new	$(description)
- *   @param [in]	$type='jpg'	$(description)
+ *   @param [in]	$type	$(description)
  *   @return     image string
  *   
  *   @details    The reverse of: imagecreatefromstring — Create a new image from the image stream in the string
@@ -184,6 +190,7 @@ function stringcreatefromimage( &$new, $type = 'jpg')
 //----------------------------------------------------------------------
 
 /**
+ * @fn          gdReorientateByOrientation( $gdImage, $orientation, $note = '' )
  *   @brief      Reorientate GD image by EXIF orientation
  *   
  *   @param [in]	$gdImage		GD Image blob
@@ -232,6 +239,7 @@ function gdReorientateByOrientation( $gdImage, $orientation, $note = '' )
 //----------------------------------------------------------------------
 
 /**
+ * @fn          rotateImage( $filename, $degrees, $out )
  *   @brief      Rotate image to file
  *   
  *   @param [in]	$filename	Source file
@@ -259,11 +267,12 @@ function rotateImage( $filename, $degrees, $out )
 //----------------------------------------------------------------------
 
 /**
+ * @fn          getResizedImage( $file, $width = 1000, $height = 1000 )
  *   @brief      Read and resize image
  *   
- *   @param [in]	$file			Source file
- *   @param [in]	$width=1000		New width
- *   @param [in]	$height=1000	New Height
+ *   @param [in]	$file		Source file
+ *   @param [in]	$width		New width
+ *   @param [in]	$height	    New Height
  *   @return     new image
  *   
  *   @details    

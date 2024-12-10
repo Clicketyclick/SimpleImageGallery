@@ -13,6 +13,7 @@
 
 
 /**
+ *  @fn         getMapLink( $lat, $lon, $zoom, $map_source )
  *  @brief     Build a link to map.
  *  @details   Build link to external map page
  *
@@ -21,16 +22,10 @@
  *  @param[in] $lat Lattitude as float
  *  @param[in] $lon Longitude as float
  *  @param[in] $zoom Zoom level
- *  @return     html link
+ *  @param [in]	$map_source Source: Google, OpenStreetMap ...
+ *
+ *  @retval     html link
  *  @since      2024-11-13T16:15:20
- */
-/*
-<!--
- *  @todo       
- *  @bug        
- *  @warning    
- *  @see        https://
--->
  */
 function getMapLink( $lat, $lon, $zoom, $map_source )
 {
@@ -68,13 +63,14 @@ function getMapLink( $lat, $lon, $zoom, $map_source )
 
 //----------------------------------------------------------------------
 /**
- *   fn         getMapEmbed
+ *   fn         getMapEmbed( $lat, $lon, $zoom, $map_source )
  *   @brief      Build an iframe with map
  *   
  *   @param [in]	$lat	Lattitude as float
  *   @param [in]	$lon	Longitude as float
  *   @param [in]	$zoom	Zoom level
- *   @return     html iframe
+ *   @param [in]	$map_source Source: Google, OpenStreetMap ...
+ *   @retval     html iframe
  *   @since      2024-11-13T16:16:37
  */
 function getMapEmbed( $lat, $lon, $zoom, $map_source )
@@ -114,11 +110,12 @@ function getMapEmbed( $lat, $lon, $zoom, $map_source )
 		return($tmpStr);
 	}
 	return(FALSE);
-}
+}   // getMapEmbed()
 
 //----------------------------------------------------------------------
 
 /**
+ *  @fn         getGps($exifCoord, $hemi)
  *   @brief      Convert EXIF GPS data to float
  *   
  *@details       Example:
@@ -137,7 +134,7 @@ function getMapEmbed( $lat, $lon, $zoom, $map_source )
  *
  *   @param [in] $exifCoord EXIF coordinate
  *   @param [in] $hemi GPS Reference ['N','S','E','W']
- *   @return     Coordinate as float
+ *   @retval     Coordinate as float
  *   
  *   @see        https://stackoverflow.com/a/2572991 gak
  *   @since      2024-11-13T15:27:47
@@ -156,16 +153,17 @@ function getGps($exifCoord, $hemi)
 //----------------------------------------------------------------------	
 
 /**
+ *  @fn         gps2Num($coordPart)
  *   @brief      Reformat GPS to float
  *   
  *   @param[in]	$coordPart	Coordinates with '/' parts
- *   @return	Coordinate as float
+ *   @retval	Coordinate as float
  *   
  *   @details    
  *   
  *   @since      2024-11-13T15:28:40
  */
-function gps2Num($coordPart) 
+function gps2Num($coordPart)
 {
     $parts = explode('/', $coordPart);
 

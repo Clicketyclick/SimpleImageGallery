@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file        handleStrings.php
  * @brief       String handling rutines
@@ -44,24 +43,16 @@
  */
 
 /**
- *  @brief     Brief description
+ *  @fn         linkTo( $keys )
+ *  @brief     Create link from template
  *  
  *  @param [in] $keys 	Description for $keys
- *  @return    Return description
+ *  @retval    Return description
  *  
- *  @details   
- *  
-
- *  
- *  @_todo      
- *  @_bug       
- *  @_warning   
- *  
- *  @see       https://
  *  @since     2022-11-23T11:10:59 / erba
  */
-function linkTo( $keys ) {
-    
+function linkTo( $keys )
+{
     $template   = $GLOBALS['cfg']['display']['linkto_template'];
 
     foreach( $keys as $key => $value ){
@@ -70,50 +61,47 @@ function linkTo( $keys ) {
     return(
         $template
     );
-}
+}   // linkTo()
 
  
 /** 
+ * @fn      bes_html( $string )
  * @brief   Converting special BES charaters to HTML entries
  * @details Decode BESMARC double a
  *
+ * @param $string    BES string
+ * @retval string   HTML string
+ * 
  * @todo    This function is hard coded. Need redesign
  *
- * @param string    BES string
- * @return string   HTML string
- * 
- * @tutorial        doc/manual.md
- * @see             
  * @since           2018-12-17T07:47:19
  */
-function bes_html( $string ) {
-    /*
-	$string = str_replace("#O", "&#xA732;", $string);
-    $string = str_replace("#o", "&#xA733;", $string);
-	*/
+function bes_html( $string )
+{
     $string = str_replace("#O", getIcon('double_a_uppercase'), $string);
     $string = str_replace("#o", getIcon('double_a_lowercase'), $string);
     return( $string );
 }   // bes_html()
 
-
 //---------------------------------------------------------------------
 
-/** 
- * @Brief   Extract substring between start pattern and end pattern
+/**
+ *  @fn         getBetween($content,$start,$end)
+ *  @brief   Extract substring between start pattern and end pattern
  *
  * @details Extract only first substring
  *
- * @param content   String to analyse
- * @param start     Start pattern
- * @param end       End patterne
- * @return string   Pattern found - or an empty string.
+ * @param $content   String to analyse
+ * @param $start     Start pattern
+ * @param $end       End patterne
+ * @retval string   Pattern found - or an empty string.
  * 
- * @tutorial        doc/manual.md
+ * @see          doc/manual.md
  * @see             https://tonyspiro.com/using-php-to-get-a-string-between-two-strings/
  * @since           2018-12-17T07:47:19
  */
-function getBetween($content,$start,$end){
+function getBetween($content,$start,$end)
+{
     $r = explode($start, $content);
     if (isset($r[1])){
         $r = explode($end, $r[1]);
@@ -124,20 +112,22 @@ function getBetween($content,$start,$end){
 
 //---------------------------------------------------------------------
 
-/** 
- * @Brief   Extract every substring between start and end pattern
+/**
+ *  @fn         getBetweens($content,$start,$end)
+ *  @brief   Extract every substring between start and end pattern
  *
  *
- * @param content   String to analyse
- * @param start     Start pattern
- * @param end       End patterne
- * @return array    Patterns found - or an empty string.
+ * @param $content   String to analyse
+ * @param $start     Start pattern
+ * @param $end       End patterne
+ * @retval array    Patterns found - or an empty string.
  * 
- * @tutorial        doc/manual.md
+ * @see          doc/manual.md
  * @see             https://tonyspiro.com/using-php-to-get-a-string-between-two-strings/
  * @since           2018-12-17T07:48:33
  */
-function getBetweens($content,$start,$end){
+function getBetweens($content,$start,$end)
+{
     $r = explode($start, $content);
     $result = [];
 
@@ -154,24 +144,28 @@ function getBetweens($content,$start,$end){
 //----------------------------------------------------------------------
 
 /**
- * @briefEncoding danMARC2 special characters to HTML entities
- *
- *| @*	| U+002A	| asterisk |
- *| @@	| U+0040	| commercial at |
- *| @¤	| U+00A4	| currency code – not used in Danish records (to be confirmed)  |
- *| @å	| U+A733	| gammelt dansk å - alternative form in dM2 @A733 |
- *| @Å	| U+A732	| gammelt dansk Å - alternative form in dM2 @ A732 |
+ *  @fn         dm2_html( $string )
+ *  @brief Encoding danMARC2 special characters to HTML entities
+ * @details
+ * 
+ * code | Hex | Name | Note
+ * ---|---|---|---
+ *| \@*	| U+002A	| asterisk |
+ *| \@\@	| U+0040	| commercial at |
+ *| \@¤	| U+00A4	| currency code – not used in Danish records (to be confirmed)  |
+ *| \@å	| U+A733	| gammelt dansk å - alternative form in dM2 \@A733 |
+ *| \@Å	| U+A732	| gammelt dansk Å - alternative form in dM2 \@A732 |
  *
  * This function MUST be encoded in UTF-8 w/o BOM
  *
- *
- * @param string $str   String to encode
- * @return string       encodet string
+ * @param string $string   String to encode
+ * @retval string       encodet string
  *
  * @see    http://php.net/manual/en/function.htmlentities.php#82534
  * @since 2018-07-30 10:51:00
  */
-function dm2_html( $string ) {
+function dm2_html( $string )
+{
     $tests  = [
         "@&Aring;" => "&Aring;",
         "@&aring;" => "&aring;",
@@ -190,18 +184,20 @@ function dm2_html( $string ) {
 //---------------------------------------------------------------------
 
 /**
- * @brief   Encode UTF-8 -> latin1
+ *  @fn         utf2latin($text)
+ *  @brief   Encode UTF-8 -> latin1
  *
  * @since 2018-07-30 10:51:00
  *
  *
- * @param string $str   String to encode
- * @return string       encodet string
+ * @param string $text  String to encode
+ * @retval string       encodet string
  *
  * @see    http://php.net/manual/en/function.htmlentities.php#82534
  * @version 2018-07-30 10:51:00
  */
-function utf2latin($text) { 
+function utf2latin($text)
+{ 
    $text=htmlentities($text,ENT_COMPAT,'UTF-8'); 
    return html_entity_decode($text,ENT_COMPAT,'ISO-8859-1'); 
 }   // utf2latin()
@@ -209,17 +205,17 @@ function utf2latin($text) {
 //---------------------------------------------------------------------
 
 /**
- * @brief   Encode latin1 -> UTF-8
+ *  @fn      latin2utf($text)
+ *  @brief   Encode latin1 -> UTF-8
  *
- *
- *
- * @param string $str   String to encode
- * @return string       encodet string
+ * @param $text   String to encode
+ * @retval string       encodet string
  *
  * @since   2018-07-30 10:51:00
  * @version 2018-07-30 10:51:00
  */
-function latin2utf($text) { 
+function latin2utf($text)
+{
    $text    = htmlentities($text,ENT_COMPAT,'ISO-8859-1'); 
    return html_entity_decode($text,ENT_QUOTES,'UTF-8'); 
 }   // latin2utf()
@@ -227,35 +223,38 @@ function latin2utf($text) {
 //---------------------------------------------------------------------
 
 /**
- *
+ * @fn      codeStr( $str )
  * @brief   Encode latin1 -> UTF-8 -> HTML
  * @details Special characters only!
  *
  *
  * @param string $str   String to encode
- * @return string       encodet string
+ * @retval string       encodet string
  *
  * @since 2018-07-30 10:51:00
  * @version 2018-07-30 10:51:00
  */
-function codeStr( $str ) {
+function codeStr( $str )
+{
     return ( htmlspecialchars( latin2utf( $str ), ENT_DISALLOWED, "UTF-8" ) );
 }   // codeStr()
 
 //---------------------------------------------------------------------
 
 /**
- * @brief   Replace Control Characters from string
+ *  @fn      controlCharacterReplacement( $str )
+ *  @brief   Replace Control Characters from string
  *
  * @since 2018-07-30 10:51:00
  *
  *
  * @param string $str   from which control characters should be replaced
- * @return string       string with replacements
+ * @retval string       string with replacements
  *
  * @version 2018-07-30 10:51:00
  */
-function controlCharacterReplacement( $str ) {
+function controlCharacterReplacement( $str )
+{
     if ( isset( $GLOBALS['config']['controlcharacterpattern'] ) 
         &&
         isset( $GLOBALS['config']['controlcharacterreplacement'] )
@@ -270,20 +269,21 @@ function controlCharacterReplacement( $str ) {
 
 //---------------------------------------------------------------------
 
-/** 
- * @brief   Escaping blanks, parenteses and quotes in CCL query string
+/**
+ *  @fn      escapeBlanksInStrings( $ccl, $mask )
+ *  @brief   Escaping blanks, parenteses and quotes in CCL query string
  *
  * @details Inserts blanks in parenteses: (this) -> ( this )
  *
- * @param ccl       CCL query string
- * @param mask      masking replacement symbol
- * @return          Converted string
+ * @param $ccl       CCL query string
+ * @param $mask      masking replacement symbol
+ * @retval          Converted string
  * 
- * @tutorial        doc/ccl.example.md 
- * @see             
+ * @see             doc/ccl.example.md 
  * @since           2018-12-21T10:56:35
  */
-function escapeBlanksInStrings( $ccl, $mask ) {
+function escapeBlanksInStrings( $ccl, $mask )
+{
     // Escaping blanks in strings
     $inquote = false;
     for ( $i=0 ; $i<strlen( $ccl ) ; $i++ ) {
@@ -305,15 +305,14 @@ function escapeBlanksInStrings( $ccl, $mask ) {
     return $ccl;
 }   // escapeBlanksInStrings()
 
-
-
 //---------------------------------------------------------------------
 
 /**
+ *  @fn    strhex($string)
  *  @brief String to string of Hex values
  *  
  *  @param [in] $string Description for $string
- *  @return Return description
+ *  @retval Return description
  *  
  *@code
  *  $hex = strhex("test sentence...");
@@ -322,10 +321,11 @@ function escapeBlanksInStrings( $ccl, $mask ) {
  *  // outputs: test sentence...
  *@endcode
  *
- *  @url https://www.php.net/manual/en/language.types.type-juggling.php#45062
+ *  @see   https://www.php.net/manual/en/language.types.type-juggling.php#45062
  *  @details More details
  */
-function strhex($string) {
+function strhex($string)
+{
    $hex="";
    for ($i=0;$i<strlen($string);$i++)
        $hex.=dechex(ord($string[$i]));
@@ -335,10 +335,11 @@ function strhex($string) {
 //---------------------------------------------------------------------
 
 /**
+ *  @fn    hexstr($hex)
  *  @brief String of Hex values to string
  *  
  *  @param [in] $hex String of Hex values
- *  @return Return String
+ *  @retval Return String
  *  
  *@code
  *  $hex = strhex("test sentence...");
@@ -347,10 +348,11 @@ function strhex($string) {
  *  // outputs: test sentence...
  *@endcode
  *
- *  @url https://www.php.net/manual/en/language.types.type-juggling.php#45062
+ *  @see https://www.php.net/manual/en/language.types.type-juggling.php#45062
  *  @details More details
  */
-function hexstr($hex) {
+function hexstr($hex)
+{
    $string="";
    for ($i=0;$i<strlen($hex)-1;$i+=2)
        $string.=chr(hexdec($hex[$i].$hex[$i+1]));
@@ -360,10 +362,11 @@ function hexstr($hex) {
 //---------------------------------------------------------------------
 
 /**
+ *  @fn        remove_utf8_bom( &$text )
  *  @brief     Remove UTF-8 BOM prefix from string
  *  
  *  @param [in] $text	Text sting to strip BOM from
- *  @return    $text w/o BOM
+ *  @retval    $text w/o BOM
  *  
  *  @details   
  *  
@@ -376,14 +379,10 @@ function hexstr($hex) {
  *  	efbbbf424f4d
  *@endcode
  *
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2022-06-19T12:18:28 / erba
  */
-function remove_utf8_bom( &$text ) {
+function remove_utf8_bom( &$text )
+{
     $bom = pack('H*','EFBBBF');
     $text = preg_replace("/^$bom/", '', $text);
     return( $text );
@@ -392,32 +391,33 @@ function remove_utf8_bom( &$text ) {
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         expandUnicode2Html( $str )
  *  @brief      Expanding Danbib encoded Unicode characters to HTML
  *  
  *  @details    Unicode prefixed by @ is expanded to HTML.
  *  
- *  Danbib	HTML
- *  @00AE	&#x00AE;	Registred sign
- *  @0153	&#x0153;	Little french oe
- *  @0394	&#x0394;	Greek capital letter delta
+ *  Danbib	|HTML       | note
+ *  ---|---|---
+ *  \@00AE	| &\#x00AE;	| Registred sign
+ *  \@0153	| &\#x0153;	| Little french oe
+ *  \@0394	| &\#x0394;	| Greek capital letter delta
  *  
  *  
  *  NOTE: Sequence of 4 hex digits can be matched using either `[0-9a-fA-F]{4}` or `[[:xdigit:]]{4}`
  *  @param [in] $str 	String to expand
- *  @return     String expanded
+ *  @retval     String expanded
  *  
  *@code
- * expandUnicode( "@00AE" ) == "&#x00AE";
+ * expandUnicode( "\@00AE" ) == "\&#x00AE";
  *@endcode
  *  
- *  @todo       
- *  @bug        
- *  @warning    May conflict with records NOT encoded where @xxxx can be expanded unintentionally
+ *  @warning    May conflict with records NOT encoded where \@xxxx can be expanded unintentionally
  *  
  *  @see        https://stackoverflow.com/a/31968439
  *  @since      2020-08-01T22:42:55
  */
-function expandUnicode2Html( $str ) {
+function expandUnicode2Html( $str )
+{
 	$pattern = '/@([[:xdigit:]]{4})/i';
 	$replacement = '&#x${1};';
 	return( preg_replace($pattern, $replacement, $str) );
@@ -426,6 +426,7 @@ function expandUnicode2Html( $str ) {
 //----------------------------------------------------------------------
 
 /**
+ *  @fn         superSubScript( $str )
  *  @brief      Expand superscript and subscript in string
  *  
  *  @details    String sequences for superscript (¹) and subscript expanded to valid HTML
@@ -445,7 +446,7 @@ function expandUnicode2Html( $str ) {
  *  
  *  
  *  @param [in] $str 	String with superscript or subscript sequences
- *  @return     Plain HTML
+ *  @retval     Plain HTML
  *  
  *@code
  *  // Byte sequences:
@@ -465,7 +466,8 @@ function expandUnicode2Html( $str ) {
  *  @see        
  *  @since      2020-08-01T22:44:07
  */
-function superSubScript( $str ) {
+function superSubScript( $str )
+{
 	$str2	= "";
 	global $str0;
 	$level	= 0;
@@ -514,28 +516,16 @@ function superSubScript( $str ) {
 
 
 /**
- *   @brief      Read Markdown file and parse to HTML
+ * @fn      get_doc( $docfile )
+ * @brief      Read Markdown file and parse to HTML
  *   
  *   @param [in]	$docfile	File to read and parse
- *   @return     HTML string
+ *   @retval     HTML string
  *   
- *   @details    
- *   
- *   @code
- *   @endcode
-@verbatim
-@endverbatim
-
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-12-03T11:36:04
  */
-
-function get_doc( $docfile ) {
+function get_doc( $docfile )
+{
     $note   = file_get_contents( $docfile );
     $Extra  = new ParsedownExtra();
     return( $Extra->text( $note ) );
@@ -543,28 +533,19 @@ function get_doc( $docfile ) {
 
 
 /**
+ * @fn          getDetailSummary( $summary, $detail, $preformat = FALSE )
  *   @brief      Build details/summary block in HTML
  *   
  *   @param [in]	$summary	Summary/headline
  *   @param [in]	$detail	    Details/body
- *   @param [in]	$preformat=FALSE	On TRUE preformatted
- *   @return     HTML string
+ *   @param [in]	$preformat	On TRUE preformatted
+ *   @retval     HTML string
  *   
  *   
- *   @code
- *   @endcode
-@verbatim
-@endverbatim
-
- *   
- *   @todo       
- *   @bug        
- *   @warning    
- *   
- *   @see        https://
  *   @since      2024-12-03T11:37:10
  */
-function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
+function getDetailSummary( $summary, $detail, $preformat = FALSE )
+{
 	$text	= sprintf( "<details><summary>%s</summary><span id='%s'>%s%s%s</span></details>"
 	,	$summary
 	,	$summary
@@ -577,10 +558,11 @@ function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
 
 
 /**
+ *  @fn         getNoOfDigits( $num )
  *  @brief     Return the no of digits in a number
  *  
  *  @param [in] $num 	Number to process
- *  @return    Number of digits
+ *  @retval    Number of digits
  *  
  *  @details   
  *  
@@ -588,9 +570,6 @@ function getDetailSummary( $summary, $detail, $preformat = FALSE ) {
  *  $count   = getNoOfDigits( 12357 ); // 5 digits
  *@endcode
  *  
- *  @todo      
- *  @bug       
- *  @warning   
  *  
  *  @see       https://stackoverflow.com/a/28434327/7485823
  *  @since     2023-02-15T12:46:44 / erba
@@ -601,10 +580,11 @@ function getNoOfDigits( $num )
 }   //*** getNoOfDigits() ***
 
 /**
+ *  @fn        getDoxygenFileHeader( $file )
  *  @brief     Extract Doxygen file header from file
  *  
  *  @param [in] $file	File to extract header from
- *  @return    Description header as string
+ *  @retval    Description header as string
  *  
  *  @details   More details
  *  
@@ -619,7 +599,7 @@ function getNoOfDigits( $num )
  *	* [details]   More details
  *  *
  *	* [copyright] http://www.gnu.org/licenses/lgpl.txt LGPL version 3
- *	* [author]    Author Name <email>
+ *	* [author]    Author Name \<email\>
  *	* [since]     2022-05-26T17:45:18 / Author Name
  *	* [version]   2022-11-30T10:15:55 / Author Name
  *
@@ -640,11 +620,12 @@ function getDoxygenFileHeader( $file )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn        number_formatted( $no, $dec = 0 )
  *  @brief     Format a number with grouped thousands and decimal separator
  *  
  *  @param [in] $no     Number to format
  *  @param [in] $dec    Number of decimals
- *  @return    Formated number as string
+ *  @retval    Formated number as string
  *  
  *  @details   Formatting a number by localisation
  *          en: 1,000.00
@@ -658,7 +639,8 @@ function getDoxygenFileHeader( $file )
  *  @see       https://
  *  @since     2023-03-24T06:27:30 / Bruger
  */
-function number_formatted( $no, $dec = 0 ) {
+function number_formatted( $no, $dec = 0 )
+{
     if ( is_string( $no ) )
         $no = intval( $no );
     return( number_format( $no, $dec, ___('decimal_separator'), ___('thousands_separator') ) );
@@ -667,11 +649,12 @@ function number_formatted( $no, $dec = 0 ) {
 //---------------------------------------------------------------------
 
 /**
+ *  @fn        stringExpand($subject, array $vars)
  *  @brief     Expand simple variables inside a string
  *  
  *  @param [in] $subject 	Description for $subject
  *  @param [in] $vars 	Description for $vars
- *  @return    Return description
+ *  @retval    Return description
  *  
  *  @details   Even in single quoted strings
  *  
@@ -686,7 +669,7 @@ function number_formatted( $no, $dec = 0 ) {
 @endverbatim
  *  
  *  Or a more complex example:
- *@endcode
+ *@code
  *
  *      // Language
  *      $lang   = 'en';
@@ -714,15 +697,12 @@ function number_formatted( $no, $dec = 0 ) {
 Hello    Hello    world
 @endverbatim
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
  *  @see       https://bugs.php.net/bug.php?id=43901
  *  @see       https://stackoverflow.com/a/5241845/7485823
  *  @since     2023-11-06T15:45:27 / erba
  */
-function stringExpand($subject, array $vars) {
+function stringExpand($subject, array $vars)
+{
 	// loop over $vars map
 	foreach ($vars as $name => $value) {
 		// use preg_replace to match ${`$name`} or $`$name`
@@ -736,11 +716,11 @@ function stringExpand($subject, array $vars) {
 //---------------------------------------------------------------------
 
 /**
- *  @fn        expandLocal
+ *  @fn        expandLocal( $str )
  *  @brief     expand localisation from global $__local;
  *  
  *  @param [in] $str     String to expand
- *  @return    Expanded string
+ *  @retval    Expanded string
  *  
  *  @details   
  *  
@@ -774,10 +754,11 @@ function expandLocal( $str )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn        platformSlashes($path)
  *  @brief     Set slashes in path according to OS
  *  
  *  @param [in] $path   Path to be normalised
- *  @return    Normalised path
+ *  @retval    Normalised path
  *  
  *  @details   
  *  
@@ -788,25 +769,22 @@ function expandLocal( $str )
  *  - Windows:  "\tmp\subdir\myfile.txt"
  *  - Linux:    "/tmp/subdir/myfile.txt"
  *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2024-03-16T16:30:26 / Bruger
  */
-function platformSlashes($path) {
+function platformSlashes($path)
+{
     return str_replace(['/','\\'], DIRECTORY_SEPARATOR, $path);
 }   // platformSlashes()
 
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         expandGlobalVarsRef( $str, $refs = FALSE )
  *  @brief      Expand complex variables in string
  *  
  *  @param [in] $str    Reference to string
  *  @param [in] $ref    Reference to associative array OR GLOBALS
- *  @return     Returns the expanded string
+ *  @retval     Returns the expanded string
  *  
  *  @details    Expands complex variables (imbedded in {}) using
  *      $GLOBALS or references from an associative array
@@ -833,7 +811,7 @@ function platformSlashes($path) {
  *  
  *  @since      2024-07-10T13:19:10 / erba
  */
-function expandGlobalVarsRef( $str, $refs = FALSE  )
+function expandGlobalVarsRef( $str, $refs = FALSE )
 {
     if ( FALSE == $refs ) $refs = $GLOBALS;
 
@@ -850,20 +828,22 @@ function expandGlobalVarsRef( $str, $refs = FALSE  )
 //---------------------------------------------------------------------
 
 /**
+ *  @fn         expandGlobalVarsRefquery_prefix( $str, $reference = FALSE, $delimit = ':='  )
  *  @brief      Expand complex variables in string w. delimiter
  *  
  *  @param [in] $str        Reference to string
  *  @param [in] $ref        Reference to associative array OR GLOBALS
  *  @param [in] $delimit    Delimiters as string
- *  @return     Returns the expanded string
+ *  @retval     Returns the expanded string
  *  
- *  @details    Expands complex variables separated by delimiter using
+ *  @details
+ *      Expands complex variables separated by delimiter using
  *      $GLOBALS or references from an associative array
  *      Delimiters are replaced by the first in string
  *
  *      "Simple" variable names (like '$x' or '${x}') are not expanded.
  *  
- *  @code
+ *@code
  *     $str='keyword=x y z';
  *     $arr = [ 'keyword' => "subject" ];
  *     
@@ -883,7 +863,7 @@ subject:x y z
  *  @see        https://
  *  @since      2024-07-14T22:11:44 / erba
  */
-function expandGlobalVarsRefquery_prefix( $str, $reference = FALSE, $delimit = ':='  )
+function expandGlobalVarsRefquery_prefix( $str, $reference = FALSE, $delimit = ':=' )
 {
     if ( FALSE == $reference ) $reference = $GLOBALS;
 
@@ -906,13 +886,14 @@ function expandGlobalVarsRefquery_prefix( $str, $reference = FALSE, $delimit = '
 //----------------------------------------------------------------------
 
 /**
+ * @fn          truncate_center_word($string,$length=100,$wordw=FALSE,$mask=FALSE) 
  *   @brief      Zap the middle of a string
  *   
  *   @param [in]	$string     Source string
- *   @param [in]	$length=100	Max length
- *   @param [in]	$wordw=FALSE    Preserve words
- *   @param [in]	$mask=FALSE     Mask to insert
- *   @return     String truncated
+ *   @param [in]	$length	    Max length
+ *   @param [in]	$wordw      Preserve words
+ *   @param [in]	$mask       Mask to insert
+ *   @retval     String truncated
  *   
  *   @details    
  *   Update 4:

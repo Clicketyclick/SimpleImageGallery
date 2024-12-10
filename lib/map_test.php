@@ -3,7 +3,9 @@
  *   @file       map_test.php
  *   @brief      Testing map functions
  *   @details    
- *   @example    http://localhost:8083/lib/map_test.php?zoom=10
+ * @code
+ *  http://localhost:8083/lib/map_test.php?zoom=10
+ * @endcode
  *
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
@@ -23,7 +25,7 @@ echo '
 
 include_once( __DIR__.'/map.php');
 
-
+/** @brief Local config */
 $cfg	= [
 	"exif_map_tag" => "See on Google map",
 	"exif_map_link_stub" => "https://maps.google.com/maps?q={\$lat},{\$lon}",
@@ -46,7 +48,7 @@ $cfg	= [
 // https://maps.google.com/?q=38.6531004,-90.243462&ll=38.6531004,-90.243462&z=3
 
 // http://www.google.com/maps/place/29.981293,31.133480/@29.981293,31.133480,7z
-
+/** @brief Text EXIF */
 $exif = [
   'GPS' => 
   array (
@@ -76,8 +78,11 @@ $exif = [
 	),
 ];
 
-$lon = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
-$lat = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
+/** @brief Test longitude */
+$lon    = getGps($exif['GPS']["GPSLongitude"], $exif['GPS']['GPSLongitudeRef']);
+/** @brief Test latitude */
+$lat    = getGps($exif['GPS']["GPSLatitude"], $exif['GPS']['GPSLatitudeRef']);
+/** @brief Test Zoom factor */
 $zoom	= $_REQUEST['zoom'] ?? 15;
 
 echo getMapLink( $lat, $lon, $zoom );
