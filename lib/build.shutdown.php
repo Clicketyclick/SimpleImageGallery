@@ -22,53 +22,6 @@ function shutdown()
     if ( ! empty( $_REQUEST['slide'] ) )
         echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
 
-//echo '['.var_export( $GLOBALS['url']['args'], TRUE )."]";
-//echo 'args['.var_export( $GLOBALS['url']['args'], TRUE )."]";
-
-//printf( "<details open><summary>%s</summary><pre>%s</pre></details>"
-
-
-/*
-    //echo "<details open><summary title='Outtro'>&#x1F52C;</summary>";
-    echo "<details><summary title='Outtro'>&#x1F52C;</summary>";
-    echo "<table border=1>\n";
-    
-    if ( 'da' == $GLOBALS['browser']['language'] ?? 'en' )
-        verbose( number_format($GLOBALS['tmp']['no_of_images'], 0, ',', '.') , ___('no_of_images'));
-    else
-        verbose( number_format($GLOBALS['tmp']['no_of_images']) , ___('no_of_images'));
-
-
-	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
-	//status( "Runtime ", $Runtime );
-	verbose( microtime2human( $Runtime ), "Runtime " );
-	//status( "Log", $GLOBALS['config']['logfile']  ?? 'none');
-	verbose( $GLOBALS['config']['logfile']  ?? 'none', 'Log');
-
-	//verbose( getRandomImage()  , 'Random');
-
-    echo "</table>";
-    echo timer_show();
-    
-    printf( "<details><summary>%s</summary><pre>%s</pre></details>"
-,   'REQUEST'
-,   var_export( $_REQUEST, TRUE )
-);
-
-printf( "<details><summary>%s</summary><pre>%s</pre></details>"
-,   'config'
-,   var_export( $GLOBALS['config'], TRUE )
-);
-
-printf( "<details><summary>%s</summary><pre>%s</pre></details>"
-,   'database'
-,   var_export( $GLOBALS['database'], TRUE )
-);
-
-    
-    
-    echo "</details>";
-*/
 }   // shutdown()
 
 ?>

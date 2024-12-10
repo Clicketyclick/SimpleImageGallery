@@ -1,6 +1,6 @@
 <?php
 /**
- *   @file       index-dev.shutdown.php
+ *   @file       index.shutdown.php
  *   @brief      Shutdown for `index.php`
  *   @details    Display details w. runtime etc.
  *   
@@ -24,19 +24,6 @@ function shutdown()
         echo "<script>slideshow(true, {$_REQUEST['slide']});</script>";
 
     //----------------------------------------------------------------------
-/*
-    echo "<details><summary>Outtro</summary>";
-    echo "<table border=1>\n";
-	verbose( $GLOBALS['tmp']['no_of_images'] , ___('no_of_images'));
-
-	$Runtime	= microtime( TRUE ) - $_SERVER["REQUEST_TIME_FLOAT"];
-	//status( "Runtime ", $Runtime );
-	verbose( microtime2human( $Runtime ), "Runtime " );
-	//status( "Log", $GLOBALS['config']['logfile']  ?? 'none');
-
-    echo "</table>";
-    echo "</details>";
-*/    
 }   // shutdown()
 
 ?>

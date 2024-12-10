@@ -1,7 +1,7 @@
 <?php
 /**
  *   @file       index-dev.shutdown.php
- *   @brief      Shutdown for `index.php`
+ *   @brief      Shutdown for index-dev.php
  *   @details    Display details w. runtime etc.
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
@@ -10,6 +10,12 @@
  *   @version    @include version.txt
  */
 
+/**
+ *   @fn         shutdown()
+ *   @brief      Shutdown function
+ *   
+ *   @since      2024-12-06T19:41:59
+ */
 function shutdown()
 {
     // Footer

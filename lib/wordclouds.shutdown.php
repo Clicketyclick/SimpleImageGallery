@@ -1,12 +1,12 @@
 <?php
 /**
- *   @file       index-dev.shutdown.php
- *   @brief      Shutdown for `index.php`
+ *   @file       wordclouds.shutdown.php
+ *   @brief      Shutdown for `wordclouds.php`
  *   @details    Display details w. runtime etc.
  *   
  *   @copyright  http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  *   @author     Erik Bachmann <ErikBachmann@ClicketyClick.dk>
- *   @since      2024-11-23T21:01:30 / ErBa
+ *   @since      2024-12-10T16:37:01 / ErBa
  *   @version    @include version.txt
  */
 
@@ -53,6 +53,14 @@ function shutdown()
     ,   'database'
     ,   var_export( $GLOBALS['database'], TRUE )
     );
+
+
+
+
+echo "<details><summary>\$_SERVER</summary><pre>". var_export( $_SERVER, TRUE ) . "</pre></details>";
+echo "<details><summary>\$_REQUEST</summary><pre>". var_export( $_REQUEST, TRUE ) . "</pre></details>";
+//exit;
+
 
     echo "</details>";
 }   // shutdown()
