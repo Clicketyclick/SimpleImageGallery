@@ -10,10 +10,13 @@
  *   @version    @include version.txt
  */
 
-// Verbose and debug
+/** @brief Verbose and debug */
 $GLOBALS['verbose']    ??= 1;
+/** @brief Verbose and debug */
 $GLOBALS['debug']      ??= 0;
+/** @brief Verbose and debug */
 $GLOBALS['logging']    ??= 1;
+/** @brief Verbose and debug */
 $GLOBALS['timer']      ??= 0;
 
 if ( ! isset($GLOBALS['timers']) )
@@ -29,7 +32,7 @@ timer_set('def_io');
 
 
 // Init global variables
-//$files		= [];
+/** @brief Dataabse handle */
 $db			= FALSE;
 
 timer_set('load_libs', 'Loading libraries');
@@ -80,14 +83,7 @@ timer_set('shutdown');
 
 // Parse $_REQUEST
 timer_set('parse_request', 'Parse $_REQUEST');
-/*
-    -config:images:image_resize_type=scale
--config:images:image_resize_type=resized
--config:images:image_resize_type=resampled
--config:resume=1
--debug=1
-*/
-/**/
+
 foreach ( $_REQUEST as $cmd => $cmdvalue )
 {
 	if ( strpos( $cmd, ':' ) )
@@ -105,15 +101,13 @@ debug( $GLOBALS, 'SESSION:');
 timer_set('parse_request');
 
 
-timer_set('init_db', 'Open - or create database');
 // Open - or create database
+timer_set('init_db', 'Open - or create database');
 initDatabase( $db, $GLOBALS['config']['database']['file_name'], $GLOBALS['database'] );
 timer_set('init_db');
 
 timer_set('get_no_images', 'Get no of images');
-//var_export( $GLOBALS['database'] );
-//var_export( $GLOBALS['database']['sql']['select_files_count'] );
-//exit;
+
 // Get no of images
 $sql	= $GLOBALS['database']['sql']['select_files_count'];
 $GLOBALS['tmp']['no_of_images']  = querySqlSingleValue( $db, $sql );
@@ -134,48 +128,16 @@ timer_set('save_query_from_str');
 
 timer_set('_header');
 
-/**
- *            initDatabase
- *   @brief      Open or create database w. tables
- *   
- *   @param [in]	&$db	Handle to database
- *   @param [in]	$dbfile	Database file name
- *   @param [in]	&$dbCfg	Database schemas from JSON
- *   @return     TRUE if open | FALSE
- *   
- *   @details
- *	* Create database if not exists
- *      * Create tables
- *  * Open data if exists
- *   
- *   @since      2024-11-13T13:47:53
- */
-function __initDatabase( &$db, $dbfile, &$dbCfg )
-{
-	if ( ! file_exists( $dbfile ) )
-	{
-		verbose( $dbfile, "Create database:\t" );
-		$db	= createSqlDb($dbfile);
-		$r  = $db->exec( $dbCfg['sql']['create_images'] );
-		//$r  = $db->exec( $dbCfg['sql']['create_meta'] );
-	}
-	else
-	{
-		debug("Opening database",  $dbfile);
-		$db	= openSqlDb($dbfile);
-	}
-	return( ! empty( $db ) );
-}	// initDatabase()
-
 //----------------------------------------------------------------------
 
 /**
+ * @fn          initDatabase( &$db, $dbfile )
  *   @brief      Open or create database w. tables
  *   
  *   @param [in]	&$db	Handle to database
  *   @param [in]	$dbfile	Database file name
  *   @param [in]	&$dbCfg	Database schemas from JSON
- *   @return     TRUE if open | FALSE
+ *   @retval     TRUE if open | FALSE
  *   
  *   @details
  *	* Create database if not exists
@@ -186,7 +148,6 @@ function __initDatabase( &$db, $dbfile, &$dbCfg )
  */
 function initDatabase( &$db, $dbfile )
 {
-    //status(  "Database", $dbfile );
 	if ( ! file_exists( $dbfile ) )
 	{
 		status(  "Create database", $dbfile );
@@ -213,38 +174,28 @@ function initDatabase( &$db, $dbfile )
 			}
 			
 			echo progressbar( ++$count, $GLOBALS['tmp']['tables_total'], 30, $action, 30 );
-			//logging( "{$count}/{$GLOBALS['tables_total']} {$group}: " . microtime2human( microtime( TRUE ) - $microtime_start ));
-            /*
-            echo "total";
-            var_export($GLOBALS['tmp']['tables_total']);
-            echo " count";
-            var_export($count);
-            echo " action";
-            var_export($action);
-            echo " timer";
-            var_export($GLOBALS['timers'][$action]);
-            */
+
 			logging( progress_log( $GLOBALS['tmp']['tables_total'], $count, $GLOBALS['timers'][$action], 1 ) );
-            //echo "\n";
 		}
         echo "\n";
 	}
 	else
 	{
-		//verbose( $dbfile, "Opening database:\t");
 		debug( $dbfile, "Opening database");
 		$db	= openSqlDb($dbfile);
 	}
+
 	return( ! empty( $db ) );
 }	// initDatabase()
 
 //----------------------------------------------------------------------
 
 /**
+ *  @fn         json_encode_db( $arr )
  *   @brief      Encode mixed data for database
  *   
  *   @param [in]	$arr	Mixed data
- *   @return     json with escaped values
+ *   @retval     json with escaped values
  *   
  *   @details    
  *   - json_encode w. JSON_INVALID_UTF8_IGNORE
@@ -264,6 +215,7 @@ function json_encode_db( $arr )
 //----------------------------------------------------------------------
 
 /**
+ * @fn          parse_cli2request()
  *  @brief     Parse cli arguments and insert into $_REQUEST
  *  
  *  @details   Store in global variable
@@ -294,11 +246,12 @@ function parse_cli2request()
 
 
 /**
+ * @fn          ___( $key, $lang = FALSE )
  *   @brief      Localisation function
  *   
  *   @param [in]	$key	Lookup key for local
  *   @param [in]	$lang='en'	Language code [Default:en]
- *   @return     Translation | [$key][$lang]
+ *   @retval     Translation | [$key][$lang]
  *   
  *   @since      2024-11-13T13:43:14
  */
@@ -313,21 +266,13 @@ function ___( $key, $lang = FALSE )
 
 
 /**
+ * @fn          getBrowserLanguage()
  *   @brief      Detect browser language
  *   
  *   @param [in]	$acceptLang=['fr'	$(description)
  *   @param [in]	'it'	$(description)
  *   @param [in]	'en'	$(description)
  *   @param [in]	'da']	$(description)
- *   @return     $(Return description)
- *   
- *   @details    $(More details)
- *   
- *   @example    
- *   
- *   @todo       
- *   @bug        
- *   @warning    
  *   
  *   @see        https://stackoverflow.com/a/3770616
  *   @since      2024-11-20T13:02:55
@@ -339,5 +284,8 @@ function getBrowserLanguage( $acceptLang = ['fr', 'it', 'en', 'da'] )
     $lang = in_array($lang, $acceptLang) ? $lang : 'en';
     $GLOBALS['browser']['language']    = $lang;
     //require_once "index_{$lang}.php"; 
-}
+}   // getBrowserLanguage()
+
 //----------------------------------------------------------------------
+
+?>
