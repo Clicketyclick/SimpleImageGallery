@@ -8,6 +8,13 @@
 		"progressbar_size": 30,
 		"progressbar_lenght": 50
 	},
+	"wordclouds": {
+		"max_set_size": 150000,
+        "default": "keywords"
+	},
+	"search": {
+		"progressbar_lenght": 50
+	},
 	"display": {
 		"flag": {
 			"path": "icons/.flags/",
