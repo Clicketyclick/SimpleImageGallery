@@ -329,22 +329,23 @@ flush();
 //----------------------------------------------------------------------
 
 /**
- *  @fn        breadcrumbTrail( $path, $urlstub, $start, $end, $delimiter)
- *  @brief     Build breadcrumb trail
+ * @fn        breadcrumbTrail( $path, $urlstub = FALSE, $start = 1, $end = -1, $delimiter = FALSE)
+ * @brief     Build breadcrumb trail
  *
- *  @details    'crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+ * @verbatim
+  "crumb1/crumb2/file" => [crumb1] -> [crumb2] 
+ * @endverbatim
  *
- *  @param[in] $path        Path to break up
- *  @param[in] $urlstub     URL stub to crumbs
- *  @param[in] $start       Start dir
- *  @param[in] $end         End dir
- *  @param[in] $delimiter   Delimiter between crumbs [Default: "rightarrow;"]
+ * @param[in] $path        Path to break up
+ * @param[in] $urlstub     URL stub to crumbs
+ * @param[in] $start       Start dir
+ * @param[in] $end         End dir
+ * @param[in] $delimiter   Delimiter between crumbs [Default: "rightarrow;"]
  *
- *  @retvar    Trail as HTML string
+ * @retvar    Trail as HTML string
  *
- *  @since      2024-11-13T14:15:32
+ * @since      2024-11-13T14:15:32
  */
-//function breadcrumbTrail( $path, $urlstub = 'xxx?path=%s', $start = 1, $end = -1, $delimiter = '&rightarrow;')
 function breadcrumbTrail( $path, $urlstub = FALSE, $start = 1, $end = -1, $delimiter = FALSE)
 {
     $crumbs = breadcrumbs( $path );
@@ -394,7 +395,6 @@ function breadcrumbs( $path )
  *  @retval     array of directory names
  *   
  *  @details    Recursive scandir
- *   
  *   
  *  @see        https://
  *  @since      2024-11-15T01:24:07

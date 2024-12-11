@@ -1,6 +1,6 @@
 <?php
 /**
- *   @file       build.php
+ *   @file       build-dev.php
  *   @brief      Gallery Builder
  *   @details    Builing database, loading images and indexing
  *   

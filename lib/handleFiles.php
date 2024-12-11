@@ -36,8 +36,7 @@
  * url          https://www.sitepoint.com/list-files-and-directories-with-php/
  * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
  * @author      Erik Bachmann <ErikBachmann@ClicketyClick.dk>
- * @deprecated  no
- * @link        
+ *
  * @since       2019-02-01T07:24:04
  * @version     2024-04-06 09:19:14
  */
@@ -52,13 +51,16 @@
  *
  * Recursivly get a list of files matching a pattern
  *
- * @example         getFilesRecursively( "./lib/", '.+\.php' );
+ * @code
+ * getFilesRecursively( "./lib/", '.+\.php' );
+ * @endcode
+ *
  * @param path      Root path of search
  * @param path      Pattern of file name
- * @return          List of files
+ * @retvar          List of files
  * 
  * @tutorial        doc/manual.md
- * @see             
+ *
  * @since           2019-02-04T08:53:59
  */
 function getFilesRecursively( $path, $pattern = '.+\.php' ) {
@@ -81,15 +83,14 @@ function getFilesRecursively( $path, $pattern = '.+\.php' ) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  countTextLines()
+ * @fn      countTextLines()
  *
- * Count no of lines in a text file
+ * @brief   Count no of lines in a text file
  *
  * @param filename  Name of file to count
- * @return          No of lines found
- * @URL https://stackoverflow.com/a/19329629
- * @tutorial        doc/manual.md
- * @see             
+ * @retvar          No of lines found
+ * @see https://stackoverflow.com/a/19329629
+ *
  * @since           2019-02-04T08:53:59
  */
 
@@ -109,15 +110,15 @@ function countTextLines($filename) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  readlastline()
+ * @fn          readlastline()
  *
- * Read last line from text file
+ * @brief   Read last line from text file
  *
  * @param filename  File to read from
  * @param pos       Default range from EOF to start searching
- * @return          Last line (incl new line) or <code>FALSE</code> otherwise.
- * @tutorial        doc/manual.md
- * @see             
+ * @retvar          Last line (incl new line) or <code>FALSE</code> otherwise.
+ *
+ *
  * @since           2019-02-04T08:53:59
  */
 function readlastline($filename, $pos = 1024) {
@@ -150,17 +151,17 @@ function readlastline($filename, $pos = 1024) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  countLines()
+ * @fn          countLines()
  *
- * Count no of lines in a text file
- ' Not efficient on large no of lines
+ * @brief   Count no of lines in a text file
+ * @details Not efficient on large no of lines
  *
  * @todo    countLines() replaced by countTextLines()
  *
  * @param filename  Name of file to count
- * @return          No of lines found
+ * @retvar          No of lines found
  * @deprecated      YES
- * @URL https://stackoverflow.com/a/20537130
+ * @see https://stackoverflow.com/a/20537130
  * @tutorial        doc/manual.md
  * @see             
  * @since           2019-02-04T08:53:59
@@ -188,13 +189,13 @@ function countLines($filename) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  getFileModified()
+ * @fn          getFileModified()
  *
  * Get date for latest file modification
  *
  * @param filename  Name of file to test
  * @param default   String / value to return if file not found
- * @return          File stamp in ISO8601 format or <code>FALSE</code> otherwise.
+ * @retvar          File stamp in ISO8601 format or <code>FALSE</code> otherwise.
  * 
  * @tutorial        doc/manual.md
  * @see             
@@ -207,13 +208,13 @@ function getFileModified($filename, $default ="Not performed" ) {
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  languageFlag()
+ * @fn          languageFlag()
  *
- * Get path to image representing language
+ * @brief   Get path to image representing language
  *
- * @URL https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
+ * @see https://en.wikipedia.org/wiki/List_of_ISO_639-2_codes
  * @param language  ISO language code (ISO3)
- * @return          Path to image
+ * @retvar          Path to image
  * @tutorial        doc/manual.md
  * @see             
  * @since           2019-02-04T08:53:59
@@ -226,14 +227,14 @@ function languageFlag( $language ) {
 }   // languageFlag()
 
 /** 
- * @subpackage  nationalFlag()
+ * @fn          nationalFlag()
  *
  * Get path to image representing national flag
  *
  * @param iso2      ISO country code (ISO2)
- * @return          Path to image
- * @URL https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
- * @URL https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+ * @retvar          Path to image
+ * @see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+ * @see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
  * @tutorial        doc/manual.md
  * @see             
  * @since           2019-02-04T08:53:59
@@ -248,9 +249,9 @@ function nationalFlag( $iso2 ) {
 
 
 /** 
- * @subpackage  upload_file()
+ * @fn          upload_file()
  *
- * Sende local file to server
+ * @brief    Send local file to server
  *
  * @param target_file   Name of file to upload
  * @param target_dir    Directory on server to store file
@@ -258,8 +259,8 @@ function nationalFlag( $iso2 ) {
  *      maxFileSize         Max file size in bytes
  *      hasMime             Must the file include a Mime description
  *      AllowedFiletypes    Accepted file extentions
- * @return string       Status message
- * @URL 
+ * @retvar string       Status message
+ * @see 
  * @tutorial        doc/manual.md
  * @see             
  * @since           2019-05-06T15:17:21
@@ -317,28 +318,32 @@ function upload_file( $target_file, $target_dir, $target_config = ['maxFileSize'
 //---------------------------------------------------------------------
 
 /** 
- * @subpackage  insertIntoArray()
+ * @fn          insertIntoArray()
  *
- * Insert element into stack at pos 2
+ * @brief    Insert element into stack at pos 2
  *
- * @example $queue = array("apple", "banana", "citrus", "date", "orange");
- * @example insertIntoQueue( $queue, "RASPberry", 2 );
- * @example var_export($queue);
- * @example 
- * @example array (
- * @example   0 => 'apple',
- * @example   1 => 'banana',
- * @example   2 => 'RASPberry',
- * @example   3 => 'citrus',
- * @example   4 => 'date',
- * @example   5 => 'orange',
- * @example )
+ * @code
+ * $queue = array("apple", "banana", "citrus", "date", "orange");
+ * insertIntoQueue( $queue, "RASPberry", 2 );
+ * var_export($queue);
+ * @endcode
  *
- * @URL
+ * @verbatim
+ * array (
+ *    0 => 'apple',
+ *    1 => 'banana',
+ *    2 => 'RASPberry',
+ *    3 => 'citrus',
+ *    4 => 'date',
+ *    5 => 'orange',
+ *  )
+ * @endverbatim
+ *
+ * @see
  * @param           Queue
  * @param           New element
  * @param           Position of new element
- * @return          <code>VOID</code>
+ * @retvar          <code>VOID</code>
  * @tutorial        doc/manual.md
  * @see             
  * @since           2019-09-30T06:28:08
@@ -358,17 +363,8 @@ function insertIntoQueue( &$queue, $element, $pos = 0) {
  *  
  *  @param [in] $topic 	Description for $topic
  *  @param [in] $lang 	Description for $lang
- *  @return    Return description
+ *  @retvar    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-12-06T16:25:14 / erba
  */
 function getDocFile( $topic, $lang = 'da' )
@@ -405,17 +401,10 @@ function getDocFile( $topic, $lang = 'da' )
  *  @brief     Get context help from file
  *  
  *  @param [in] $docfile 	Description for $docfile
- *  @return    Return description
+ *  @retvar    Return description
  *  
  *  @details   ParsedonExtra and remove newlines
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-12-06T16:25:21 / erba
  */
 function getContextHelp( $docfile ) 
@@ -436,12 +425,11 @@ function getContextHelp( $docfile )
  *  @param [in] $path 	Path to start
  *  @param [in] $exts 	File extentions
  *  @param [in] $types	File types
- *  @return    filename + date
+ *  @retvar    filename + date
  *  
  *  @details   Only for specified extensions and file types
  *  
- *  @example   
- *   
+ *  @code
  *   list($file, $date)  = getLatestFileDate( './src/', ['php', 'js', 'css', 'json'] );
  *   
  *   printf( "Latest: %s %s\n"
@@ -456,13 +444,8 @@ function getContextHelp( $docfile )
  *   ,   $file
  *   ,   $date
  *   );
+ *  @endcode
  *   
- *   
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2023-12-06T16:29:03 / erba
  */
 function getLatestFileDateRecursive( $path, $exts = FALSE, $types = ['file', 'link', 'dir', 'block', 'fifo', 'char', 'socket', 'unknown'] )
@@ -505,17 +488,14 @@ function getLatestFileDateRecursive( $path, $exts = FALSE, $types = ['file', 'li
  *  @fn        getUrlStub
  *  @brief     Get protocol, host, port and path to current file
  *  
- *  @return    Get current path excl. filename
+ *  @retvar    Get current path excl. filename
  *  
  *  @details   
  *  
- *  @example   $url_stub   = getUrlStub();
-*              echo "\n[$url_stub]\n";
-
- *  
- *  @todo      
- *  @bug       
- *  @warning   
+ *  @code
+ *      $url_stub   = getUrlStub();
+ *      echo "\n[$url_stub]\n";
+ *  @endcode
  *  
  *  @see       // https://stackoverflow.com/a/8891890
  *  @since     2024-02-26T07:03:37 / Bruger

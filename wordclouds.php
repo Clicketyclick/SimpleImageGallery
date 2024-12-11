@@ -8,7 +8,7 @@
  *@code
  *  php showrecord.php Standard bes 1 TEST
  *  php showrecord.php Standard dm2 3
- *@enccode  
+ *@endcode  
  *  
  *  
  *  @copyright http://www.gnu.org/licenses/lgpl.txt LGPL version 3
@@ -311,17 +311,8 @@ error_log( ___('rebuild_runtime'). ": $runtime ".___('no_of_indexterms').": $cou
  *  @param [in] $key 	Data key to update
  *  @param [in] $value 	Value to add to data key
  *  @param [in] $desc 	Button text
- *  @return    Return description
+ *  @retvar    Return description
  *  
- *  @details   More details
- *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2022-05-19T09:14:13 / erba
  */
 function actionButton( $action, $key, $value, $desc ) 
@@ -345,17 +336,9 @@ function actionButton( $action, $key, $value, $desc )
  *  @param [in] $desc 	Button text
  *  @param [in] $count 	Count of entries
  *  @param [in] $norm 	Norm / text size
- *  @return    Return description
+ *  @retvar    Return description
  *  
- *  @details   More details
  *  
- *  @example   
- *  
- *  @todo      
- *  @bug       
- *  @warning   
- *  
- *  @see       https://
  *  @since     2022-05-19T09:15:36 / erba
  */
 function actionLink( $action, $key, $value, $desc, $count, $norm = 100 ) 
