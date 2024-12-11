@@ -255,7 +255,7 @@ function getGitVersion($major = 0, $minor = 0, $patch = 1, $level = 0)
 		,	$GitCommitInfo['commitno'] ?? $patch
 		,	$lifecycle[ $level ?? 0 ]
 		,	str_replace( ' ', 'T', $GitCommitInfo['commitdate'] ?? '_' )
-		,	$GitCommitInfo['shorthash']
+		,	$GitCommitInfo['shorthash'] ?? "?"
 		//,	$GitCommitInfo[]
 		);
 	}
