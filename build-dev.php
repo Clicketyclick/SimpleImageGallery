@@ -30,7 +30,7 @@ echo "
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-  <meta charset='UTF-8'>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
   <title>".___('sigbuild_window_title')."</title>
   <link rel='stylesheet' href='css/styles.css'>
   <!--script src='js/display.js'></script-->
