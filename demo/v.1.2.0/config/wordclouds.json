@@ -1,0 +1,40 @@
+{
+	"keywords": {
+		"keys": [
+			"KW:",
+			"PL:",
+			"en:"
+		],
+		"order": "ASC"
+	},
+	"people": {
+		"keys": [
+			"AU:"
+		],
+		"order": "ASC"
+	},
+	"places": {
+		"keys": [
+			"CY:"
+		],
+		"order": "ASC"
+	},
+	"classification": {
+		"keys": [
+			"DK:"
+		],
+		"order": "ASC"
+	},
+	"shelfmark": {
+		"keys": [
+			"CL:"
+		],
+		"order": "ASC"
+	},
+	"publication year": {
+		"keys": [
+			"PY:"
+		],
+		"order": "DESC"
+	}
+}
