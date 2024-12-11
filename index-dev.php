@@ -25,6 +25,7 @@ include_once('lib/_header.php');
 
 
 timer_set('header', 'Reading header info');
+/*
 echo '
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +38,23 @@ echo '
 </head>
 <body>
 ';
+*/
+
+echo "
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
+  <title>".___('sig_window_title')."</title>
+  <link rel='stylesheet' href='css/styles.css'>
+  <!--script src='js/display.js'></script-->
+  <link rel='icon' type='image/x-icon' href=\"{$GLOBALS['config']['system']['favicon']}\">
+
+</head>
+<body>
+";
+
+
 
 debug( $GLOBALS['browser']['language'], "session language: ");
 

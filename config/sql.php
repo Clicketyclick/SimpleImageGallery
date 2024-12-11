@@ -13,6 +13,8 @@
  *  @version   2024-04-23 22:05:10 / ErBa
  */
 
+/** @brief  Array of SQL statements */
+
 $sql_config = [
     // https://stackoverflow.com/a/48875603 Reset rowid field after deleting rows
     "clear_index"               => "REINDEX %s;",

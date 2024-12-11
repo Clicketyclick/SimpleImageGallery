@@ -11,6 +11,14 @@
 		"en": "SIGbuild - Simple Image Gallery database builder",
 		"da": "SIGbuild - Simple Image Gallery database builder"
 	},
+	"sig_window_title": {
+		"en": "SIG - Simple Image Gallery database builder",
+		"da": "SIG - Simple Image Gallery database builder"
+	},
+	"sigwords_window_title": {
+		"en": "SIGword - Simple Image Gallery database builder",
+		"da": "SIGword - Simple Image Gallery database builder"
+	},
 	"sigbuild_title": {
 		"en": "Build database for Simple Image Gallery",
 		"da": "Byg database til Simple Image Gallery"
